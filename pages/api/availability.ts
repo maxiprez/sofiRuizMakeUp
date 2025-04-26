@@ -65,9 +65,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.setHeader('Expires', '0');
       res.status(200).json({ availableTimes });
 
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error al obtener eventos del calendario:', error);
-      res.status(500).json({ error: `Error al obtener la disponibilidad del calendario: ${error.message}` });
+      res.status(500).json({ error: `Error al obtener la disponibilidad del calendario: ${error}` });
     }
 
   } else {

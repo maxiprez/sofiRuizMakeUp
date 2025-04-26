@@ -15,7 +15,7 @@ interface AvailabilityDatesProps {
 
 function AvailabilityDates({ service, date }: AvailabilityDatesProps) {
   const { availableTimes, loading, error, } = useAvailability(service, date);
-  const { handleTimeSelect, isReserving, bookingSuccess, bookingError, handleReserve, selectedTime } = useServiceBooking();
+  const { handleTimeSelect, isReserving, handleReserve, selectedTime } = useServiceBooking();
 
   
   if (loading) {

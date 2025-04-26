@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.8.0",
+    "@getbrevo/brevo": "^1.0.1",
     "@googleapis/calendar": "^9.8.0",
     "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.49.4",

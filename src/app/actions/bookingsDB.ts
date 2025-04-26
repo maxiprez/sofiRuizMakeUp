@@ -3,6 +3,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "../../../auth";
 import { revalidatePath } from "next/cache";
+import ConfirmationEmail from "@/app/components/emails/ConfirmationEmail";
  
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
@@ -17,8 +18,10 @@ interface BookingData {
 export async function createBooking(bookingData: BookingData) {
   const session = await auth();
   const userId = session?.user?.id;
+  const userMail = session?.user?.email;
+  const userFullName = session?.user?.name;
 
-  if(!userId){
+  if(!userId || !userMail){
     return {error: "No se ha encontrado un usuario autenticado."};
   }
 
@@ -33,17 +36,40 @@ export async function createBooking(bookingData: BookingData) {
       date,
       time
     })
-    .select();
+    .select()
+    .single();
 
   if(insertError){
     console.error("Error al crear la cita:", insertError);
     return {error: "Ocurrió un error al crear la cita."};
   }
 
-    revalidatePath("/bookings");
+  const subject = "Confirmación de turno";
+  const htmlContent = ConfirmationEmail({ userFullName, service, date, time });
+
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/sendEmail`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        toEmail: userMail,
+        subject,
+        htmlContent,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Error al enviar el correo de confirmación');
+      return { success: false, error: 'Error al enviar el correo de confirmación' };
+    } else {
+      console.log('Email enviado con éxito');
+    }
+
+    revalidatePath("/");
     console.log("Cita creada exitosamente.");
-    return {success: true, data};
-  } catch (error){
+    return { success: true, data };
+  } catch (error) {
     console.error("Error inesperado durante al crear la reserva: ", error);
     return { error: "Ocurrió un error inesperado." };
   }
