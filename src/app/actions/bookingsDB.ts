@@ -21,6 +21,7 @@ export async function createBooking(bookingData: BookingData) {
   const userMail = session?.user?.email;
   const userFullName = session?.user?.name;
 
+
   if(!userId || !userMail){
     return {error: "No se ha encontrado un usuario autenticado."};
   }
@@ -34,7 +35,8 @@ export async function createBooking(bookingData: BookingData) {
       user_id: userId,
       service,
       date,
-      time
+      time,
+      status: true
     })
     .select()
     .single();
@@ -45,7 +47,13 @@ export async function createBooking(bookingData: BookingData) {
   }
 
   const subject = "Confirmación de turno";
-  const htmlContent = ConfirmationEmail({ userFullName, service, date, time });
+
+  const dateEmail = new Date(date).toLocaleDateString('es-AR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  const htmlContent = ConfirmationEmail({ userFullName, service, date: dateEmail, time });
 
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/sendEmail`, {
       method: 'POST',

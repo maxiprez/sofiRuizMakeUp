@@ -3,8 +3,6 @@
 import React from 'react';
 import useAvailability from '@/app/hooks/useAvailability';
 import BeatLoader from 'react-spinners/BeatLoader';
-
-
 import { useServiceBooking } from '@/app/hooks/useServiceBooking';
 import Button from '@/app/components/Button';
 
@@ -55,15 +53,17 @@ function AvailabilityDates({ service, date }: AvailabilityDatesProps) {
           <p className="text-gray-600 mt-4">No hay horarios disponibles para la fecha seleccionada.</p>
         )}
       </div>
-      <div className="mt-6 container mx-auto text-center p-4">
-        <Button
-          text="Reservar"
-          onClick={() => handleReserve(service!, date!)} 
-          loading={isReserving}
-          className={`bg-pink-500 min-w-40 text-white cursor-pointer py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1 ${isReserving || !selectedTime ? 'opacity-50' : ''}`}
-          disabled={isReserving || !selectedTime}
-        />
-      </div>
+      {availableTimes.length > 0 && (
+        <div className="mt-6 container mx-auto text-center p-4">
+          <Button
+            text="Reservar"
+            onClick={() => handleReserve(service!, date!)} 
+            loading={isReserving}
+            className={`bg-pink-500 min-w-40 text-white cursor-pointer py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1 ${isReserving || !selectedTime ? 'opacity-50' : ''}`}
+            disabled={isReserving || !selectedTime}
+          />
+        </div>
+      )}
     </div>
   );
 }

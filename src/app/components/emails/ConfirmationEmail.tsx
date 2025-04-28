@@ -1,4 +1,3 @@
-
 interface ConfirmationEmailProps {
     userFullName: string | null | undefined;
     service: string;
@@ -47,10 +46,10 @@ export default function ConfirmationEmail({ userFullName, service, date, time }:
                             <span class="label">Servicio:</span> <span class="value">${service}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="label">Fecha:</span> <span class="value">${date}</span>
+                            <span class="label">Día:</span> <span class="value">${date}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="label">Hora:</span> <span class="value">${time}</span>
+                            <span class="label">Hora:</span> <span class="value">${time}hs.</span>
                         </div>
                         </div>
 

@@ -3,6 +3,7 @@
 import React from 'react';
 import useHero from '@/app/hooks/useHero';
 import Button from '@/app/components/Button';
+import { ChevronDown } from '@/app/icons/icons';
 
 interface HeroProps {
   onSearch: (service: string, date: string) => void;
@@ -19,18 +20,22 @@ function Hero({ onSearch }: HeroProps) {
         </h1>
         <p className="text-lg text-gray-600 mb-8">Encuentra la disponibilidad perfecta para tu próximo servicio de belleza.</p>
         <div className="bg-white flex flex-col lg:gap-2 gap-2 sm:flex-row space-y-4 sm:space-x-4 justify-center align-center p-8">
-          <div className="w-full sm:w-auto mb-0"> {/* Quitar margen inferior del contenedor del select */}
+          <div className="w-full sm:w-auto mb-0 relative"> {/* Quitar margen inferior del contenedor del select */}
             <select
               className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500"
               value={selectedService}
               onChange={handleServiceChange}
+              required
+              id="serviceSelect"
+              name="service"
+              aria-label="Selecciona un servicio"
             >
               <option value="Todos los servicios" disabled>Todos los servicios</option>
               <option value="Make Up">Make Up</option>
               <option value="Make Up Express">Make Up Express</option>
               <option value="Perfilado de Cejas">Perfilado de Cejas</option>
             </select>
-          
+            <ChevronDown color="#f472b6" size={22} className="absolute right-2 top-3"/>
           </div>
           <div className="relative w-full sm:w-auto mb-0"> {/* Quitar margen inferior del contenedor del input date */}
             <input
@@ -38,6 +43,10 @@ function Hero({ onSearch }: HeroProps) {
                 className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500"
                 value={selectedDate}
                 onChange={(event) => handleDateChange(event.target.value)}
+                required
+                id="dateInput"
+                name="date"
+                aria-label="Selecciona una fecha"
             />
           </div>
           <Button

@@ -34,12 +34,12 @@ export const useLogin = () => {
 
       console.log("result login: ", result);
 
-      if (result?.error) {
-        setError("Credenciales inválidas."); // Muestra el mensaje de error de next-auth
-      } else {
-        router.push("/"); // Redirige en el cliente
-      }
-    } catch (err) {
+      if (result.error == "CredentialsSignin") {
+        setError("E-mail o contraseña incorrecta.");
+    } else {
+        router.push("/");
+    }
+  } catch (err) {
       console.error("Unexpected login error:", err);
       setError("An unexpected error occurred. Please try again.");
     } finally {
@@ -56,4 +56,4 @@ export const useLogin = () => {
     showPassword,
     isSubmitting,
   }
-}
+};

@@ -25,7 +25,7 @@ function Input({ labelText, name, id, htmlType, required, value, onChange, butto
           inputMode={inputMode}
           name={name}
           id={id}
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 outline-none pr-10"
+          className="block border-gray-700 w-full p-2 rounded-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 outline-none pr-10"
           value={value}
           onChange={onChange}
           required={required}

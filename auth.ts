@@ -27,6 +27,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const password = String(credentials?.password);
 
         if (!email || !password) {
+          
           return null; // Indica un fallo de autenticación
         }
 

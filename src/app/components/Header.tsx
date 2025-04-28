@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from 'react';
-import { TimesIcon, HamburgerMenu } from "@/app/icons/icons"; // Asumo que tienes estos iconos
+import { TimesIcon, HamburgerMenu, ChevronDown } from "@/app/icons/icons"; // Asumo que tienes estos iconos
 
 function Header() {
   const { data: session } = useSession();
@@ -64,10 +64,10 @@ function Header() {
               <button
                 type="button"
                 onClick={toggleUserMenu}
-                className="text-gray-700 hover:text-pink-500 py-2 flex items-center gap-2 cursor-pointer focus:outline-none"
+                className="text-gray-700 relative hover:text-pink-500 py-2 flex items-center gap-2 cursor-pointer focus:outline-none"
               >
                 {session.user.name}
-                {/* Puedes agregar un icono aquí para indicar que es un menú desplegable */}
+                <ChevronDown color="#f472b6" size={22} className="top-3"/>
               </button>
               {isUserMenuOpen && (
                 <div className="absolute mt-2 w-48 bg-white shadow-md rounded-md z-20">
@@ -115,9 +115,10 @@ function Header() {
             <>
               <button
                 onClick={toggleUserMenu} // Puedes mantener un botón aquí si lo prefieres
-                className="text-gray-700 hover:text-pink-500 block py-2 focus:outline-none text-left"
+                className="flex items-center gap-2 text-gray-700 hover:text-pink-500 py-2 focus:outline-none text-left"
               >
                 {session.user.name}
+                <ChevronDown color="#f472b6" size={22} className="top-3"/>
               </button>
               {isUserMenuOpen && (
                 <div className="ml-4 flex flex-col">

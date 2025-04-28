@@ -8,7 +8,7 @@ import Button from "@/app/components/Button";
 import { useLogin } from "@/app/hooks/useLogin";
 
 export default function Login() {
-  const { handleSubmit, email, setEmail, password, setPassword, showPassword, isSubmitting } = useLogin();
+  const { handleSubmit, email, setEmail, password, setPassword, showPassword, isSubmitting, error } = useLogin();
   const primaryColor = "pink-500";
   const textColor = "gray-700";
   const backgroundColor = "gray-100";
@@ -21,6 +21,13 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="mb-4">
           <Input labelText="E-mail" inputMode="email" name="email" htmlType="email" id="email" required value={email} onChange={(e) => setEmail(e.target.value)} button={false} />
           <Input labelText="Contraseña" name="password" htmlType={showPassword ? 'text' : 'password'} id="password" required value={password} onChange={(e) => setPassword(e.target.value)} button={true} />
+          {error
+           && 
+           <p className={`text-sm text-red-500 mb-4`}>{error}</p>
+           }
+           <Link href="/forgotPassword" className="cursor-pointer block text-center text-blue-500 hover:underline mb-4">
+            ¿Olvidaste tu contraseña?
+          </Link>
           <Button
             text="Iniciar sesión"
             type="submit"
