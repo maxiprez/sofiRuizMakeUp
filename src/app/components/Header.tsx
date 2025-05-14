@@ -42,64 +42,64 @@ function Header() {
   }, [userMenuRef]);
 
   return (
-    <header className="bg-white shadow-md sticky top-0 p-4">
+    <header className="bg-white shadow-md sticky top-0 p-4 z-30">
       <div className="container mx-auto flex items-center justify-between relative">
-        {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-pink-500">
-          SofiRuiz
-        </Link>
+          {/* Logo */}
+          <Link href="/" className="text-2xl font-bold text-pink-500">
+            SofiRuiz
+          </Link>
 
-        {/* Menú Desktop */}
-        <nav className="hidden md:flex items-center space-x-4 gap-8">
-          <div className="flex items-center space-x-4">
-            <Link href="/allServices" className="text-gray-700 hover:text-pink-500">
-              Servicios
-            </Link>
-            <Link href="/admin/login" className="text-gray-700 hover:text-pink-500">
-              Admin
-            </Link>
-          </div>
-          {session?.user ? (
-            <div className="relative" ref={userMenuRef}>
-              <button
-                type="button"
-                onClick={toggleUserMenu}
-                className="text-gray-700 relative hover:text-pink-500 py-2 flex items-center gap-2 cursor-pointer focus:outline-none"
-              >
-                {session.user.name}
-                <ChevronDown color="#f472b6" size={22} className="top-3"/>
-              </button>
-              {isUserMenuOpen && (
-                <div className="absolute mt-2 w-48 bg-white shadow-md rounded-md z-20">
-                  <Link href="/myAccount" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Mi cuenta
-                  </Link>
-                  <button
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    className="block px-4 py-2 text-red-500 hover:bg-gray-100 w-full text-left cursor-pointer"
-                  >
-                    Cerrar Sesión
-                  </button>
-                </div>
-              )}
+          {/* Menú Desktop */}
+          <nav className="hidden md:flex items-center space-x-4 gap-8 pr-6">
+            <div className="flex items-center space-x-4">
+              <Link href="/allServices" className="text-gray-700 hover:text-pink-500">
+                Servicios
+              </Link>
+              <Link href="/admin/login" className="text-gray-700 hover:text-pink-500">
+                Admin
+              </Link>
             </div>
-          ) : (
-            <Link href="/login" className="text-gray-700 hover:text-pink-500">
-              Iniciar Sesión
-            </Link>
-          )}
-        </nav>
-
-        {/* Botón Menú Mobile */}
-        <div className="md:hidden z-30">
-          <button onClick={toggleMobileMenu} className="text-gray-700 hover:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500 z-30 relative">
-            {isMobileMenuOpen ? (
-              <TimesIcon color="currentColor" size={24} />
+            {session?.user ? (
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  type="button"
+                  onClick={toggleUserMenu}
+                  className="text-gray-700 relative hover:text-pink-500 py-2 flex items-center gap-2 cursor-pointer focus:outline-none"
+                >
+                  {session.user.name}
+                  <ChevronDown color="#f472b6" size={22} className="top-3"/>
+                </button>
+                {isUserMenuOpen && (
+                  <div className="absolute mt-2 min-w-36 max-w-56 bg-white shadow-md rounded-md z-20">
+                    <Link href="/myAccount" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                      Mi cuenta
+                    </Link>
+                    <button
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="block px-4 py-2 text-red-500 hover:bg-gray-100 w-full text-left cursor-pointer"
+                    >
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
-              <HamburgerMenu color="currentColor" size={24} />
+              <Link href="/login" className="text-gray-700 hover:text-pink-500">
+                Iniciar Sesión
+              </Link>
             )}
-          </button>
-        </div>
+          </nav>
+
+          {/* Botón Menú Mobile */}
+          <div className="md:hidden z-20">
+            <button onClick={toggleMobileMenu} className="text-gray-700 hover:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500 z-30 relative">
+              {isMobileMenuOpen ? (
+                <TimesIcon color="currentColor" size={24} />
+              ) : (
+                <HamburgerMenu color="currentColor" size={24} />
+              )}
+            </button>
+          </div>
       </div>
 
       {/* Menú Mobile (Desplegable) */}

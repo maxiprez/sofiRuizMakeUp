@@ -10,8 +10,8 @@ interface HeroProps {
 }
 
 function Hero({ onSearch }: HeroProps) {
-  const { selectedService, handleServiceChange, handleDateChange, selectedDate } = useHero();
- 
+  const { selectedService, handleServiceChange, handleDateChange, selectedDate, handleSearchAndScroll } = useHero(onSearch);
+
   return (
     <section className="bg-gradient-to-br from-gray-100 to-pink-100 py-20">
       <div className="container mx-auto text-center">
@@ -20,7 +20,7 @@ function Hero({ onSearch }: HeroProps) {
         </h1>
         <p className="text-lg text-gray-600 mb-8">Encuentra la disponibilidad perfecta para tu próximo servicio de belleza.</p>
         <div className="bg-white flex flex-col lg:gap-2 gap-2 sm:flex-row space-y-4 sm:space-x-4 justify-center align-center p-8">
-          <div className="w-full sm:w-auto mb-0 relative"> {/* Quitar margen inferior del contenedor del select */}
+          <div className="w-full sm:w-auto mb-0 relative">
             <select
               className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500"
               value={selectedService}
@@ -30,36 +30,20 @@ function Hero({ onSearch }: HeroProps) {
               name="service"
               aria-label="Selecciona un servicio"
             >
-              <option value="Todos los servicios" disabled>Todos los servicios</option>
+              <option value="Todos los servicios" disabled className="text-gray-400">Todos los servicios</option>
               <option value="Make Up">Make Up</option>
               <option value="Make Up Express">Make Up Express</option>
               <option value="Perfilado de Cejas">Perfilado de Cejas</option>
             </select>
-            <ChevronDown color="#f472b6" size={22} className="absolute right-2 top-3"/>
+            <ChevronDown color="#f472b6" size={22} className="absolute right-2 top-3 transition-transform duration-200" />
           </div>
           <div className="relative w-full sm:w-auto mb-0"> {/* Quitar margen inferior del contenedor del input date */}
-            <input
-                type="date"
-                className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500"
-                value={selectedDate}
-                onChange={(event) => handleDateChange(event.target.value)}
-                required
-                id="dateInput"
-                name="date"
-                aria-label="Selecciona una fecha"
-            />
+            <input type="date" className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500" value={selectedDate} onChange={(event) => handleDateChange(event.target.value)} required id="dateInput" name="date" aria-label="Selecciona una fecha" />
           </div>
-          <Button
-            text="Ver Disponibilidad"
-            onClick={() => onSearch(selectedService, selectedDate)}
-            className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto cursor-pointer"
-            id="searchButton"
-            disabled={false}
-          />
+          <Button text="Ver Disponibilidad" onClick={handleSearchAndScroll} className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto cursor-pointer" id="searchButton" disabled={false} />
         </div>
       </div>
     </section>
   );
 }
-
 export default Hero;

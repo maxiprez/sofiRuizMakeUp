@@ -29,6 +29,11 @@ export async function signInWithCredentials(formData: FormData) {
       return { error: "Credenciales inválidas" };
     }
 
+    if(!user.tel) {
+      console.log('User sin telefono de contacto');
+      return { error: "sin telefono de contacto" };
+    }
+
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {

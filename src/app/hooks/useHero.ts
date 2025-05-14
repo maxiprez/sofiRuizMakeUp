@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 
-export default function useHero() {
+export default function useHero(onSearchCallback: (service: string, date: string) => void) {
   const [selectedService, setSelectedService] = useState('Todos los servicios');
   const [selectedDate, setSelectedDate] = useState('');
 
@@ -19,6 +19,18 @@ export default function useHero() {
     handleSearch(selectedService, selectedDate);
   };
 
+  const handleSearchAndScroll = () => {
+    if (onSearchCallback) {
+      onSearchCallback(selectedService, selectedDate);
+      setTimeout(() => {
+        const horariosDiv = document.getElementById('availabilityHours');
+        if (horariosDiv) {
+          horariosDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 900);
+    }
+  };
+
   const handleSearch = useCallback((service: string, date: string) => {
     setSelectedService(service);
     setSelectedDate(date);
@@ -30,5 +42,6 @@ export default function useHero() {
     handleServiceChange,
     handleDateChange,
     handleSearchClick,
+    handleSearchAndScroll,
   };
 }

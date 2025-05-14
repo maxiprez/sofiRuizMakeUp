@@ -36,7 +36,7 @@ export default function ConfirmationEmail({ userFullName, service, date, time }:
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>¡Hola, ${userFullName}!</h1>
+                        <h1>Hola, ${userFullName}</h1>
                         <h2>¡Tu Turno ha sido Confirmado!</h2>
                     </div>
 

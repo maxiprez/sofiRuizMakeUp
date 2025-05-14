@@ -7,7 +7,6 @@ import path from 'path';
 const serviceAccountKeyPath = path.resolve(process.cwd(), 'pages/api/config/serviceAccountKey.json');
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log('Directorio de trabajo actual:', process.cwd());
   if (req.method === 'GET') {
     const { service, date: queryDate } = req.query;
     console.log('Solicitud de disponibilidad recibida para:', service, queryDate);
@@ -25,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const auth = new google.auth.GoogleAuth({
         keyFile: serviceAccountKeyPath, // Use the resolved absolute path
-        scopes: ['https://www.googleapis.com/auth/calendar.readonly'], // Solo necesitamos permiso de lectura
+        scopes: ['https://www.googleapis.com/auth/calendar'], // permiso de lectura y escritura
       });
 
       const client = await auth.getClient() as JWT;
@@ -39,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       timeMax.setHours(23, 59, 59, 999);
       timeMax.setUTCHours(23, 59, 59, 999); // Asegurar que la hora es 23:59:59.999 UTC
 
-      const calendarId = 'sofiaruizmakeup@gmail.com'; // Reemplaza con el ID del calendario que compartiste
+      const calendarId = process.env.CALENDAR_ID_TEST; // quitar el _TEST en caso que queremos usar el calendario real
 
       const eventsResponse = await calendar.events.list({
         calendarId: calendarId,
@@ -84,9 +83,6 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
   
   // Create date with explicit parameters to avoid timezone shifts
   const localDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-
-  console.log('Adjusted localDate:', localDate);
-
   const availableTimes: string[] = [];
   const bookingDurationHours = 1; // Duración del turno en horas
   const startTime = 9; // Hora de inicio del horario de atención (9 AM)
@@ -101,8 +97,6 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
     return []; // No hay disponibilidad fuera del horario de atención
   }
 
-  console.log("se encontraron eventos en el calendario para la fecha:", localDate);
-
   // Generar todos los posibles horarios de inicio dentro del horario de atención
   const possibleSlots: Date[] = [];
   for (let hour = startTime; hour < endTime; hour++) {
@@ -113,8 +107,6 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
       hour, 0, 0
     ));
   }
-
-  console.log('Posibles slots:', possibleSlots);
 
   // Filtrar los horarios que no están ocupados por eventos existentes
   possibleSlots.forEach((slot) => {

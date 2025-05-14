@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/app/actions/authDB";
+import { signIn } from "next-auth/react";
 
 export const useRegister = () =>{
     const [name, setName] = useState("");
@@ -18,8 +19,6 @@ export const useRegister = () =>{
         event.preventDefault();
         setError(null);
         setIsSubmitting(true);
-
-        console.log("Valores al enviar:", { name, email, password, confirmPassword });
     
         if (password !== confirmPassword) {
             setError("Las contraseñas no coinciden.");
@@ -31,7 +30,18 @@ export const useRegister = () =>{
         if (result?.error) {
             setError(result.error);
         } else if (result?.success) {
-        router.push("/");
+            //Intenta iniciar sesión automáticamente después del registro exitoso
+            const signInResult = await signIn('credentials', {
+                redirect: false,
+                email: email,
+                password: password,
+            });
+            if (!signInResult?.error) {
+                router.push("/");
+            }
+            else{
+                setError("Error de inicio de sesión.");
+            }
         }
         setIsSubmitting(false);
     };
@@ -51,4 +61,3 @@ export const useRegister = () =>{
         isSubmitting
     };
 }
-

@@ -24,22 +24,22 @@ export const useLogin = () => {
     setIsSubmitting(true);
 
     try {
-      // **Llama a signIn aquí, en el componente del cliente**
-      const result = await signIn("credentials", {
-        redirect: false, // Evita la redirección automática
-        email,
-        password,
-        callbackUrl: "/" // Ajusta tu callbackUrl
-      });
+        // **Llama a signIn aquí, en el componente del cliente**
+        const result = await signIn("credentials", {
+          redirect: false, // Evita la redirección automática
+          email,
+          password,
+          callbackUrl: "/" // Ajusta tu callbackUrl
+        });
 
-      console.log("result login: ", result);
+        console.log("result login: ", result);
 
-      if (result.error == "CredentialsSignin") {
-        setError("E-mail o contraseña incorrecta.");
-    } else {
-        router.push("/");
-    }
-  } catch (err) {
+        if (result.error == "CredentialsSignin") {
+          setError("E-mail o contraseña incorrecta.");
+      } else {
+          router.push("/");
+      }
+    } catch (err) {
       console.error("Unexpected login error:", err);
       setError("An unexpected error occurred. Please try again.");
     } finally {

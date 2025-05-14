@@ -36,17 +36,18 @@ export default function useBookingUser(): UseBookingUserResult {
   const [cancelErrorId, setCancelErrorId] = useState<number | null>(null);
   const isAuthenticated = status === 'authenticated';
 
+  console.log("status", status);
+
   const fetchUserBookings = async () => {
     setLoading(true);
     setError(null);
-  try {
-    const response = await fetch('/api/user/bookings');
-    console.log(  response )
-    if (response.ok) {
-      const data = await response.json();
-      setBookings(data);
-    } else {
-      console.error('Error al obtener los turnos del usuario');
+    try {
+      const response = await fetch('/api/user/bookings')
+      if (response.ok) {
+        const data = await response.json();
+        setBookings(data);
+      } else {
+        console.error('Error al obtener los turnos del usuario');
         setError('Error al cargar tus turnos.');
       }
     } catch (error) {

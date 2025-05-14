@@ -5,6 +5,8 @@ import useAvailability from '@/app/hooks/useAvailability';
 import BeatLoader from 'react-spinners/BeatLoader';
 import { useServiceBooking } from '@/app/hooks/useServiceBooking';
 import Button from '@/app/components/Button';
+import { useSession } from 'next-auth/react'; 
+import ModalTel from '@/app/components/modals/modalTel';
 
 interface AvailabilityDatesProps {
   service: string | null;
@@ -13,9 +15,9 @@ interface AvailabilityDatesProps {
 
 function AvailabilityDates({ service, date }: AvailabilityDatesProps) {
   const { availableTimes, loading, error, } = useAvailability(service, date);
-  const { handleTimeSelect, isReserving, handleReserve, selectedTime } = useServiceBooking();
+  const { handleTimeSelect, isReserving, handleReserve, selectedTime, isOpenTelModal, closeModalTel } = useServiceBooking();
+  const { data: session } = useSession();
 
-  
   if (loading) {
     return (
       <div className="bg-gray-50 py-10">
@@ -34,8 +36,8 @@ function AvailabilityDates({ service, date }: AvailabilityDatesProps) {
   }
 
   return (
-    <div className="bg-gray-50 py-10">
-      <div className="container mx-auto text-center p-4">
+    <div id="availabilityHours" className="bg-gray-50 py-10">
+      <div  className="container mx-auto text-center p-4">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Horarios Disponibles</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {availableTimes.map((time) => (
@@ -49,20 +51,28 @@ function AvailabilityDates({ service, date }: AvailabilityDatesProps) {
             </button>
           ))}
         </div>
-        {availableTimes.length === 0 && (
-          <p className="text-gray-600 mt-4">No hay horarios disponibles para la fecha seleccionada.</p>
-        )}
       </div>
       {availableTimes.length > 0 && (
         <div className="mt-6 container mx-auto text-center p-4">
           <Button
             text="Reservar"
-            onClick={() => handleReserve(service!, date!)} 
+            onClick={() => { handleReserve(service!, date!, selectedTime!, session!); }}
             loading={isReserving}
             className={`bg-pink-500 min-w-40 text-white cursor-pointer py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1 ${isReserving || !selectedTime ? 'opacity-50' : ''}`}
             disabled={isReserving || !selectedTime}
           />
         </div>
+      )}
+      {isOpenTelModal && (
+        <ModalTel 
+        isOpen={isOpenTelModal} 
+        onClose={closeModalTel} 
+        selectedService={service!} 
+        selectedDate={date!} 
+        selectedTime={selectedTime!} 
+        handleReserve={handleReserve}
+        session={session!}
+        />
       )}
     </div>
   );

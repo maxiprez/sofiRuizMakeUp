@@ -14,10 +14,8 @@ export default function useAvailability(service: string | null, date: string | n
     if (service && service !== 'Todos los servicios') {
       url += `&service=${service}`;
     }
-
     fetch(url)
       .then(response => {
-        console.log("Respuesta del fetch:", response); // Log de la respuesta completa
         if (!response.ok) {
           console.error("Error en la respuesta:", response.status); // Log del status del error
           throw new Error(`HTTP error! status: ${response.status}`);

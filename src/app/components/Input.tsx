@@ -10,9 +10,10 @@ type InputProps = {
     value: string,
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
     button: boolean,
+    placeholder?: string,
   };
 
-function Input({ labelText, name, id, htmlType, required, value, onChange, button, inputMode }: InputProps) {
+function Input({ labelText, name, id, htmlType, required, value, onChange, button, inputMode, placeholder }: InputProps) {
   const { showPassword, togglePasswordVisibility } = usePassword();
   return (
     <div className="mb-6">
@@ -29,6 +30,7 @@ function Input({ labelText, name, id, htmlType, required, value, onChange, butto
           value={value}
           onChange={onChange}
           required={required}
+          placeholder={placeholder}
         />
         {button && (
           <button

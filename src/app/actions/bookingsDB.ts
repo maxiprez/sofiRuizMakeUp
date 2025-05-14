@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { auth } from "../../../auth";
 import { revalidatePath } from "next/cache";
 import ConfirmationEmail from "@/app/components/emails/ConfirmationEmail";
+// import deleteEvent from "../../../pages/api/deleteCalendarEvent";
  
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
@@ -20,15 +21,33 @@ export async function createBooking(bookingData: BookingData) {
   const userId = session?.user?.id;
   const userMail = session?.user?.email;
   const userFullName = session?.user?.name;
+  const userTel = session?.user?.tel;
 
+  if(!session || !userId || !userMail){
+    return {error: "Tenés que iniciar sesión para crear una cita.", success: false, login: false};
+  }
 
-  if(!userId || !userMail){
-    return {error: "No se ha encontrado un usuario autenticado."};
+  if(!userTel){
+    return {error: "Tenés que completar tu número de teléfono para crear una cita.", success: false, tel: false};
   }
 
   const {service, date, time} = bookingData;
 
   try {
+    const { data: existingBooking, error: existingBookingError } = await supabase
+      .from("bookings")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("date", date);
+
+    if (existingBookingError) {
+        console.error("Error al verificar reservas existentes:", existingBookingError);
+        return { error: "Error al verificar reservas existentes.", success: false };
+    }
+
+    if (existingBooking && existingBooking.length > 0) {
+        return { error: "Ya tienes una reserva para este día.", success: false };
+    }
     const {data, error: insertError} = await supabase
     .from("bookings")
     .insert({
@@ -41,19 +60,20 @@ export async function createBooking(bookingData: BookingData) {
     .select()
     .single();
 
-  if(insertError){
-    console.error("Error al crear la cita:", insertError);
-    return {error: "Ocurrió un error al crear la cita."};
-  }
+    if(insertError){
+      console.error("Error al crear la cita:", insertError);
+      return {error: "Ocurrió un error al crear la cita."};
+    }
 
-  const subject = "Confirmación de turno";
-
-  const dateEmail = new Date(date).toLocaleDateString('es-AR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-  const htmlContent = ConfirmationEmail({ userFullName, service, date: dateEmail, time });
+    const subject = "Confirmación de turno";
+    const formatter = new Intl.DateTimeFormat('es-AR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'America/Argentina/Buenos_Aires',
+    });
+    const dateEmail = formatter.format(new Date(`${date}T${time}:00-03:00`));
+    const htmlContent = ConfirmationEmail({ userFullName, service, date: dateEmail, time });
 
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/sendEmail`, {
       method: 'POST',
@@ -73,6 +93,40 @@ export async function createBooking(bookingData: BookingData) {
     } else {
       console.log('Email enviado con éxito');
     }
+
+
+    const startDateTime = new Date(`${date}T${time}:00-03:00`);
+    const endDateTime = new Date(startDateTime.getTime() + 60 * 60000); // 1 hora después
+    const calendarEvent = {
+      summary: `Turno: ${service}`,
+      description: `Turno reservado para ${userFullName}`,
+      start: {
+        dateTime: startDateTime.toISOString(),
+        timeZone: 'America/Argentina/Buenos_Aires',
+      },
+      end: {
+        dateTime: endDateTime.toISOString(),
+        timeZone: 'America/Argentina/Buenos_Aires',
+      },
+    };
+
+    const calendarResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/createCalendarEvent`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(calendarEvent),
+    });
+
+    if (!calendarResponse.ok) {
+      console.error('Error al crear el evento en Google Calendar');
+      return { success: false, error: 'Error al crear el evento en Google Calendar' };
+    }
+
+    // const eventId = (await calendarResponse.json()).event.id;
+    // if (eventId) {
+    //   await deleteEvent(eventId);
+    // }
 
     revalidatePath("/");
     console.log("Cita creada exitosamente.");

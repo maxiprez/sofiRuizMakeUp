@@ -49,11 +49,15 @@ export default function MyAccount() {
               <div>
                 <p className="font-semibold">{booking.service}</p>
                 <p className="text-gray-600 xs:text-xs lg:text-md">
-                  {new Date(booking.date).toLocaleDateString('es-AR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })} a las {booking.time.slice(0, 5)}hs
+                  {(() => {
+                    const [year, month, day] = booking.date.split('-').map(Number);
+                    const localDate = new Date(year, month - 1, day);
+                    return localDate.toLocaleDateString('es-AR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    });
+                  })()} a las {booking.time.slice(0, 5)}hs
                 </p>
               </div>
               <div>
