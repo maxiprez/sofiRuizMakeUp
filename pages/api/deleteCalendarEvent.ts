@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import deleteEvent from './calendarUtils'; // Importa la función desde el archivo de utilidades
+import deleteEvent from './calendarUtils';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -12,7 +12,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Event ID is required' });
       }
       await deleteEvent(eventId);
-      console.log("eventId: id del evento eliminado ", eventId);
       res.status(200).json({ message: `Evento con ID ${eventId} borrado exitosamente` }); 
   } catch (error) {
     console.error('Error en /api/deleteCalendarEvent:', error);

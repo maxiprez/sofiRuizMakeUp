@@ -49,19 +49,13 @@ export default async function createEvent(eventData: EventData) { // eventData d
   }
 }
 
-/**
- * Borra un evento del calendario de Google Calendar.
- * @param eventId El ID del evento a borrar.
- * @returns Una promesa que se resuelve cuando el evento se borra exitosamente.
- * @throws Un error si no se proporciona el ID del evento o si ocurre un error al borrar el evento.
- */
 export async function deleteEvent(eventId: string) {
   if (!eventId) {
     throw new Error('Se debe proporcionar el ID del evento a borrar.');
   }
 
   const auth = new google.auth.GoogleAuth({
-    keyFile: serviceAccountKeyPath, // Reutiliza la ruta de la clave del servicio
+    keyFile: serviceAccountKeyPath,
     scopes: ['https://www.googleapis.com/auth/calendar'],
   });
   const client = await auth.getClient() as JWT;

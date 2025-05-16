@@ -55,7 +55,8 @@ export async function createBooking(bookingData: BookingData) {
       service,
       date,
       time,
-      status: true
+      status: true,
+      google_event_id: ""
     })
     .select()
     .single();
@@ -123,10 +124,20 @@ export async function createBooking(bookingData: BookingData) {
       return { success: false, error: 'Error al crear el evento en Google Calendar' };
     }
 
-    // const eventId = (await calendarResponse.json()).event.id;
-    // if (eventId) {
-    //   await deleteEvent(eventId);
-    // }
+    const calendarData = await calendarResponse.json();
+    const eventId = calendarData?.event?.id;
+
+    if (eventId && data?.id) {
+      const { error: updateError } = await supabase
+        .from("bookings")
+        .update({ google_event_id: eventId })
+        .eq("id", data.id);
+
+      if (updateError) {
+        console.error("Error al guardar el eventId en la base de datos:", updateError);
+        return { success: false, error: "Error al guardar el ID del evento en la base de datos" };
+      }
+    }
 
     revalidatePath("/");
     console.log("Cita creada exitosamente.");
