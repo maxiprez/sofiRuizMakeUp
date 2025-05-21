@@ -9,7 +9,7 @@ export default function MyAccount() {
     loading,
     error,
     handleCancelBooking,
-    cancelLoadingId,
+    // cancelLoadingId,
     cancelErrorId,
     isAuthenticated,
   } = useBookingUser();
@@ -63,7 +63,7 @@ export default function MyAccount() {
               <div>
                 <button
                   onClick={() => handleCancelBooking(booking.id)}
-                  disabled={cancelLoadingId === booking.id}
+                  // disabled={cancelLoadingId === booking.id}
                   className="bg-red-500 xs:text-xs lg:text-md cursor-pointer hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                   Cancelar Turno

@@ -13,8 +13,10 @@
     "@getbrevo/brevo": "^1.0.1",
     "@googleapis/calendar": "^9.8.0",
     "@heroicons/react": "^2.2.0",
-    "@supabase/supabase-js": "^2.49.4",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.7",
     "bcryptjs": "^3.0.2",
+    "formidable": "^3.5.4",
     "google-auth-library": "^9.15.1",
     "googleapis": "^148.0.0",
     "next": "15.3.1",
@@ -22,6 +24,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-spinners": "^0.16.1",
+    "sib-api-v3-sdk": "^8.4.0",
     "supabase": "^2.20.12",
     "sweetalert2": "^11.6.13"
   },
@@ -29,13 +32,15 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20.17.30",
+    "@types/node": "^20.17.47",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "webpack": "^5.99.8",
+    "webpack-dev-server": "^5.2.1"
   },
   "packageManager": "yarn@4.8.1+sha512.bc946f2a022d7a1a38adfc15b36a66a3807a67629789496c3714dd1703d2e6c6b1c69ff9ec3b43141ac7a1dd853b7685638eb0074300386a59c18df351ef8ff6"
 }

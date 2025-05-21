@@ -42,40 +42,49 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
     Credentials({
-      async authorize(credentials) {
-        const email = String(credentials?.email);
-        const password = String(credentials?.password);
-
+      async authorize(credentials: Record<string, unknown> | undefined) {
+        const { email, password } = credentials as { email: string; password: string };
+        
         if (!email || !password) {
-          
-          return null; // Indica un fallo de autenticación
+          return null;
         }
-
+    
         try {
           const { data: user, error } = await supabaseClient
             .from("users")
             .select("*")
             .eq("email", email)
             .single();
-
+    
           if (error || !user) {
-            return null; // Indica un fallo de autenticación
+            return null;
           }
-         
+    
+          // Validar is_verified SOLO para Credentials
+          if (!user.is_verified) {
+            throw new Error("USER_NOT_VERIFIED");
+          }
+    
           const passwordMatch = await bcrypt.compare(password, user.password);
-
-          if (passwordMatch) {
-            // Retorna la información del usuario para la sesión
-            return { id: user.id, email: user.email, name: user.name, tel: user.tel };
-          } else {
-            return null; // Indica un fallo de autenticación (contraseña incorrecta)
+    
+          if (!passwordMatch) {
+            return null;
           }
+    
+          return { 
+            id: user.id, 
+            email: user.email, 
+            name: user.name, 
+            tel: user.tel, 
+            is_verified: user.is_verified 
+          };
         } catch (error) {
-          console.error("Error durante la autorización:", error);
-          return null; // Indica un fallo de autenticación
+          console.error("Error durante la autorización:  ", error);
+          return null;
         }
       },
     }),
+    
   ],
   callbacks: {
     async session({ session, token }) {
@@ -96,6 +105,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             (session.user as ExtendedUser).tel = dbUser?.tel;
           }
         }
+        
         return session;
     },
     async jwt({ token, user, account }) {
@@ -107,11 +117,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.accessToken = account.access_token;
         token.id = user.id;
       }
+      
       if (user) {
         token.id = user.id;
       }
       return token;
     },
+    
     async signIn({ user, account, profile }) {
       if (account?.provider === 'google' && profile?.email && profile?.name) {
         console.log("Inicio de sesión con Google detectado para:", profile.email);

@@ -25,15 +25,16 @@ export default function Login() {
            && 
            <p className={`text-sm text-red-500 mb-4`}>{error}</p>
            }
-           <Link href="/forgotPassword" className="cursor-pointer block text-center text-blue-500 hover:underline mb-4">
+           <Link href="/recoverPassword" className="cursor-pointer block text-center text-blue-500 hover:underline mb-4">
             ¿Olvidaste tu contraseña?
           </Link>
           <Button
             text="Iniciar sesión"
             type="submit"
-            className={`cursor-pointer w-full bg-${primaryColor} text-white px-4 py-2 rounded hover:bg-${primaryColor}-700 focus:outline-none focus:ring-2 focus:ring-${primaryColor}-500 focus:ring-offset-1`}
+            className={`cursor-pointer w-full ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''} bg-${primaryColor} text-white px-4 py-2 rounded hover:bg-${primaryColor}-700 focus:outline-none focus:ring-2 focus:ring-${primaryColor}-500 focus:ring-offset-1`}
             id="loginButton"
             loading={isSubmitting}
+            disabled={isSubmitting}
           />
         </form>
         <SignInGoogle />

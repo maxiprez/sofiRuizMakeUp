@@ -62,7 +62,18 @@ export async function createUser(formData: FormData) {
       email,
       tel,
       password: hashedPassword,
+      is_verified: false,
     });
+
+    const { error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (authError) {
+      console.error("Error al crear el usuario en Auth:", authError);
+      return { error: "Error al crear la cuenta." };
+    }
 
     if (insertError) {
         console.error("Error al crear el usuario:", insertError);
@@ -70,7 +81,12 @@ export async function createUser(formData: FormData) {
         return { error: "Error al crear la cuenta." };
     }
 
-    revalidatePath("/login"); // O la página a la que quieras redirigir después del registro
+    if (authError) {
+      console.error("Error al crear el usuario en Auth:", authError);
+      return { error: "Error al crear la cuenta." };
+    }
+
+    revalidatePath("/login");
     return { success: true };
   } catch (error: unknown) {
     console.error("Error inesperado durante el registro:", error);

@@ -17,9 +17,9 @@ export default function Register() {
   const cardBackgroundColor = "white"; // Reemplaza con el color de fondo de la tarjeta
 
   return (
-    <div className={`flex justify-center items-center h-screen bg-${backgroundColor}`}>
-      <div className={`bg-${cardBackgroundColor} p-8 rounded-md shadow-md w-96`}>
-        <h1 className={`text-2xl font-bold mb-6 text-${textColor} text-center`}>Registrarme</h1>
+    <div className={`flex justify-center items-center bg-${backgroundColor}`}>
+      <div className={`bg-${cardBackgroundColor} p-8 rounded-md shadow-md w-96 my-4`}>
+        <h1 className={`text-xl font-bold mb-6 text-${textColor} text-center`}>Registrarme</h1>
         <form onSubmit={handleSubmit}>
           <Input labelText="Nombre" inputMode="text" name="name" id="name" htmlType="text" required value={name} onChange={(e) => setName(e.target.value)} button={false} />
           <Input labelText="Correo Electrónico" inputMode="email" name="email" id="email" htmlType="text" required value={email} onChange={(e) => setEmail(e.target.value)} button={false} />
@@ -29,8 +29,9 @@ export default function Register() {
           <Button 
            type="submit"
            text="Confirmar"
-           className={`cursor-pointer w-full bg-${primaryColor} text-white px-4 py-2 rounded hover:bg-${primaryColor}-700 focus:outline-none focus:ring-2 focus:ring-${primaryColor}-500 focus:ring-offset-1`}
+           className={`cursor-pointer w-full ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''} bg-${primaryColor} text-white px-4 py-2 rounded hover:bg-${primaryColor}-700 focus:outline-none focus:ring-2 focus:ring-${primaryColor}-500 focus:ring-offset-1`}
            loading={isSubmitting}
+           disabled={isSubmitting}
           />
           {error && <p className="mt-4 text-red-500 text-sm">{error}</p>}
         </form>

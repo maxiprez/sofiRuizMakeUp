@@ -1,13 +1,13 @@
 import { usePassword } from "@/app/hooks/usePassword";
 type AllowedInputTypes = "search" | "text" | "email" | "tel" | "url" | "none" | "numeric" | "decimal";
 type InputProps = { 
-    labelText: string,
+    labelText?: string,
     name: string,
     id: string,
     htmlType: string,
     required: boolean,
     inputMode?: AllowedInputTypes;
-    value: string,
+    value?: string,
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
     button: boolean,
     placeholder?: string,
@@ -35,7 +35,7 @@ function Input({ labelText, name, id, htmlType, required, value, onChange, butto
         {button && (
           <button
             type="button"
-            className="absolute inset-y-0 right-0 flex items-center pr-3"
+            className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
             onClick={togglePasswordVisibility}
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
           >
