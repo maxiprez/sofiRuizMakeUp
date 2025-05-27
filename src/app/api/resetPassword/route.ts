@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
   });
 
   if (error) {
+    console.error("Error al enviar el email de recuperación:", error);
     return NextResponse.json({ error: "Error al enviar el email de recuperación." }, { status: 500 });
   }
 

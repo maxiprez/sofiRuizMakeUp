@@ -2,6 +2,7 @@
 
 import useBookingUser from "../hooks/useBookingUser";
 import BeatLoader from 'react-spinners/BeatLoader';
+import Link from "next/link";
 
 export default function MyAccount() {
   const {
@@ -41,7 +42,12 @@ export default function MyAccount() {
       <h1 className="text-2xl font-bold mb-4">Mi Cuenta</h1>
       <h2 className="text-xl font-semibold mb-2">Tus Turnos</h2>
       {bookings.length === 0 ? (
-        <p className="text-gray-600">No tienes turnos reservados aún.</p>
+        <>
+          <p className="text-gray-600">No tienes turnos reservados aún.</p>
+          <Link href="/" className="cursor-pointer mt-2 block text-center max-w-40 mx-auto text-white bg-pink-500 hover:bg-pink-600 px-4 py-2 rounded">
+            ¡Buscar un turno!
+          </Link>
+        </>
       ) : (
         <ul className="space-y-4">
           {bookings.map((booking) => (

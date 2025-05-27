@@ -5,7 +5,6 @@ import Button from "@/app/components/Button";
 import { useState } from "react";
 import { useRecoverPassword } from "@/app/hooks/useRecoverPassword";
 
-
 export default function RecoverPassword() {
  const [email, setEmail] = useState("");
  const { resetPassword, error, loading } = useRecoverPassword();

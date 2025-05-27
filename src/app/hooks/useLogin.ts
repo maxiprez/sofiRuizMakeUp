@@ -28,7 +28,13 @@ export const useLogin = () => {
           callbackUrl: "/" // Ajusta tu callbackUrl
         });
         if (result?.error) {
-          setError("Los datos que ingresaste son incorrectos.");
+          if (result.error === "USER_NOT_VERIFIED") {
+            setError("Tu usuario no está verificado. Por favor revisa tu email.");
+          } else if (result.error === "CredentialsSignin") {
+            setError("Correo o contraseña incorrectos.");
+          } else {
+            setError("Ocurrió un error inesperado. Intenta nuevamente.");
+          }
         } else {
           router.push("/");
         }

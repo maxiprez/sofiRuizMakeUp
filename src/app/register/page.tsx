@@ -40,7 +40,7 @@ export default function Register() {
           ¿Ya tienes una cuenta?
         </p>
         <Link href="/login" className="block text-center text-blue-500 hover:underline">
-          Iniciar Sesión
+          Iniciar sesión
         </Link>
       </div>
     </div>

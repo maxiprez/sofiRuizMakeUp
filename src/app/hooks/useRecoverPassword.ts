@@ -21,6 +21,8 @@ export const useRecoverPassword = () => {
 
       const result = await response.json();
 
+      console.log("Result:", result);
+
       if (result.error) {
         setError(result.error);
         return { success: false };

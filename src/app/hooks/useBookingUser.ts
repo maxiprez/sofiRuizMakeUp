@@ -87,10 +87,10 @@ export default function useBookingUser(): UseBookingUserResult {
 
   const handleCancelBookingConfirm = async (bookingId: number) => {
     try {
-      const bookingToCancel = bookings.find((b) => b.id === bookingId);
+      // const bookingToCancel = bookings.find((b) => b.id === bookingId);
       //const eventId = bookingToCancel?.google_event_id;
 
-      console.log("bookingToCancel: ", bookingToCancel);
+      // console.log("bookingToCancel: ", bookingToCancel);
 
       const response = await fetch('/api/user/bookings/cancel', {
         method: 'POST',
