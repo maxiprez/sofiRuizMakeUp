@@ -149,7 +149,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 name: profile.name,
                 email: profile.email,
                 tel: null, 
-                password: null, 
+                password: null,
+                is_verified: true,
               })
               .select("id, tel") // Only selecting id and tel
               .single();

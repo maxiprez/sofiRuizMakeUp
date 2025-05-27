@@ -1,5 +1,6 @@
 import { type EmailOtpType } from '@supabase/supabase-js'
 import { type NextRequest } from 'next/server'
+
 import { createClient } from "@supabase/supabase-js"
 import { redirect } from 'next/navigation'
 
@@ -19,28 +20,28 @@ export async function GET(request: NextRequest) {
       type,
       token_hash,
     });
-
     if (!verifyError && user) {
-      if (type === 'signup') {
-        console.log("✔️ Usuario verificado:", user.email);
+      console.log("🚀 Usuario verificado en Supabase Auth. ID:", user.id);
+      const { error: updateError } = await supabaseAdmin.from("users").update({
+        is_verified: true,
+      }).eq("id", user.id);
 
-        const { error: updateError } = await supabaseAdmin
-          .from('users')
-          .update({ is_verified: true })
-          .eq('id', user.id);
-
-        if (updateError) {
-          console.error("❌ Error al actualizar is_verified:", updateError);
-        } else {
-          console.log("✅ Usuario marcado como verificado.");
-        }
+      if (updateError) {
+        console.error("Error al actualizar el usuario en la tabla 'users':", updateError);
+        // Podrías redirigir a una página de error más específica si el problema es la base de datos
+        redirect('/authCodeError?reason=db_update_failed');
+      } else {
+        console.log("🚀 Usuario verificado y tabla 'users' actualizada correctamente.");
+        redirect('/emailValidateOk');
       }
-      redirect("/login");
     } else {
-      console.error("❌ Error al verificar token:", verifyError?.message);
-      redirect('/auth/auth-code-error');
+      // Si hubo un error en la verificación del OTP o no se encontró el usuario
+      console.error("❌ Error al verificar token o usuario no encontrado:", verifyError);
+      redirect('/authCodeError?reason=otp_verification_failed');
     }
+  } else {
+    // Si faltan los parámetros esenciales en la URL
+    console.error("❌ Faltan parámetros en la URL (token_hash o type).");
+    redirect('/authCodeError?reason=missing_params');
   }
-
-  redirect('/auth/auth-code-error');
 }

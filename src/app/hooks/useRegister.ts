@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createUser } from "@/app/actions/createUser";
+import { createUser } from "@/app/actions/authDB";
 
 export const useRegister = () => {
   const [name, setName] = useState("");
@@ -46,6 +46,8 @@ export const useRegister = () => {
     formData.append("password", password);
   
     const result = await createUser(formData);
+
+    console.log("🚀 Resultado del registro: ", result);
   
     if (result?.error) {
       setError(result.error);
