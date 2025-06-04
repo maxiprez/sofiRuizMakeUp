@@ -27,11 +27,6 @@ const userId = session?.user?.id;
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("date: ", selectedDate);
-    console.log("service: ", selectedService);
-    console.log("tel: ", tel);
-    console.log("userId: ", userId);
-    // debugger;
     if (userId) {
       await updateTel(userId, tel);
       session.user.tel = tel;

@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   const { email } = await request.json();
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXTAUTH_URL}/auth/confirm?next=/updatePassword`,
+    redirectTo: `${location.origin}/auth/password-reset-callback`,
   });
 
   if (error) {

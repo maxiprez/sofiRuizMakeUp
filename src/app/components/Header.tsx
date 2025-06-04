@@ -3,13 +3,15 @@
 import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from 'react';
-import { TimesIcon, HamburgerMenu, ChevronDown } from "@/app/icons/icons"; // Asumo que tienes estos iconos
+import { TimesIcon, HamburgerMenu, ChevronDown } from "@/app/icons/icons";
 
 function Header() {
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  console.log("session: ", session);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

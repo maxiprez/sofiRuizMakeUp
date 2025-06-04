@@ -13,8 +13,9 @@
     "@getbrevo/brevo": "^1.0.1",
     "@googleapis/calendar": "^9.8.0",
     "@heroicons/react": "^2.2.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.49.7",
+    "@supabase/supabase-js": "^2.49.8",
     "bcryptjs": "^3.0.2",
     "formidable": "^3.5.4",
     "google-auth-library": "^9.15.1",
@@ -26,7 +27,8 @@
     "react-spinners": "^0.16.1",
     "sib-api-v3-sdk": "^8.4.0",
     "supabase": "^2.20.12",
-    "sweetalert2": "^11.6.13"
+    "sweetalert2": "^11.6.13",
+    "unique-forge": "^1.6.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

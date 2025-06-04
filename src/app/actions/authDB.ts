@@ -33,7 +33,6 @@ export async function createUser(formData: FormData) {
       console.error("Error al verificar el mail:", emailError);
       return { error: "Error al verificar el mail." };
     }
-
     if (existingUserByEmail) {
       return { error: "El mail ya está registrado." };
     }
@@ -56,9 +55,6 @@ export async function createUser(formData: FormData) {
     const { error: authError, data } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: { name, phone: tel },
-      },
     });
 
     const salt = await bcrypt.genSalt(10);
@@ -74,11 +70,13 @@ export async function createUser(formData: FormData) {
     });
 
     if (insertError) {
+        console.error("Error al insertar el usuario en la base de datos:", insertError);
         return { error: "Error al crear la cuenta." };
     }
 
     if (authError) {
-      return { error: "Error al crear la cuenta." };
+      console.error("Error al crear la cuenta en Supabase Auth:", authError.message);
+      return { error: "Error al crear la cuenta. Intentá de nuevo en unos minutos." };
     }
 
     revalidatePath("/login");
