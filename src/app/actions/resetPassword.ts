@@ -41,7 +41,7 @@ export async function resetPassword(formData: FormData) {
     }
 
     const frontendUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
+    const resetLink = `${frontendUrl}/resetPassword?token=${resetToken}`;
 
     console.log("Enviando email de reseteo a: ", email, "con link: ", resetLink);
     console.log("existingUser: ", existingUser);

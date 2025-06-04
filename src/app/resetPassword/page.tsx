@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from 'react';
 import Input from '@/app/components/Input';
 import Button from '@/app/components/Button';
+import { useResetPassword } from '@/app/hooks/useResetPassword';
 
 function UpdatePasswordPage() {
-  const [newPassword, setNewPassword] = useState('');
-
+  const { newPassword, confirmPassword, loading, message, handleUpdatePassword, setNewPassword, setConfirmPassword } = useResetPassword();
   return (
     <section className={`flex justify-center items-center h-screen bg-gray-100`}>
         <div className={`bg-white p-8 rounded-md shadow-md w-96 mx-4`}>
@@ -22,7 +21,7 @@ function UpdatePasswordPage() {
                     loading={loading}
                     disabled={loading}
                 />
-                {message && <p>{message}</p>}
+                {message && <p className="text-center text-green-500">{message}</p>}
             </form>
         </div>
     </section>
