@@ -36,8 +36,6 @@ export default function useBookingUser(): UseBookingUserResult {
   const [cancelErrorId, setCancelErrorId] = useState<number | null>(null);
   const isAuthenticated = status === 'authenticated';
 
-  console.log("status", status);
-
   const fetchUserBookings = async () => {
     setLoading(true);
     setError(null);

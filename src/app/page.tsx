@@ -8,12 +8,9 @@ import { useServiceBooking } from "@/app/hooks/useServiceBooking";
 export default function Home() {
   const { selectedService, selectedDate, handleSearch } = useServiceBooking();
   return (
-    <main className="flex flex-col min-h-screen">
+    <main className="flex flex-col">
       <Hero onSearch={handleSearch} />
-        <main className="flex-grow py-10">
-          <div className="container mx-auto text-center">
-            {/* El contenido principal ahora podría ir aquí o dentro del Hero */}
-          </div>
+        <main>
           {selectedDate && <AvailabilityDates service={selectedService} date={selectedDate} />}
         </main>
       <Footer />

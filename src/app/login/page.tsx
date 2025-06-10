@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import SignInGoogle from "@/app/components/SignInGoogle";
 import Input from "@/app/components/Input";
-import Button from "@/app/components/Button";
+import Button from "@/app/components/CustomBtn";
 import { useLogin } from "@/app/hooks/useLogin";
 
 export default function Login() {

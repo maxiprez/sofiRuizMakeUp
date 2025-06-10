@@ -1,5 +1,3 @@
-"use client";
-
 import { SessionProvider } from "next-auth/react"; // Para v5
 
 interface AuthProviderProps {

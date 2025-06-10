@@ -10,7 +10,6 @@ export default function EmailValidateOk() {
   const router = useRouter();
   const supabase = createClientComponentClient(); 
     
-   
   useEffect(() => {
     const handleSession = async () => {
       // Supabase Auth Helpers automáticamente intentará leer los tokens del fragmento de URL

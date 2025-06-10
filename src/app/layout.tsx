@@ -5,7 +5,7 @@ import Header from "@/app/components/Header";
 
 export const metadata: Metadata = {
   title: "Sofía Ruiz Make up",
-  description: "App gestión de turnos",
+  description: "App gestión de turnos"
 };
 
 export default function RootLayout({
@@ -13,8 +13,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <html lang="en">
+    <html lang="es">
       <body>
         <AuthProvider>
           <Header />

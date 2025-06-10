@@ -1,7 +1,7 @@
 "use client";
 
 import Input from '@/app/components/Input';
-import Button from '@/app/components/Button';
+import Button from '@/app/components/CustomBtn';
 import { useResetPassword } from '@/app/hooks/useResetPassword';
 
 function UpdatePasswordPage() {

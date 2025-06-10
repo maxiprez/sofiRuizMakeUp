@@ -36,7 +36,7 @@ export async function createBooking(bookingData: BookingData) {
   try {
     const { data: existingBooking, error: existingBookingError } = await supabase
       .from("bookings")
-      .select("id")
+      .select("id, status")
       .eq("user_id", userId)
       .eq("date", date);
 
@@ -45,7 +45,7 @@ export async function createBooking(bookingData: BookingData) {
         return { error: "Error al verificar reservas existentes.", success: false };
     }
 
-    if (existingBooking && existingBooking.length > 0) {
+    if (existingBooking && existingBooking.length > 0 && existingBooking[0].status) {
         return { error: "Ya tienes una reserva para este día.", success: false };
     }
     const {data, error: insertError} = await supabase

@@ -9,7 +9,7 @@ export default function useAvailability(service: string | null, date: string | n
 
   useEffect(() => {
     setLoading(true);
-    setError(null); // Resetear el error en cada nueva petición
+    setError(null);
     let url = `/api/availability?date=${date}`;
     if (service && service !== 'Todos los servicios') {
       url += `&service=${service}`;
@@ -17,7 +17,7 @@ export default function useAvailability(service: string | null, date: string | n
     fetch(url)
       .then(response => {
         if (!response.ok) {
-          console.error("Error en la respuesta:", response.status); // Log del status del error
+          console.error("Error en la respuesta:", response.status);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
@@ -27,7 +27,7 @@ export default function useAvailability(service: string | null, date: string | n
         setLoading(false);
       })
       .catch(error => {
-        console.error("Error en el catch:", error); // Log del error capturado
+        console.error("Error en el catch:", error);
         setError(error.message);
         setLoading(false);
       });

@@ -27,6 +27,7 @@ export const useLogin = () => {
           password,
           callbackUrl: "/" // Ajusta tu callbackUrl
         });
+        console.log("🚀 Resultado del login: ", result);
         if (result?.error) {
           if (result.error === "USER_NOT_VERIFIED") {
             setError("Tu usuario no está verificado. Por favor revisa tu email.");

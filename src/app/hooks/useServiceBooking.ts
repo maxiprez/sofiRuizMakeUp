@@ -7,7 +7,6 @@ interface Session {
   user: {
     name?: string | null;
     email?: string | null;
-    image?: string | null;
     tel?: string | null;
   };
 }
@@ -39,6 +38,7 @@ export const useServiceBooking = () => {
   }, []);
 
   const handleTimeSelect = (time: string) => {
+    document.getElementById('reserveButton')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setSelectedTime(time);
     setBookingSuccess(false);
     setBookingError(null);

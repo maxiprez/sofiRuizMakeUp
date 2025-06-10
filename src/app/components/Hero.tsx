@@ -2,8 +2,8 @@
 
 import React from 'react';
 import useHero from '@/app/hooks/useHero';
-import Button from '@/app/components/Button';
 import { ChevronDown } from '@/app/icons/icons';
+import { Button } from '@/components/ui/button';
 
 interface HeroProps {
   onSearch: (service: string, date: string) => void;
@@ -13,7 +13,7 @@ function Hero({ onSearch }: HeroProps) {
   const { selectedService, handleServiceChange, handleDateChange, selectedDate, handleSearchAndScroll } = useHero(onSearch);
 
   return (
-    <section className="bg-gradient-to-br from-gray-100 to-pink-100 py-20">
+    <section className="bg-gradient-to-br from-gray-100 to-pink-100 md:py-20 py-10">
       <div className="container mx-auto text-center">
         <h1 className="lg:text-4xl text-2xl font-bold text-gray-800 mb-6">
           Reserva tus turnos de <span className="text-pink-600">Make Up</span> y <span className="text-pink-600">Perfilado de Cejas</span>
@@ -22,7 +22,7 @@ function Hero({ onSearch }: HeroProps) {
         <div className="bg-white flex flex-col lg:gap-2 gap-2 sm:flex-row space-y-4 sm:space-x-4 justify-center align-center p-8">
           <div className="w-full sm:w-auto mb-0 relative">
             <select
-              className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500"
+              className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 min-h-12 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500"
               value={selectedService}
               onChange={handleServiceChange}
               required
@@ -37,10 +37,12 @@ function Hero({ onSearch }: HeroProps) {
             </select>
             <ChevronDown color="#f472b6" size={22} className="absolute right-2 top-3 transition-transform duration-200" />
           </div>
-          <div className="relative w-full sm:w-auto mb-0"> {/* Quitar margen inferior del contenedor del input date */}
-            <input type="date" className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500" value={selectedDate} onChange={(event) => handleDateChange(event.target.value)} required id="dateInput" name="date" aria-label="Selecciona una fecha" />
+          <div className="relative w-full sm:w-auto mb-0">
+            <input type="date" className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 min-h-12 py-3 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500" value={selectedDate} onChange={(event) => handleDateChange(event.target.value)} required id="dateInput" name="date" aria-label="Selecciona una fecha" />
           </div>
-          <Button text="Ver Disponibilidad" onClick={handleSearchAndScroll} className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto cursor-pointer" id="searchButton" disabled={false} />
+          <Button onClick={handleSearchAndScroll} className="bg-pink-500 hover:bg-pink-600 md:text-base text-sm text-white font-bold min-h-12 py-4 px-6 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto cursor-pointer" id="searchButton" disabled={false}>
+            Ver Disponibilidad
+          </Button>
         </div>
       </div>
     </section>

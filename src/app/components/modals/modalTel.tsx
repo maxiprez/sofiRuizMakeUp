@@ -1,11 +1,11 @@
 "use client";
 import Input from "../Input";
 import { useRegister } from "../../hooks/useRegister";
-import Button from "../Button";
+import Button from "../CustomBtn";
 import { useUpdateTel } from "@/app/hooks/useUpdateTel";
 import { Session } from "next-auth";
 
-interface ModalTelProps {
+export interface ModalTelProps {
   isOpen: boolean;
   onClose: () => void;
   selectedService: string;
