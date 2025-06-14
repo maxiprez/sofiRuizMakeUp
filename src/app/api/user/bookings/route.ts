@@ -20,7 +20,7 @@ export async function GET() {
   try {
     const { data, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select(`*, services(*)`)
       .eq('user_id', userId)
       .eq('status', true)
       .order('date', { ascending: true })

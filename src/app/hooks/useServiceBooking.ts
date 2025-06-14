@@ -13,7 +13,7 @@ interface Session {
 
 export const useServiceBooking = () => {
   const { isOpenTelModal, openModalTel, closeModalTel } = useModalTel();
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>('');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isReserving, setIsReserving] = useState<boolean>(false);
@@ -32,8 +32,8 @@ export const useServiceBooking = () => {
   }, [bookingError, openModalTel, closeModalTel, hasShownTelError]);
   
 
-  const handleSearch = useCallback((service: string, date: string) => {
-    setSelectedService(service);
+  const handleSearch = useCallback((service_id: string, date: string) => {
+    setSelectedServiceId(service_id);
     setSelectedDate(date);
   }, []);
 
@@ -45,7 +45,7 @@ export const useServiceBooking = () => {
   };
 
   const handleReserve = useCallback(
-    async (service: string, date: string, selectedTime: string, session: Session) => {
+    async (service_id: string, date: string, selectedTime: string, session: Session) => {
       if (!session) {
         Swal.fire({
           icon: 'warning',
@@ -61,7 +61,7 @@ export const useServiceBooking = () => {
         return;
       }
 
-      if (!service || !date || !selectedTime) {
+      if (!service_id || !date || !selectedTime) {
         Swal.fire({
           icon: 'warning',
           title: '¡Atención!',
@@ -111,7 +111,7 @@ export const useServiceBooking = () => {
 
             try {
               const bookingData = {
-                service,
+                service_id,
                 date,
                 time: selectedTime,
                 tel,
@@ -160,7 +160,7 @@ export const useServiceBooking = () => {
   );
 
   return {
-    selectedService,
+    selectedServiceId,
     selectedDate,
     handleSearch,
     selectedTime,

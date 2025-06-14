@@ -22,8 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     sendSmtpEmail.htmlContent = htmlContent;
 
     try {
-      const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
-      console.log('Correo electrónico enviado:', data);
+      await apiInstance.sendTransacEmail(sendSmtpEmail);
       res.status(200).json({ message: 'Correo electrónico enviado correctamente' });
     } catch (error) {
       console.error('Error al enviar el correo electrónico:', error);

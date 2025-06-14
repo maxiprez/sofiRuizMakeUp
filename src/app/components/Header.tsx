@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
 import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
 import { TimesIcon, HamburgerMenu, ChevronDown } from "@/app/icons/icons"
 import {
   DropdownMenu,
@@ -19,13 +18,9 @@ export default function Header() {
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  const pathname = usePathname();
-
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
-
-  const iMenuVisible = (pathname === "/admin" && session?.user?.role === "admin");
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,7 +33,7 @@ export default function Header() {
   }, [])
 
   return (
-    <header className={`bg-white shadow-md sticky top-0 p-4 z-30 ${iMenuVisible ? "hidden" : ""}`}>
+    <header className="bg-white shadow-md sticky top-0 p-4 z-30">
       <div className="container mx-auto flex items-center justify-between relative">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold text-pink-500">
@@ -66,7 +61,7 @@ export default function Header() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-2 text-gray-700 hover:text-pink-500 hover:bg-transparent focus:bg-transparent"
+                  className="flex items-center cursor-pointer gap-2 text-gray-700 hover:text-pink-500 hover:bg-transparent focus:bg-transparent"
                 >
                   <div className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">

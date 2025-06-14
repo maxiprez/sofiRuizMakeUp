@@ -11,7 +11,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 interface BookingData {
-  service: string;
+  service_id: string;
   date: string;
   time: string;
 }
@@ -31,7 +31,18 @@ export async function createBooking(bookingData: BookingData) {
     return {error: "Tenés que completar tu número de teléfono para crear una cita.", success: false, tel: false};
   }
 
-  const {service, date, time} = bookingData;
+  const {service_id, date, time} = bookingData;
+
+  const { data: service, error: serviceError } = await supabase
+    .from("services")
+    .select("id, name, duration, price")
+    .eq("id", service_id)
+    .single();
+
+  if (serviceError) {
+    console.error("Error al obtener el servicio:", serviceError);
+    return { error: "Error al obtener el servicio." };
+  }
 
   try {
     const { data: existingBooking, error: existingBookingError } = await supabase
@@ -52,14 +63,15 @@ export async function createBooking(bookingData: BookingData) {
     .from("bookings")
     .insert({
       user_id: userId,
-      service,
       date,
       time,
+      service_id,
       status: true,
       google_event_id: ""
     })
-    .select()
+    .select(`*, services(*)`)
     .single();
+
 
     if(insertError){
       console.error("Error al crear la cita:", insertError);
@@ -74,7 +86,7 @@ export async function createBooking(bookingData: BookingData) {
       timeZone: 'America/Argentina/Buenos_Aires',
     });
     const dateEmail = formatter.format(new Date(`${date}T${time}:00-03:00`));
-    const htmlContent = ConfirmationEmail({ userFullName, service, date: dateEmail, time });
+    const htmlContent = ConfirmationEmail({ userFullName, serviceName: service.name, date: dateEmail, time });
 
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/sendEmail`, {
       method: 'POST',
@@ -99,7 +111,7 @@ export async function createBooking(bookingData: BookingData) {
     const startDateTime = new Date(`${date}T${time}:00-03:00`);
     const endDateTime = new Date(startDateTime.getTime() + 60 * 60000); // 1 hora después
     const calendarEvent = {
-      summary: `Turno: ${service}`,
+      summary: `Turno: ${service_id}`,
       description: `Turno reservado para ${userFullName}`,
       start: {
         dateTime: startDateTime.toISOString(),

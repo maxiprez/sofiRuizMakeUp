@@ -6,12 +6,12 @@ import Footer from "@/app/components/Footer";
 import { useServiceBooking } from "@/app/hooks/useServiceBooking";
 
 export default function Home() {
-  const { selectedService, selectedDate, handleSearch } = useServiceBooking();
+  const { selectedServiceId, selectedDate, handleSearch } = useServiceBooking();
   return (
     <main className="flex flex-col">
       <Hero onSearch={handleSearch} />
         <main>
-          {selectedDate && <AvailabilityDates service={selectedService} date={selectedDate} />}
+          {selectedDate && <AvailabilityDates service_id={selectedServiceId} date={selectedDate} />}
         </main>
       <Footer />
     </main>

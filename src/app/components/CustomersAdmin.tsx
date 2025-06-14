@@ -76,7 +76,7 @@ export function CustomersAdmin() {
                     <TableHead>Fecha</TableHead>
                     <TableHead>Hora</TableHead>
                     <TableHead>Estado</TableHead>
-                    <TableHead className="text-right">Acciones</TableHead>
+                    {/* <TableHead className="text-right">Acciones</TableHead> */}
                 </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -117,28 +117,28 @@ export function CustomersAdmin() {
                             </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                        <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
+                        {/* <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                            <Eye className="h-4 w-4 mr-2" />
-                            Ver detalles
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Cancelar
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                        </DropdownMenu>
+                                <DropdownMenuItem>
+                                <Eye className="h-4 w-4 mr-2" />
+                                Ver detalles
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Editar
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-red-600">
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Cancelar
+                                </DropdownMenuItem>
+                            </DropdownMenuContent> 
+                        </DropdownMenu> */}
                         </TableCell>
                     </TableRow>
                 ))}

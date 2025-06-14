@@ -8,11 +8,11 @@ import { Session } from "next-auth";
 export interface ModalTelProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedService: string;
+  selectedServiceId: string;
   selectedDate: string;
   selectedTime: string;
   handleReserve: (
-    service: string,
+    service_id: string,
     date: string,
     selectedTime: string,
     session: Session
@@ -20,7 +20,7 @@ export interface ModalTelProps {
   session: Session;
 }
 
-export default function ModalTel({ isOpen, onClose, selectedService, selectedDate, selectedTime, handleReserve, session }: ModalTelProps) {
+export default function ModalTel({ isOpen, onClose, selectedServiceId, selectedDate, selectedTime, handleReserve, session }: ModalTelProps) {
 const { tel, setTel } = useRegister();
 const { updateTel } = useUpdateTel();
 const userId = session?.user?.id;
@@ -30,7 +30,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (userId) {
       await updateTel(userId, tel);
       session.user.tel = tel;
-      handleReserve(selectedService, selectedDate, selectedTime, session);
+      handleReserve(selectedServiceId, selectedDate, selectedTime, session);
       onClose();
     }
   };

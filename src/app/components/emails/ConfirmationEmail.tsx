@@ -1,11 +1,11 @@
 interface ConfirmationEmailProps {
     userFullName: string | null | undefined;
-    service: string;
+    serviceName: string;
     date: string;
     time: string;
 }
 
-export default function ConfirmationEmail({ userFullName, service, date, time }: ConfirmationEmailProps) {
+export default function ConfirmationEmail({ userFullName, serviceName, date, time }: ConfirmationEmailProps) {
   return (
    `
    <!DOCTYPE html>
@@ -42,7 +42,7 @@ export default function ConfirmationEmail({ userFullName, service, date, time }:
                     <div class="details-section">
                         <h2>Detalles del turno:</h2>
                         <div class="detail-item">
-                            <span class="label">Servicio:</span> <span class="value">${service}</span>
+                            <span class="label">Servicio:</span> <span class="value">${serviceName}</span>
                         </div>
                         <div class="detail-item">
                             <span class="label">Día:</span> <span class="value">${date}</span>

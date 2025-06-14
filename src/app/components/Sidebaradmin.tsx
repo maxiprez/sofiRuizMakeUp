@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { BarChart3, Calendar, Users, Scissors, Clock, Settings } from "lucide-react"
+import { BarChart3, Calendar, Users, Scissors, Clock, Home } from "lucide-react"
 import {
     Sidebar,
     SidebarContent,
@@ -8,45 +8,47 @@ import {
     SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
-    SidebarInset,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarProvider,
-    SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 const menuItems = [
     {
+      title: "Home",
+      icon: Home,
+      url: "/",
+    },
+    {
       title: "Dashboard",
       icon: BarChart3,
-      url: "#dashboard",
+      url: "/admin",
     },
     {
       title: "Citas",
       icon: Calendar,
-      url: "#appointments",
+      url: "/admin/dates",
     },
     {
       title: "Clientes",
       icon: Users,
-      url: "#clients",
+      url: "/admin/customers",
     },
     {
       title: "Servicios",
       icon: Scissors,
-      url: "#services",
+      url: "/admin/categories",
     },
     {
       title: "Horarios",
       icon: Clock,
-      url: "#schedule",
+      url: "/admin/schedules",
     },
-    {
-      title: "Configuración",
-      icon: Settings,
-      url: "#settings",
-    },
+    // {
+    //   title: "Configuración",
+    //   icon: Settings,
+    //   url: "#settings",
+    // },
 ]
 
 export function SidebarAdmin() {
@@ -88,7 +90,6 @@ export function SidebarAdmin() {
         <SidebarFooter className="border-t border-purple-100 p-4">
           <div className="flex items-center gap-2">
             <Avatar className="h-8 w-8">
-              {/* <AvatarImage src="/" /> */}
               <AvatarFallback className="bg-pink-100 text-pink-700">SR</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">

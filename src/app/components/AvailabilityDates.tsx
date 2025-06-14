@@ -9,15 +9,16 @@ import ModalTel from '@/app/components/modals/ModalTel';
 import Button from '@/app/components/CustomBtn';
 
 interface AvailabilityDatesProps {
-  service: string | null;
+  service_id: string | null;
   date: string | null;
 }
 
-function AvailabilityDates({ service, date }: AvailabilityDatesProps) {
-  const { availableTimes, loading, error, } = useAvailability(service, date);
+function AvailabilityDates({ service_id, date }: AvailabilityDatesProps) {
+  const { availableTimes, loading, error, } = useAvailability(service_id, date);
   const { handleTimeSelect, isReserving, handleReserve, selectedTime, isOpenTelModal, closeModalTel } = useServiceBooking();
   const { data: session } = useSession();
 
+  console.log("serviceId Availability: ", service_id);
   if (loading) {
     return (
       <div className="bg-gray-50 py-10 availabilityHours">
@@ -57,7 +58,7 @@ function AvailabilityDates({ service, date }: AvailabilityDatesProps) {
           <Button
             text="Reservar"
             id="reserveButton"
-            onClick={() => { handleReserve(service!, date!, selectedTime!, session!); }}
+            onClick={() => { handleReserve(service_id!, date!, selectedTime!, session!); }}
             loading={isReserving}
             className={`bg-pink-500 min-w-40 text-white cursor-pointer py-2 px-4 rounded-md hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1 ${isReserving || !selectedTime ? 'opacity-50' : ''}`}
             disabled={isReserving || !selectedTime}
@@ -68,7 +69,7 @@ function AvailabilityDates({ service, date }: AvailabilityDatesProps) {
         <ModalTel 
         isOpen={isOpenTelModal} 
         onClose={closeModalTel} 
-        selectedService={service!} 
+        selectedServiceId={service_id!} 
         selectedDate={date!} 
         selectedTime={selectedTime!} 
         handleReserve={handleReserve}

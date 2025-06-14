@@ -73,7 +73,7 @@ export default function MyAccount() {
   }
 
   const getServiceIcon = (service: string) => {
-    if (service.toLowerCase().includes("make up")) {
+    if (service.toLowerCase().includes("makeup")) {
       return <Sparkles className="h-5 w-5 text-pink-600" />
     }
     if (service.toLowerCase().includes("ceja")) {
@@ -140,7 +140,7 @@ export default function MyAccount() {
                 <Sparkles className="h-4 w-4 text-pink-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{new Set(bookings.map((b) => b.service)).size}</div>
+                <div className="text-2xl font-bold text-gray-900">{new Set(bookings.map((b) => b.services.name)).size}</div>
                 <p className="text-xs text-gray-500">Tipos diferentes</p>
               </CardContent>
             </Card>
@@ -197,10 +197,10 @@ export default function MyAccount() {
                       <CardContent className="md:p-4">
                         <div className="flex flex-row gap-4 items-center justify-between">
                           <div className="flex items-center gap-4">
-                            <div className="md:p-3 p-2 bg-white rounded-lg shadow-sm">{getServiceIcon(booking.service)}</div>
+                            <div className="md:p-3 p-2 bg-white rounded-lg shadow-sm">{getServiceIcon(booking.services.name)}</div>
                             <div className="md:space-y-1 space-y-2">
                               <div className="flex md:flex-row flex-col md:items-center items-start md:gap-2 gap-1">
-                                <h3 className="font-semibold md:text-lg text-sm text-gray-900">{booking.service}</h3>
+                                <h3 className="font-semibold md:text-lg text-sm text-gray-900">{booking.services.name}</h3>
                                 {upcoming && (
                                   <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Próxima</Badge>
                                 )}

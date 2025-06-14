@@ -11,8 +11,16 @@ interface Booking {
   service: string;
   date: string;
   time: string;
+  services: Services[];
 }
-
+interface Services{
+  id: string;
+  name: string;
+  duration?:number;
+  price:number;
+  createdAt: string;
+  status: boolean;
+}
 interface UseBookingUserResult {
   bookings: Booking[];
   loading: boolean;
@@ -85,10 +93,8 @@ export default function useBookingUser(): UseBookingUserResult {
 
   const handleCancelBookingConfirm = async (bookingId: number) => {
     try {
-      // const bookingToCancel = bookings.find((b) => b.id === bookingId);
-      //const eventId = bookingToCancel?.google_event_id;
-
-      // console.log("bookingToCancel: ", bookingToCancel);
+      //const bookingToCancel = bookings.find((b) => b.id === bookingId);
+      // const eventId = bookingToCancel?.google_event_id;
 
       const response = await fetch('/api/user/bookings/cancel', {
         method: 'POST',
@@ -123,6 +129,7 @@ export default function useBookingUser(): UseBookingUserResult {
     }
   }, [status, router]);
 
+  console.log("bookings: ", bookings);
   return {
     bookings,
     loading,
