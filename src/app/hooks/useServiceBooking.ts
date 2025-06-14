@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { createBooking } from '../actions/bookingsDB';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import { useModalPhone } from '../hooks/useModalPhone';
+import { useModalPhone } from './useModalPhone';
 interface Session {
   user: {
     name?: string | null;

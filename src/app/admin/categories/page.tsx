@@ -18,7 +18,7 @@ export default function CategoriesPage() {
   const { stopService } = usePauseService(setServices);
   const { resumeService } = useResumeService(setServices);
   const { savePriceService } = useSavePriceService(setServices);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string>();
   const [editedPrices, setEditedPrices] = useState<{ [id: string]: number }>({});
 
   const editPrice = (id: string, currentPrice: number) => {
@@ -32,7 +32,7 @@ export default function CategoriesPage() {
     if (!isNaN(price)) {
       savePriceService(id, price);
     }
-    setEditingId(null);
+    setEditingId(undefined);
   };
 
   return (
@@ -52,93 +52,95 @@ export default function CategoriesPage() {
                   <BeatLoader color="#f472b6" size={16} />
                 </div>
               ) : (
-                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                <>
                   <NewServiceCard />
-                  {services.map((service) => (
-                  <Card key={service.id} className="p-4 border-pink-200 hover:shadow-xl transition">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-4">
-                        <div className="p-3 bg-pink-100 rounded-xl">
-                          <Scissors className="h-6 w-6 text-pink-600" />
-                        </div>
-                        <div>
-                          <CardTitle className="text-2xl">{service.name}</CardTitle>
-                          <CardDescription className="text-lg text-gray-700">
-                            {editingId === service.id ? (
-                                <input
-                                  type="number"
-                                  value={editedPrices[service.id] ?? Number(service.price)}
-                                  onChange={(e) =>
-                                    setEditedPrices((prev: { [id: string]: number }) => ({
-                                      ...prev,
-                                      [service.id]: Number(e.target.value),
-                                    }))
-                                  }
-                                  className="border rounded p-1"
-                                />
-                              ) : (
-                                <span>${service.price.toLocaleString()}</span>
-                              )}
-                          </CardDescription>
-                        </div>
-                      </div>
+                  <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+                    {services.map((service) => (
+                      <Card key={service.id} className="p-4 border-pink-200 hover:shadow-xl transition">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-start gap-4">
+                            <div className="p-3 bg-pink-100 rounded-xl">
+                              <Scissors className="h-6 w-6 text-pink-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-2xl">{service.name}</CardTitle>
+                              <CardDescription className="text-lg text-gray-700">
+                                {editingId === service.id ? (
+                                    <input
+                                      type="number"
+                                      value={editedPrices[service.id] ?? Number(service.price)}
+                                      onChange={(e) =>
+                                        setEditedPrices((prev: { [id: string]: number }) => ({
+                                          ...prev,
+                                          [service.id]: Number(e.target.value),
+                                        }))
+                                      }
+                                      className="border rounded p-1"
+                                    />
+                                  ) : (
+                                    <span>${service.price.toLocaleString()}</span>
+                                  )}
+                              </CardDescription>
+                            </div>
+                          </div>
 
-                      <div className="flex flex-col gap-2">
-                        {editingId === service.id ? (
-                            <>
-                              <Button
-                                onClick={() => savePrice(service.id)}
-                                variant="outline"
-                                size="sm"
-                                className="gap-1 text-pink-600 border-pink-300 hover:bg-pink-100 cursor-pointer"
-                              >
-                                <Save className="h-4 w-4" />
-                                Guardar
+                          <div className="flex flex-col gap-2">
+                            {editingId === service.id ? (
+                                <>
+                                  <Button
+                                    onClick={() => savePrice(service.id)}
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-1 text-pink-600 border-pink-300 hover:bg-pink-100 cursor-pointer"
+                                  >
+                                    <Save className="h-4 w-4" />
+                                    Guardar
+                                  </Button>
+                                  <Button
+                                    onClick={() => setEditingId(undefined)}
+                                    variant="outline"
+                                    size="sm"
+                                    className="gap-1 cursor-pointer"
+                                  >
+                                    <X className="h-4 w-4"/>
+                                    Cancelar
+                                  </Button>
+                                </>
+                              ) : (
+                                <Button
+                                  onClick={() => editPrice(service.id, service.price)}
+                                  variant="outline"
+                                  size="sm"
+                                  className="gap-1 cursor-pointer"
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                  Editar
+                                </Button>
+                              )}
+                              <Button 
+                                  onClick={() => stopService(service.id)}
+                                  variant="outline" size="sm"
+                                  disabled={service.status == false ? true : false}
+                                  className="cursor-pointer gap-1 text-purple-600 border-purple-300 hover:bg-purple-100">
+                                <Pause className="h-4 w-4" />
+                                Pausar
                               </Button>
                               <Button
-                                onClick={() => setEditingId(null)}
+                                onClick={() => resumeService(service.id)}
                                 variant="outline"
                                 size="sm"
-                                className="gap-1 cursor-pointer"
+                                disabled={service.status == true ? true : false}
+                                className="cursor-pointer gap-1 text-green-600 border-green-300 hover:bg-green-100"
                               >
-                                <X className="h-4 w-4"/>
-                                Cancelar
-                              </Button>
-                            </>
-                          ) : (
-                            <Button
-                              onClick={() => editPrice(service.id, service.price)}
-                              variant="outline"
-                              size="sm"
-                              className="gap-1 cursor-pointer"
-                            >
-                              <Pencil className="h-4 w-4" />
-                              Editar
+                              <Play className="h-4 w-4" />
+                              Reanudar
                             </Button>
-                          )}
-                          <Button 
-                              onClick={() => stopService(service.id)}
-                              variant="outline" size="sm"
-                              disabled={service.status == false ? true : false}
-                              className="cursor-pointer gap-1 text-purple-600 border-purple-300 hover:bg-purple-100">
-                            <Pause className="h-4 w-4" />
-                            Pausar
-                          </Button>
-                          <Button
-                            onClick={() => resumeService(service.id)}
-                            variant="outline"
-                            size="sm"
-                            disabled={service.status == true ? true : false}
-                            className="cursor-pointer gap-1 text-green-600 border-green-300 hover:bg-green-100"
-                          >
-                          <Play className="h-4 w-4" />
-                          Reanudar
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-                </section>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </section>
+                </>
               )}
               <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <QuickActionCard

@@ -3,8 +3,27 @@
 import { useState, useEffect } from "react";
 import { searchDates } from "../actions/searchDates";
 
+interface Booking {
+    created_at: string;
+    date: string;
+    google_event_id: string;
+    id: string;
+    service_id: string;
+    status: boolean;
+    time: string;
+    users: {
+        id: string;
+        name: string;
+        tel: string;
+    };
+    services: {
+        id: string;
+        name: string;
+    };
+}
+
 export function useSearchDates() {
-    const [bookings, setBookings] = useState<any[]>([]);
+    const [bookings, setBookings] = useState<Booking[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const formatDate = (dateString: string) => {
@@ -25,7 +44,7 @@ export function useSearchDates() {
                 setError(result.error);
             } else {
                 if (result.data) {
-                    result.data.forEach((booking: any) => {
+                    result.data.forEach((booking: Booking) => {
                         booking.date = formatDate(booking.date);
                     });
                     setBookings(result.data);
@@ -41,7 +60,7 @@ export function useSearchDates() {
 
     useEffect(() => {
         fetchDates();
-    }, []);
-
+    });
+    console.log("bookings: ", bookings);
     return { bookings, loading, error, fetchDates };
 }

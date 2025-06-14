@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import useGetServices from './useABMServices';
-import { Service } from '../actions/ambServices';
+import { Service } from '../actions/abmServices';
 
 export default function useHero(onSearchCallback: (serviceId: string, date: string) => void) {
   const { services } = useGetServices();

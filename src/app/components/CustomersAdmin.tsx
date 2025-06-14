@@ -1,44 +1,12 @@
+"use client";
+
 import { useSearchDates } from "../hooks/useSearchDates"
-
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-
-import {
-    Button,
-} from "@/components/ui/button"
-
-import {
-    Filter,
-    Plus,
-    MoreHorizontal,
-    Eye,
-    Edit,
-    Trash2,
-} from "lucide-react"
-
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-
-import {
-    Avatar,
-    AvatarFallback,
-} from "@/components/ui/avatar"
-
-import {
-    Badge,
-} from "@/components/ui/badge"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
+import {Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/components/ui/card"
+import {Button} from "@/components/ui/button"
+import { Filter, Plus } from "lucide-react"
+import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow,} from "@/components/ui/table"
+import {Avatar,AvatarFallback,} from "@/components/ui/avatar"
+import {Badge} from "@/components/ui/badge"
 
 export function CustomersAdmin() {
     const { bookings } = useSearchDates();
@@ -93,7 +61,7 @@ export function CustomersAdmin() {
                             </div>
                         </TableCell>    
                         <TableCell>{booking.users.tel}</TableCell>
-                        <TableCell>{booking.service}</TableCell>
+                        <TableCell>{booking.services.name}</TableCell>
                         <TableCell>{booking.date}</TableCell>
                         <TableCell>{booking.time.slice(0, 5)}hs.</TableCell>
                         <TableCell>

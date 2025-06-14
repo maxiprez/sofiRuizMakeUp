@@ -13,8 +13,9 @@ import {
     Star,
 } from "lucide-react"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CustomersAdmin } from "./CustomersAdmin"
+import { QuickActionCard } from "./QuickActionsCardsAdmin"
 
 export function AdminDashboard() {
   return (
@@ -87,53 +88,24 @@ export function AdminDashboard() {
                   </CardContent>
                 </Card>
               </div>
-
               <CustomersAdmin/>
-
-              {/* Quick Actions */}
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <Card className="border-purple-100 hover:shadow-lg transition-shadow cursor-pointer group">
-                  <CardHeader>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-pink-100 rounded-lg group-hover:bg-pink-200 transition-colors">
-                        <Calendar className="h-5 w-5 text-pink-600" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">Gestionar Citas</CardTitle>
-                        <CardDescription>Ver y organizar el calendario</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                </Card>
-
-                <Card className="border-purple-100 hover:shadow-lg transition-shadow cursor-pointer group">
-                  <CardHeader>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-purple-100 rounded-lg group-hover:bg-purple-200 transition-colors">
-                        <Users className="h-5 w-5 text-purple-600" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">Clientes</CardTitle>
-                        <CardDescription>Administrar base de clientes</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                </Card>
-
-                <Card className="border-purple-100 hover:shadow-lg transition-shadow cursor-pointer group">
-                  <CardHeader>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-pink-100 rounded-lg group-hover:bg-pink-200 transition-colors">
-                        <Scissors className="h-5 w-5 text-pink-600" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">Servicios</CardTitle>
-                        <CardDescription>Configurar precios y duración</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                </Card>
-              </div>
+               <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  <QuickActionCard
+                  icon={<Calendar className="h-6 w-6 text-pink-600" />}
+                  title="Gestionar Citas"
+                  description="Ver y organizar el calendario"
+                  />
+                  <QuickActionCard
+                  icon={<Users className="h-6 w-6 text-purple-600" />}
+                  title="Clientes"
+                  description="Administrar base de clientes"
+                  />
+                  <QuickActionCard
+                  icon={<Scissors className="h-6 w-6 text-pink-600" />}
+                  title="Servicios"
+                  description="Configurar precios y duración"
+                  />
+              </section>
             </div>
           </main>
         </SidebarInset>

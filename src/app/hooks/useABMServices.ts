@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getServices, createService, pauseService, resumeService, Service, editPriceService } from "../actions/ambServices";
+import { getServices, createService, pauseService, resumeService, Service, editPriceService } from "../actions/abmServices";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 

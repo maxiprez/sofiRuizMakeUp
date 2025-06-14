@@ -5,7 +5,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { createService } from "@/app/actions/ambServices";
+import { createService } from "@/app/actions/abmServices";
 
 export default function NewServiceCard() {
   const [open, setOpen] = useState(false);

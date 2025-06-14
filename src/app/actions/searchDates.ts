@@ -11,7 +11,7 @@ const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate()
 export async function searchDates() {
     const { data, error } = await supabase
     .from('bookings')
-    .select(`*, users:users(*)`)
+    .select(`*, users:users(*), services:services(*)`)
     .gte('date', tomorrow.toISOString())
     .order('date', { ascending: true });
 
@@ -19,6 +19,8 @@ export async function searchDates() {
         console.error("Error al buscar citas:", error);
         return { error: "Error al buscar citas." };
     }
+
+    console.log("data search dates: ", data);
 
     return { data };
 }

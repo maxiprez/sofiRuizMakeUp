@@ -5,7 +5,7 @@ import useHero from '@/app/hooks/useHero';
 import { ChevronDown } from '@/app/icons/icons';
 import { Button } from '@/components/ui/button';
 import useGetServices  from '@/app/hooks/useABMServices';
-import { Service } from '@/app/actions/ambServices';
+import { Service } from '@/app/actions/abmServices';
 
 interface HeroProps {
   onSearch: (serviceId: string, date: string) => void;
