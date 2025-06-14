@@ -2,10 +2,10 @@
 import Input from "../Input";
 import { useRegister } from "../../hooks/useRegister";
 import Button from "../CustomBtn";
-import { useUpdateTel } from "@/app/hooks/useUpdateTel";
+import { useUpdatePhone } from "@/app/hooks/useUpdatePhone";
 import { Session } from "next-auth";
 
-export interface ModalTelProps {
+export interface ModalPhoneProps {
   isOpen: boolean;
   onClose: () => void;
   selectedServiceId: string;
@@ -20,9 +20,9 @@ export interface ModalTelProps {
   session: Session;
 }
 
-export default function ModalTel({ isOpen, onClose, selectedServiceId, selectedDate, selectedTime, handleReserve, session }: ModalTelProps) {
+export default function ModalPhone({ isOpen, onClose, selectedServiceId, selectedDate, selectedTime, handleReserve, session }: ModalPhoneProps) {
 const { tel, setTel } = useRegister();
-const { updateTel } = useUpdateTel();
+const { updateTel } = useUpdatePhone();
 const userId = session?.user?.id;
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

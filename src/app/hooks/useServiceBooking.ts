@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { createBooking } from '../actions/bookingsDB';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import { useModalTel } from '../hooks/useModalTel';
+import { useModalPhone } from '../hooks/useModalPhone';
 interface Session {
   user: {
     name?: string | null;
@@ -12,7 +12,7 @@ interface Session {
 }
 
 export const useServiceBooking = () => {
-  const { isOpenTelModal, openModalTel, closeModalTel } = useModalTel();
+  const { isOpenTelModal, openModalPhone, closeModalPhone } = useModalPhone();
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>('');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -23,13 +23,13 @@ export const useServiceBooking = () => {
 
   useEffect(() => {
       if (bookingError === "telError") {
-        openModalTel();
+        openModalPhone();
         setHasShownTelError(true);
       }
       if (bookingError !== "telError" && hasShownTelError) {
         setHasShownTelError(false);
       }
-  }, [bookingError, openModalTel, closeModalTel, hasShownTelError]);
+  }, [bookingError, openModalPhone, closeModalPhone, hasShownTelError]);
   
 
   const handleSearch = useCallback((service_id: string, date: string) => {
@@ -57,7 +57,7 @@ export const useServiceBooking = () => {
 
       const tel = session?.user?.tel;
       if (!tel || tel.trim() === '') {
-        openModalTel();
+        openModalPhone();
         return;
       }
 
@@ -156,7 +156,7 @@ export const useServiceBooking = () => {
           }
         });
     },
-    [openModalTel]
+    [openModalPhone]
   );
 
   return {
@@ -170,8 +170,8 @@ export const useServiceBooking = () => {
     bookingError,
     handleReserve,
     isOpenTelModal,
-    openModalTel,
-    closeModalTel,
+    openModalPhone,
+    closeModalPhone,
     hasShownTelError,
     setHasShownTelError,
   };

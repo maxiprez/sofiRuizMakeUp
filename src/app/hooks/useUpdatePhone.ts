@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export function useUpdateTel() {
+export function useUpdatePhone() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
@@ -12,7 +12,7 @@ export function useUpdateTel() {
       setError(null);
       setSuccess(false);
       try {
-        const response = await fetch(`/api/updateUserTel`, {
+        const response = await fetch(`/api/updateUserPhone`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

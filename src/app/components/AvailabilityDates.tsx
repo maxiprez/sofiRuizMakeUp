@@ -5,7 +5,7 @@ import useAvailability from '@/app/hooks/useAvailability';
 import BeatLoader from 'react-spinners/BeatLoader';
 import { useServiceBooking } from '@/app/hooks/useServiceBooking';
 import { useSession } from 'next-auth/react'; 
-import ModalTel from '@/app/components/modals/ModalTel';
+import ModalPhone from '@/app/components/modals/ModalPhone';
 import Button from '@/app/components/CustomBtn';
 
 interface AvailabilityDatesProps {
@@ -15,7 +15,7 @@ interface AvailabilityDatesProps {
 
 function AvailabilityDates({ service_id, date }: AvailabilityDatesProps) {
   const { availableTimes, loading, error, } = useAvailability(service_id, date);
-  const { handleTimeSelect, isReserving, handleReserve, selectedTime, isOpenTelModal, closeModalTel } = useServiceBooking();
+  const { handleTimeSelect, isReserving, handleReserve, selectedTime, isOpenTelModal, closeModalPhone } = useServiceBooking();
   const { data: session } = useSession();
 
   console.log("serviceId Availability: ", service_id);
@@ -64,11 +64,11 @@ function AvailabilityDates({ service_id, date }: AvailabilityDatesProps) {
             disabled={isReserving || !selectedTime}
           />
         </div>
-      )}
+      )}  
       {isOpenTelModal && (
-        <ModalTel 
+        <ModalPhone 
         isOpen={isOpenTelModal} 
-        onClose={closeModalTel} 
+        onClose={closeModalPhone} 
         selectedServiceId={service_id!} 
         selectedDate={date!} 
         selectedTime={selectedTime!} 
