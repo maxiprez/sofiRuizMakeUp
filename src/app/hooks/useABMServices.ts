@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getServices, createService, pauseService, resumeService, Service } from "../actions/ambServices";
+import { getServices, createService, pauseService, resumeService, Service, editPriceService } from "../actions/ambServices";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -28,13 +28,10 @@ export default function useGetServices() {
             setLoading(false);
         }
     };
-    
-    console.log("services: ", services);
     useEffect(() => {
         fetchServices();
     }, []);
-
-    return { services, loading, error };
+    return { services, loading, error, setServices };
 }
 
 export function useCreateService({ refreshServices }: { refreshServices: () => void }) {
@@ -71,11 +68,10 @@ export function useCreateService({ refreshServices }: { refreshServices: () => v
             setLoading(false);
         }
     };
-
     return { createService: handleCreateService, loading, error };
 }
 
-export function usePauseService() {
+export function usePauseService(setServices: React.Dispatch<React.SetStateAction<Service[]>>) {
     const [error, setError] = useState<string | null>(null);
     const handleStopService = async (id: string) => {
         try {
@@ -90,6 +86,11 @@ export function usePauseService() {
                     timer: 2000,
                     showConfirmButton: false,
                 });
+                setServices((prevServices) =>
+                    prevServices.map((service) =>
+                        service.id === id ? { ...service, status: false } : service
+                    )
+                );
             }
         } catch (error) {
             console.error("Error al pausar servicio:", error);
@@ -102,12 +103,11 @@ export function usePauseService() {
                 showConfirmButton: false,
             });
         }
-    }    
-
+    }
     return { stopService: handleStopService, error }
 }
 
-export function useResumeService(){
+export function useResumeService(setServices: React.Dispatch<React.SetStateAction<Service[]>>) {
     const [error, setError] = useState<string | null>(null);
     const handleResumeService = async (id: string) => {
         try {
@@ -122,6 +122,11 @@ export function useResumeService(){
                     timer: 2000,
                     showConfirmButton: false,
                 });
+                setServices((prevServices) =>
+                    prevServices.map((service) =>
+                        service.id === id ? { ...service, status: true } : service
+                    )
+                );
             }
         } catch (error) {
             console.error("Error al reanudar servicio:", error);
@@ -134,7 +139,44 @@ export function useResumeService(){
                 showConfirmButton: false,
             });
         }
-    }    
-
+    }
     return { resumeService: handleResumeService, error }
 }
+
+export function useSavePriceService(setServices: React.Dispatch<React.SetStateAction<Service[]>>) {
+    const [error, setError] = useState<string | null>(null);
+  
+    const handleEditPriceService = async (id: string, price: number) => {
+      try {
+        const result = await editPriceService(id, price);
+        if (result.error) {
+          setError(result.error);
+        } else {
+          setServices((prevServices: Service[]) =>
+            prevServices.map((service) =>
+              service.id === id ? { ...service, price } : service
+            )
+          );
+          Swal.fire({
+            icon: "success",
+            title: "¡Precio editado exitosamente!",
+            text: "Precio editado.",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
+      } catch (error) {
+        console.error("Error al editar precio:", error);
+        setError("Error al editar precio.");
+        Swal.fire({
+          icon: "error",
+          title: "¡Error al editar precio!",
+          text: "Error al editar precio.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    };
+  
+    return { savePriceService: handleEditPriceService, error };
+  }

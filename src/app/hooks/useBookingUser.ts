@@ -11,7 +11,7 @@ interface Booking {
   service: string;
   date: string;
   time: string;
-  services: Services[];
+  services: Services;
 }
 interface Services{
   id: string;
@@ -106,7 +106,6 @@ export default function useBookingUser(): UseBookingUserResult {
       });
      
       if (response.ok) {
-        console.log("response cancel event: ", response);
         setBookings(bookings.filter((booking) => booking.id !== bookingId));
       } else {
         const errorData = await response.json();
@@ -128,8 +127,6 @@ export default function useBookingUser(): UseBookingUserResult {
       fetchUserBookings();
     }
   }, [status, router]);
-
-  console.log("bookings: ", bookings);
   return {
     bookings,
     loading,
