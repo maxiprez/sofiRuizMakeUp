@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import useHero from '@/app/hooks/useHero';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/app/components/ui/button';
 import useGetServices from '@/app/hooks/useABMServices';
 import { Service } from '@/app/actions/abmServices';
 import {
@@ -11,9 +11,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+} from "@/app/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/app/components/ui/popover";
+import { Calendar } from "@/app/components/ui/calendar";
 import { format, parseISO, startOfToday } from "date-fns";
 import { es } from 'date-fns/locale';
 import { CalendarIcon } from "lucide-react";
@@ -67,12 +67,12 @@ export default function Hero({ onSearch }: HeroProps) {
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full sm:w-[240px] justify-start text-left font-normal min-h-12",
+                  "w-full sm:w-55 justify-start text-left font-normal min-h-12",
                   !dateObj && "text-muted-foreground"
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {dateObj ? format(dateObj, "PPP", { locale: es }) : <span>Selecciona una fecha</span>}
+                {dateObj ? format(dateObj, "PPP", { locale: es }) : <span>Seleccioná una fecha</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0 bg-white border-gray-200">

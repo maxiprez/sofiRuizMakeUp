@@ -1,7 +1,7 @@
 "use client";
 
 import useABMServices from "@/app/hooks/useABMServices";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/app/components/ui/card";
 import { Sparkles, Brush, Eye, Wand, CalendarCheck } from "lucide-react"; // Añadido CalendarCheck para el botón
 import { JSX } from "react";
 import BeatLoader from "react-spinners/BeatLoader";

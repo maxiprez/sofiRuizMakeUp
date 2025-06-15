@@ -1,15 +1,15 @@
 "use client";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/app/components/ui/sidebar";
 import { SidebarAdmin } from "../../components/SidebarAdmin";
-import { SidebarInset } from "@/components/ui/sidebar";
+import { SidebarInset } from "@/app/components/ui/sidebar";
 import HeaderAdmin from "../../components/HeaderAdmin";
 import { Calendar, Users, Scissors } from "lucide-react";
 import { QuickActionCard } from "../../components/QuickActionsCardsAdmin";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/app/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/app/components/ui/table";
+import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
+import { Badge } from "@/app/components/ui/badge";
 import useGetCustomers from "../../hooks/useABMCustomers";
 import { BeatLoader } from "react-spinners";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarTrigger } from "@/app/components/ui/sidebar"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,12 +8,12 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/app/components/ui/dropdown-menu"
 import { signOut } from "next-auth/react"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/app/components/ui/avatar"
 import { Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Input } from "@/app/components/ui/input"
+import { Button } from "@/app/components/ui/button"
 import { Bell } from "lucide-react"
 import { ChevronDown } from "lucide-react"
 

@@ -12,8 +12,8 @@ import {
     CalendarDays,
     Star,
 } from "lucide-react"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { SidebarInset, SidebarProvider } from "@/app/components/ui/sidebar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card"
 import { CustomersAdmin } from "./CustomersAdmin"
 import { QuickActionCard } from "./QuickActionsCardsAdmin"
 

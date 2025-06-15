@@ -10,9 +10,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+} from "@/app/components/ui/dropdown-menu"
+import { Button } from "@/app/components/ui/button"
+import { Avatar, AvatarFallback } from "@/app/components/ui/avatar"
 
 export default function Header() {
   const { data: session } = useSession();

@@ -1,12 +1,12 @@
 "use client";
 
 import { useSearchDates } from "../hooks/useSearchDates"
-import {Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/components/ui/card"
-import {Button} from "@/components/ui/button"
+import {Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/app/components/ui/card"
+import {Button} from "@/app/components/ui/button"
 import { Filter, Plus } from "lucide-react"
-import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow,} from "@/components/ui/table"
-import {Avatar,AvatarFallback,} from "@/components/ui/avatar"
-import {Badge} from "@/components/ui/badge"
+import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow,} from "@/app/components/ui/table"
+import {Avatar,AvatarFallback,} from "@/app/components/ui/avatar"
+import {Badge} from "@/app/components/ui/badge"
 
 export function CustomersAdmin() {
     const { bookings } = useSearchDates();

@@ -4,11 +4,11 @@ import useBookingUser from "../hooks/useBookingUser";
 import BeatLoader from 'react-spinners/BeatLoader';
 import Link from "next/link";
 import { Calendar, Clock, Scissors, AlertCircle, CalendarX, Sparkles, ArrowRight, Trash2 } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card"
+import { Button } from "@/app/components/ui/button"
+import { Badge } from "@/app/components/ui/badge"
+import { Alert, AlertDescription } from "@/app/components/ui/alert"
+import { Avatar, AvatarFallback } from "@/app/components/ui/avatar"
 
 export default function MyAccount() {
   const { bookings, loading, error, handleCancelBooking, cancelErrorId, isAuthenticated, isUpcoming, filteredBookings, showHistory, setShowHistory } = useBookingUser()
