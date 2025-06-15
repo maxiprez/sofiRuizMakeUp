@@ -32,6 +32,10 @@ interface UseBookingUserResult {
   cancelErrorId: number | null;
   setCancelErrorId: React.Dispatch<React.SetStateAction<number | null>>;
   isAuthenticated: boolean;
+  isUpcoming: (date: string) => boolean;
+  filteredBookings: Booking[];
+  setShowHistory: React.Dispatch<React.SetStateAction<boolean>>;
+  showHistory: boolean;
 }
 
 export default function useBookingUser(): UseBookingUserResult {
@@ -43,6 +47,7 @@ export default function useBookingUser(): UseBookingUserResult {
   const [cancelLoadingId, setCancelLoadingId] = useState<number | null>(null);
   const [cancelErrorId, setCancelErrorId] = useState<number | null>(null);
   const isAuthenticated = status === 'authenticated';
+  const [showHistory, setShowHistory] = useState(false);
 
   const fetchUserBookings = async () => {
     setLoading(true);
@@ -120,6 +125,20 @@ export default function useBookingUser(): UseBookingUserResult {
     }
   };
 
+  const isUpcoming = (date: string) => {
+    const today = new Date();
+    const bookingDate = new Date(date);
+    return bookingDate > today;
+  };
+
+  const filteredBookings = bookings.filter((booking) => {
+    if (showHistory) {
+      return !isUpcoming(booking.date);
+    } else {
+      return isUpcoming(booking.date);
+    }
+  });
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
@@ -138,5 +157,9 @@ export default function useBookingUser(): UseBookingUserResult {
     cancelErrorId,
     setCancelErrorId,
     isAuthenticated,
+    isUpcoming,
+    filteredBookings,
+    showHistory,
+    setShowHistory,
   };
 }

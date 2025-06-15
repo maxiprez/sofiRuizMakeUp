@@ -11,8 +11,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 export default function MyAccount() {
-  const { bookings, loading, error, handleCancelBooking, cancelErrorId, isAuthenticated } = useBookingUser()
-
+  const { bookings, loading, error, handleCancelBooking, cancelErrorId, isAuthenticated, isUpcoming, filteredBookings, showHistory, setShowHistory } = useBookingUser()
+  
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
@@ -82,17 +82,9 @@ export default function MyAccount() {
     return <Calendar className="h-5 w-5 text-pink-600" />
   }
 
-  const isUpcoming = (dateString: string, timeString: string) => {
-    const [year, month, day] = dateString.split("-").map(Number)
-    const [hours, minutes] = timeString.split(":").map(Number)
-    const appointmentDate = new Date(year, month - 1, day, hours, minutes)
-    return appointmentDate > new Date()
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
       <div className="max-w-6xl mx-auto p-6 space-y-8">
-        {/* Header Section */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3">
             <Avatar className="h-16 w-16">
@@ -106,8 +98,6 @@ export default function MyAccount() {
             </div>
           </div>
         </div>
-
-        {/* Stats Cards */}
         {bookings.length > 0 && (
           <div className="grid gap-6 md:grid-cols-3">
             <Card className="border-purple-100 hover:shadow-lg transition-shadow">
@@ -128,7 +118,7 @@ export default function MyAccount() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-gray-900">
-                  {bookings.filter((booking) => isUpcoming(booking.date, booking.time)).length}
+                  {bookings.filter((booking) => isUpcoming(booking.date)).length}
                 </div>
                 <p className="text-xs text-gray-500">Por confirmar</p>
               </CardContent>
@@ -146,8 +136,6 @@ export default function MyAccount() {
             </Card>
           </div>
         )}
-
-        {/* Bookings Section */}
         <Card className="border-purple-100">
           <CardHeader>
             <CardTitle className="text-2xl text-gray-900 flex items-center gap-2">
@@ -155,9 +143,31 @@ export default function MyAccount() {
               Tus Citas
             </CardTitle>
             <CardDescription>Gestiona y revisa tus próximas citas de belleza</CardDescription>
+            <div className="flex justify-center gap-4 mt-8">
+              <Button 
+                variant={!showHistory ? "default" : "outline"}
+                className={!showHistory 
+                  ? "bg-pink-600 hover:bg-pink-700 text-white shadow-md transition-all cursor-pointer"
+                  : "text-pink-600 border-pink-300 hover:bg-pink-100 hover:text-pink-700 transition-all cursor-pointer"
+                }
+                onClick={() => setShowHistory(false)}
+              >
+                Próximas citas
+              </Button>
+              <Button
+                variant={showHistory ? "default" : "outline"}
+                className={showHistory
+                  ? "bg-pink-600 hover:bg-pink-700 text-white shadow-md transition-all cursor-pointer"
+                  : "text-pink-600 border-pink-300 hover:bg-pink-100 hover:text-pink-700 transition-all cursor-pointer"
+                }
+                onClick={() => setShowHistory(true)}
+              >
+                Historial
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
-            {bookings.length === 0 ? (
+            {filteredBookings.length === 0 ? (
               <div className="text-center py-12 space-y-6">
                 <div className="flex justify-center">
                   <div className="p-6 bg-pink-100 rounded-full">
@@ -183,13 +193,13 @@ export default function MyAccount() {
               </div>
             ) : (
               <div className="md:space-y-4 space-y-2">
-                {bookings.map((booking) => {
-                  const upcoming = isUpcoming(booking.date, booking.time)
+                {filteredBookings.map((booking) => {
                   return (
                     <Card
                       key={booking.id}
+                      hidden={showHistory && isUpcoming(booking.date)}
                       className={`transition-all hover:shadow-md ${
-                        upcoming
+                        isUpcoming(booking.date)
                           ? "border-pink-200 bg-gradient-to-r from-pink-50 to-purple-50"
                           : "border-gray-200 bg-gray-50"
                       }`}
@@ -208,7 +218,7 @@ export default function MyAccount() {
                                 <h3 className="font-semibold md:text-lg text-sm text-gray-900">
                                   {booking.services?.name || 'Servicio no especificado'}
                                 </h3>
-                                {upcoming && (
+                                {isUpcoming(booking.date) && (
                                   <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Próxima</Badge>
                                 )}
                               </div>
@@ -225,15 +235,17 @@ export default function MyAccount() {
                             </div>
                           </div>
                           <div className="flex flex-col items-end gap-2">
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => handleCancelBooking(booking.id)}
-                              className="bg-red-500 md:text-sm text-xs hover:bg-red-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1"
-                            >
-                              <span className="md:block hidden">Cancelar</span>
-                              <Trash2 className="h-4 w-4 md:mr-2" />
-                            </Button>
+                            {isUpcoming(booking.date) && (
+                              <Button
+                                variant="default"
+                                size="sm"
+                                onClick={() => handleCancelBooking(booking.id)}
+                                className="text-white bg-red-500 md:text-sm text-xs hover:bg-red-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1"
+                              >
+                                <span className="md:block hidden">Cancelar</span>
+                                <Trash2 className="h-4 w-4 md:mr-2" />
+                              </Button>
+                            )}
                             {cancelErrorId === booking.id && <p className="text-red-500 text-xs">Error al cancelar</p>}
                           </div>
                         </div>
@@ -241,8 +253,6 @@ export default function MyAccount() {
                     </Card>
                   )
                 })}
-
-                {/* Call to Action for more bookings */}
                 <Card className="border-dashed border-2 border-pink-200 bg-gradient-to-r from-pink-50 to-purple-50 hover:border-pink-300 transition-colors">
                   <CardContent className="p-6">
                     <div className="text-center space-y-4">

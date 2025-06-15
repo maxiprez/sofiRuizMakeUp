@@ -33,29 +33,43 @@ const faqs = [
 ];
 
 export default function FaqsSection() {
-    const [openIndex, setOpenIndex] = useState<number | null>(null);
-  
-    const toggleFaq = (index: number) => {
-      setOpenIndex(openIndex === index ? null : index);
-    };
-  
-    return (
-      <section className="max-w-2xl mx-auto my-16 px-4">
-        <div className="flex items-center justify-center">
-            <h2 className="text-3xl font-semibold mb-8 text-center">Preguntas Frecuentes</h2>
-        </div>
-        <div className="space-y-4">
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const toggleFaq = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  return (
+    <section className="py-24 bg-gradient-to-br from-pink-50 via-white to-pink-50 text-center"> {/* Fondo degradado coherente */}
+      <div className="max-w-2xl mx-auto px-6"> {/* max-w-2xl para contenido centrado, px-6 para padding */}
+        <h2 className="text-4xl font-extrabold text-pink-800 mb-14 tracking-tight">Preguntas Frecuentes</h2> {/* Estilo de título coherente, mb-14 */}
+        
+        <div className="space-y-6"> {/* Más espacio entre tarjetas */}
           {faqs.map((faq, index) => (
-            <div
+            <motion.div // Envuelve cada FAQ para posibles animaciones futuras si decides que aparezcan
               key={index}
-              className="border rounded-2xl p-4 shadow-sm bg-white/80 hover:shadow-md transition-all"
+              initial={false} // importante para AnimatePresence dentro
+              className="rounded-3xl p-6 shadow-xl bg-white border-2 border-pink-100 // Más redondeado, sombra más fuerte, fondo blanco, borde sutil
+                         hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 // Mejor hover effect
+                         focus-within:ring-4 focus-within:ring-pink-200 focus-within:outline-none" // Focus para accesibilidad
             >
               <button
                 onClick={() => toggleFaq(index)}
-                className="w-full flex justify-between items-center text-left cursor-pointer"
+                className="w-full flex justify-between items-center text-left cursor-pointer focus:outline-none"
               >
-                <span className="text-lg font-medium text-gray-900">{faq.question}</span>
-                {openIndex === index ? <ChevronUp /> : <ChevronDown />}
+                <span className="text-xl font-semibold text-pink-800 leading-snug pr-4"> {/* Texto de pregunta más grande, color de marca, padding a la derecha */}
+                  {faq.question}
+                </span>
+                <motion.span
+                  animate={{ rotate: openIndex === index ? 180 : 0 }} // Anima la rotación del icono
+                  transition={{ duration: 0.3 }}
+                >
+                  {openIndex === index ? (
+                    <ChevronUp className="w-7 h-7 text-pink-500 flex-shrink-0" /> // Icono más grande y color de acento
+                  ) : (
+                    <ChevronDown className="w-7 h-7 text-pink-500 flex-shrink-0" />
+                  )}
+                </motion.span>
               </button>
               <AnimatePresence initial={false}>
                 {openIndex === index && (
@@ -63,18 +77,19 @@ export default function FaqsSection() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
+                    transition={{ duration: 0.3, ease: "easeOut" }} // Transición más suave
+                    className="overflow-hidden" // Asegura que el contenido no se desborde durante la animación
                   >
-                    <p className="mt-3 text-gray-700 text-sm leading-relaxed">
+                    <p className="mt-4 text-gray-700 text-base leading-relaxed pt-3 border-t border-pink-100"> {/* Texto de respuesta más grande, mejor interlineado, separador visual */}
                       {faq.answer}
                     </p>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
-    );
-  }
+      </div>
+    </section>
+  );
+}

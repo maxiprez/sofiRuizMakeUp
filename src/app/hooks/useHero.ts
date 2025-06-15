@@ -10,8 +10,7 @@ export default function useHero(onSearchCallback: (serviceId: string, date: stri
   const [selectedService, setSelectedService] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
 
-  const handleServiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const id = event.target.value;
+  const handleServiceChange = (id: string) => {
     const service = services.find((s: Service) => s.id === id);
     if (service) {
       setSelectedServiceId(service.id);
