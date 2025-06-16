@@ -18,7 +18,6 @@ function AvailabilityDates({ service_id, date }: AvailabilityDatesProps) {
   const { handleTimeSelect, isReserving, handleReserve, selectedTime, isOpenTelModal, closeModalPhone } = useServiceBooking();
   const { data: session } = useSession();
 
-  console.log("serviceId Availability: ", service_id);
   if (loading) {
     return (
       <div className="bg-gray-50 py-10 availabilityHours">
@@ -39,17 +38,21 @@ function AvailabilityDates({ service_id, date }: AvailabilityDatesProps) {
   return (
     <div className="bg-gray-50 py-10 availabilityHours scroll-m-20">
       <div className="container mx-auto text-center p-4">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Horarios Disponibles</h2>
+        {availableTimes.length === 0 && (
+          <p className="text-2xl font-semibold text-gray-800 mb-6">Sin horarios disponibles para esta fecha.</p>
+        )}
+        {availableTimes.length > 0 && (
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">Horarios Disponibles</h2>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {availableTimes.map((time) => (
-            <button
+            <Button
               key={time}
               disabled={isReserving}
               onClick={() => handleTimeSelect(time)}
+              text={time}
               className={`border border-pink-300 text-pink-500 rounded-md py-3 px-6 hover:bg-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1 cursor-pointer ${selectedTime === time ? 'bg-pink-500 text-white hover:bg-pink-400' : ''}`}
-            >
-              {time}
-            </button>
+              />
           ))}
         </div>
       </div>
