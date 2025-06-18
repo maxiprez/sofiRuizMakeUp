@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export default function useAvailability(service: string | null, date: string | null) {
+export default function useAvailability(service: string | null, date: string | null, duration: number) {
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -12,8 +12,9 @@ export default function useAvailability(service: string | null, date: string | n
     setError(null);
     let url = `/api/availability?date=${date}`;
     if (service && service !== 'Todos los servicios') {
-      url += `&service=${service}`;
+      url += `&service=${service}&duration=${duration}`;
     }
+
     fetch(url)
       .then(response => {
         if (!response.ok) {
@@ -31,7 +32,7 @@ export default function useAvailability(service: string | null, date: string | n
         setError(error.message);
         setLoading(false);
       });
-  }, [service, date]);
+  }, [service, date, duration]);
 
   return {
     availableTimes,

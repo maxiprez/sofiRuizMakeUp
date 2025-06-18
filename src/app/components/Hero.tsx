@@ -20,7 +20,7 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface HeroProps {
-  onSearch: (serviceId: string, date: string) => void;
+  onSearch: (serviceId: string, date: string, duration: number) => void;
 }
 
 export default function Hero({ onSearch }: HeroProps) {

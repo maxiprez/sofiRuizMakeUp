@@ -8,8 +8,10 @@ const serviceAccountKeyPath = path.resolve(process.cwd(), 'pages/api/config/serv
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    const { service, date: queryDate } = req.query;
-    console.log('Solicitud de disponibilidad recibida para:', service, queryDate);
+    const { service, date: queryDate, duration } = req.query;
+    const durationInMinutes = Number(duration);
+    
+    console.log('Solicitud de disponibilidad recibida para:', service,", ", queryDate);
 
     let date = '';
     if (typeof queryDate === 'string' && queryDate.trim() !== '') { // Verificar si es string y no está vacía después de quitar espacios
@@ -20,6 +22,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Manejar el caso en que 'date' no se proporciona o está vacía en la consulta
       return res.status(400).json({ error: 'La fecha es requerida.' });
     }
+
+
+    console.log("date: ", date);
+    console.log("duration: ", durationInMinutes);
 
     try {
       const auth = new google.auth.GoogleAuth({
@@ -53,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (events && Array.isArray(events)) {
         const selectedDateForExtraction = new Date(date);
         console.log('Fecha para extractAvailableTimes:', selectedDateForExtraction); // Imprime el objeto Date
-        availableTimes = extractAvailableTimes(events, selectedDateForExtraction); // Llama a extractAvailableTimes solo si 'events' es un array
+        availableTimes = extractAvailableTimes(events, selectedDateForExtraction, durationInMinutes); // Llama a extractAvailableTimes solo si 'events' es un array
       } else {
         console.warn('No se encontraron eventos en el calendario para la fecha:', date);
         availableTimes = []; // Si no hay eventos, devolvemos un array vacío
@@ -75,18 +81,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate: Date) {
+function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate: Date, duration: number) {
   console.log('Original selectedDate:', selectedDate);
   
   // Parse the date string to ensure exact date
   const [year, month, day] = selectedDate.toISOString().split('T')[0].split('-').map(Number);
   
-  // Create date with explicit parameters to avoid timezone shifts
+  // Crea un nuevo objeto Date con los parámetros explícitos
   const localDate = new Date(year, month - 1, day, 0, 0, 0, 0);
   const availableTimes: string[] = [];
-  const bookingDurationHours = 1; // Duración del turno en horas
-  const startTime = 9; // Hora de inicio del horario de atención (9 AM)
-  const endTime = 19; // Hora de fin del horario de atención (7 PM)
+  const startTime = 9; // Hora de inicio del horario de atención (9 AM) cambiar para que sea dinámico
+  const endTime = 19; // Hora de fin del horario de atención (7 PM) cambiar para que sea dinámico
 
   const dayOfWeek = localDate.getDay(); // Use getDay for local day calculation
 
@@ -99,26 +104,29 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
 
   // Generar todos los posibles horarios de inicio dentro del horario de atención
   const possibleSlots: Date[] = [];
-  for (let hour = startTime; hour < endTime; hour++) {
-    possibleSlots.push(new Date(
-      localDate.getFullYear(), 
-      localDate.getMonth(), 
-      localDate.getDate(), 
-      hour, 0, 0
-    ));
+  const stepMinutes = 30; //podría ser 30 o 60
+  const slotStart = new Date(localDate);
+  slotStart.setHours(startTime, 0, 0, 0);
+  
+  const slotEndLimit = new Date(localDate);
+  slotEndLimit.setHours(endTime, 0, 0, 0); // El último inicio posible
+  
+  while (slotStart.getTime() + duration * 60000 <= slotEndLimit.getTime()) {
+    possibleSlots.push(new Date(slotStart)); // Clonar
+    slotStart.setMinutes(slotStart.getMinutes() + stepMinutes);
   }
 
   // Filtrar los horarios que no están ocupados por eventos existentes
   possibleSlots.forEach((slot) => {
     const slotEnd = new Date(slot);
-    slotEnd.setHours(slotEnd.getHours() + bookingDurationHours);
+    slotEnd.setMinutes(slotEnd.getMinutes() + duration);
 
     const isSlotBooked = events.some((event) => {
       const eventStart = new Date(event.start?.dateTime || event.start?.date || '');
       const eventEnd = new Date(event.end?.dateTime || event.end?.date || '');
 
       // Verificar si el posible slot se superpone con algún evento existente
-      return (slot < eventEnd && slotEnd > eventStart);
+      return !(slot >= eventEnd || slotEnd <= eventStart);
     });
 
     if (!isSlotBooked) {

@@ -25,8 +25,6 @@ export default async function createEvent(eventData: EventData) { // eventData d
   const client = await auth.getClient() as JWT;
   const calendar = google.calendar({ version: 'v3', auth: client });
 
-  console.log("eventData", eventData);
-
   const event: calendar_v3.Schema$Event = {
     summary: eventData.summary,
     description: eventData.description,
@@ -39,11 +37,9 @@ export default async function createEvent(eventData: EventData) { // eventData d
       calendarId: process.env.CALENDAR_ID_TEST, // ¡Importante: Usa el ID del calendario de prueba!
       requestBody: event,
     });
-    console.log('Evento creado:', response.data);
     const eventId = response.data.id; 
     return { eventId, ...response.data }; // Devuelve la información del evento creado
   } catch (error) {
-    console.error('Error al crear evento:', error);
     console.error('Error details:', error);
     throw new Error(`Error al crear evento en Google Calendar: ${error}`); // Lanza el error para que se maneje más arriba
   }
@@ -66,7 +62,6 @@ export async function deleteEvent(eventId: string) {
       calendarId: process.env.CALENDAR_ID_TEST, // Usa el ID del calendario
       eventId: eventId,
     });
-    console.log(`Evento con ID ${eventId} borrado exitosamente.`);
   } catch (error) {
     console.error(`Error al borrar el evento con ID ${eventId}:`, error);
     throw new Error(`Error al borrar el evento del calendario: ${error}`);

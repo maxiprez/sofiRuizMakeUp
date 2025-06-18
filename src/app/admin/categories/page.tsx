@@ -5,7 +5,7 @@ import { SidebarAdmin } from "../../components/SidebarAdmin";
 import { SidebarInset } from "@/app/components/ui/sidebar";
 import HeaderAdmin from "../../components/HeaderAdmin";
 import { Card, CardDescription, CardTitle } from "@/app/components/ui/card";
-import { Calendar, Users, Scissors, Pencil, Pause, Play, Save, X } from "lucide-react";
+import { Calendar, Users, Scissors, Pencil, Pause, Play, Save, X, Clock, Sparkles } from "lucide-react";
 import useGetServices, { usePauseService, useResumeService, useSavePriceService } from "../../hooks/useABMServices";
 import { Button } from "@/app/components/ui/button";
 import { QuickActionCard } from "../../components/QuickActionsCardsAdmin";
@@ -25,6 +25,7 @@ export default function CategoriesPage() {
     setEditingId(id);
     setEditedPrices((prev: { [id: string]: number }) => ({ ...prev, [id]: currentPrice }));
   };
+
   
   const savePrice = (id: string) => {
     const priceStr = editedPrices[id];
@@ -34,6 +35,18 @@ export default function CategoriesPage() {
     }
     setEditingId(undefined);
   };
+
+  console.log("services", services);
+
+  const getServiceIcon = (serviceName?: string) => {
+    if (serviceName?.toLowerCase().includes("makeup")) {
+      return <Sparkles className="h-5 w-5 text-pink-600" />
+    }
+    if (serviceName?.toLowerCase().includes("ceja")) {
+      return <Scissors className="h-5 w-5 text-purple-600" />
+    }
+    return <Calendar className="h-5 w-5 text-pink-600" />
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
@@ -59,31 +72,35 @@ export default function CategoriesPage() {
                       <Card key={service.id} className="p-4 border-pink-200 hover:shadow-xl transition">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex items-start gap-4">
-                            <div className="p-3 bg-pink-100 rounded-xl">
-                              <Scissors className="h-6 w-6 text-pink-600" />
+                            <div className="md:p-3 p-2 bg-pink-100 rounded-xl">
+                              {getServiceIcon(service.name)}
                             </div>
-                            <div>
-                              <CardTitle className="text-2xl">{service.name}</CardTitle>
-                              <CardDescription className="text-lg text-gray-700">
-                                {editingId === service.id ? (
-                                    <input
-                                      type="number"
-                                      value={editedPrices[service.id] ?? Number(service.price)}
-                                      onChange={(e) =>
-                                        setEditedPrices((prev: { [id: string]: number }) => ({
-                                          ...prev,
-                                          [service.id]: Number(e.target.value),
-                                        }))
-                                      }
-                                      className="border rounded p-1"
-                                    />
-                                  ) : (
-                                    <span>${service.price.toLocaleString()}</span>
-                                  )}
-                              </CardDescription>
-                            </div>
+                            <div className="flex flex-col gap-2">
+                              <CardTitle className="md:text-2xl text-sm">{service.name}</CardTitle>
+                                <CardDescription className="text-lg text-gray-700">
+                                    {editingId === service.id ? (
+                                      <input
+                                          type="number"
+                                          value={editedPrices[service.id] ?? Number(service.price)}
+                                          onChange={(e) =>
+                                          setEditedPrices((prev: { [id: string]: number }) => ({
+                                            ...prev,
+                                            [service.id]: Number(e.target.value),
+                                          }))
+                                        }
+                                        className="border rounded p-1 md:text-lg text-sm md:w-24 w-16"
+                                      />
+                                    ) : (
+                                      <span className="md:text-lg text-sm">${service.price.toLocaleString()}</span>
+                                    )}
+                                </CardDescription>
+                               
+                                <CardDescription className="text-gray-700 flex items-center gap-2 text-sm">
+                                  <Clock className="h-4 w-4 text-pink-600" />
+                                  <span>{service.duration} minutos</span>
+                                </CardDescription>
+                              </div>
                           </div>
-
                           <div className="flex flex-col gap-2">
                             {editingId === service.id ? (
                                 <>
@@ -94,7 +111,7 @@ export default function CategoriesPage() {
                                     className="gap-1 text-pink-600 border-pink-300 hover:bg-pink-100 cursor-pointer"
                                   >
                                     <Save className="h-4 w-4" />
-                                    Guardar
+                                    <span className="md:block hidden">Guardar</span>
                                   </Button>
                                   <Button
                                     onClick={() => setEditingId(undefined)}
@@ -103,7 +120,7 @@ export default function CategoriesPage() {
                                     className="gap-1 cursor-pointer"
                                   >
                                     <X className="h-4 w-4"/>
-                                    Cancelar
+                                    <span className="md:block hidden">Cancelar</span>
                                   </Button>
                                 </>
                               ) : (
@@ -114,7 +131,7 @@ export default function CategoriesPage() {
                                   className="gap-1 cursor-pointer"
                                 >
                                   <Pencil className="h-4 w-4" />
-                                  Editar
+                                  <span className="md:block hidden">Editar</span>
                                 </Button>
                               )}
                               <Button 
@@ -123,7 +140,7 @@ export default function CategoriesPage() {
                                   disabled={service.status == false ? true : false}
                                   className="cursor-pointer gap-1 text-purple-600 border-purple-300 hover:bg-purple-100">
                                 <Pause className="h-4 w-4" />
-                                Pausar
+                                <span className="md:block hidden">Pausar</span>
                               </Button>
                               <Button
                                 onClick={() => resumeService(service.id)}
@@ -133,7 +150,7 @@ export default function CategoriesPage() {
                                 className="cursor-pointer gap-1 text-green-600 border-green-300 hover:bg-green-100"
                               >
                               <Play className="h-4 w-4" />
-                              Reanudar
+                              <span className="md:block hidden">Reanudar</span>
                             </Button>
                           </div>
                         </div>

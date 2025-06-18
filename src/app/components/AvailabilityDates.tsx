@@ -11,10 +11,11 @@ import Button from '@/app/components/CustomBtn';
 interface AvailabilityDatesProps {
   service_id: string | null;
   date: string | null;
+  duration: number;
 }
 
-function AvailabilityDates({ service_id, date }: AvailabilityDatesProps) {
-  const { availableTimes, loading, error, } = useAvailability(service_id, date);
+function AvailabilityDates({ service_id, date, duration }: AvailabilityDatesProps) {
+  const { availableTimes, loading, error, } = useAvailability(service_id, date, duration);
   const { handleTimeSelect, isReserving, handleReserve, selectedTime, isOpenTelModal, closeModalPhone } = useServiceBooking();
   const { data: session } = useSession();
 

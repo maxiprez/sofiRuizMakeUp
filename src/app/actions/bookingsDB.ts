@@ -107,11 +107,10 @@ export async function createBooking(bookingData: BookingData) {
       console.log('Email enviado con éxito');
     }
 
-
     const startDateTime = new Date(`${date}T${time}:00-03:00`);
-    const endDateTime = new Date(startDateTime.getTime() + 60 * 60000); // 1 hora después
+    const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);
     const calendarEvent = {
-      summary: `Turno: ${service_id}`,
+      summary: `Turno: ${service.name}`,
       description: `Turno reservado para ${userFullName}`,
       start: {
         dateTime: startDateTime.toISOString(),
@@ -152,7 +151,6 @@ export async function createBooking(bookingData: BookingData) {
     }
 
     revalidatePath("/");
-    console.log("Cita creada exitosamente.");
     return { success: true, data };
   } catch (error) {
     console.error("Error inesperado durante al crear la reserva: ", error);

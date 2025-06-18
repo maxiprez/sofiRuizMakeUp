@@ -20,6 +20,7 @@ export const useServiceBooking = () => {
   const [bookingSuccess, setBookingSuccess] = useState<boolean>(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
   const [hasShownTelError, setHasShownTelError] = useState(false);
+  const [selectedDuration, setSelectedDuration] = useState(0);
 
   useEffect(() => {
       if (bookingError === "telError") {
@@ -32,9 +33,10 @@ export const useServiceBooking = () => {
   }, [bookingError, openModalPhone, closeModalPhone, hasShownTelError]);
   
 
-  const handleSearch = useCallback((service_id: string, date: string) => {
+  const handleSearch = useCallback((service_id: string, date: string, durationService: number) => {
     setSelectedServiceId(service_id);
     setSelectedDate(date);
+    setSelectedDuration(durationService);
   }, []);
 
   const handleTimeSelect = (time: string) => {
@@ -162,6 +164,7 @@ export const useServiceBooking = () => {
   return {
     selectedServiceId,
     selectedDate,
+    selectedDuration,
     handleSearch,
     selectedTime,
     handleTimeSelect,
