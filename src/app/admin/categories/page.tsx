@@ -6,7 +6,7 @@ import { SidebarInset } from "@/app/components/ui/sidebar";
 import HeaderAdmin from "../../components/HeaderAdmin";
 import { Card, CardDescription, CardTitle } from "@/app/components/ui/card";
 import { Calendar, Users, Scissors, Pencil, Pause, Play, Save, X, Clock, Sparkles } from "lucide-react";
-import useGetServices, { usePauseService, useResumeService, useSavePriceService } from "../../hooks/useABMServices";
+import useGetServices, { usePauseService, useResumeService, useSavePriceDurationService } from "../../hooks/useABMServices";
 import { Button } from "@/app/components/ui/button";
 import { QuickActionCard } from "../../components/QuickActionsCardsAdmin";
 import NewServiceCard from "../../components/NewServiceCard";
@@ -17,26 +17,27 @@ export default function CategoriesPage() {
   const { services, loading, setServices } = useGetServices();
   const { stopService } = usePauseService(setServices);
   const { resumeService } = useResumeService(setServices);
-  const { savePriceService } = useSavePriceService(setServices);
+  const { savePriceDurationService } = useSavePriceDurationService(setServices);
   const [editingId, setEditingId] = useState<string>();
   const [editedPrices, setEditedPrices] = useState<{ [id: string]: number }>({});
+  const [editedDuration, setEditedDuration] = useState<{ [id: string]: number }>({});
 
-  const editPrice = (id: string, currentPrice: number) => {
+  const editPriceDuration = (id: string, currentPrice: number, currentDuration: number) => {
     setEditingId(id);
     setEditedPrices((prev: { [id: string]: number }) => ({ ...prev, [id]: currentPrice }));
+    setEditedDuration((prev: { [id: string]: number }) => ({ ...prev, [id]: currentDuration }));
   };
-
   
-  const savePrice = (id: string) => {
+  const savePriceDuration = (id: string) => {
     const priceStr = editedPrices[id];
     const price = Number(priceStr);
+    const durationStr = editedDuration[id];
+    const duration = Number(durationStr);
     if (!isNaN(price)) {
-      savePriceService(id, price);
+      savePriceDurationService(id, price, duration);
     }
     setEditingId(undefined);
   };
-
-  console.log("services", services);
 
   const getServiceIcon = (serviceName?: string) => {
     if (serviceName?.toLowerCase().includes("makeup")) {
@@ -96,8 +97,24 @@ export default function CategoriesPage() {
                                 </CardDescription>
                                
                                 <CardDescription className="text-gray-700 flex items-center gap-2 text-sm">
-                                  <Clock className="h-4 w-4 text-pink-600" />
-                                  <span>{service.duration} minutos</span>
+                                  {editingId === service.id ? (
+                                    <input
+                                      type="number"
+                                      value={editedDuration[service.id] ?? Number(service.duration)}
+                                      onChange={(e) =>
+                                        setEditedDuration((prev: { [id: string]: number }) => ({
+                                          ...prev,
+                                          [service.id]: Number(e.target.value),
+                                        }))
+                                      }
+                                      className="border rounded p-1 md:text-lg text-sm md:w-24 w-16"
+                                    />
+                                  ) : (
+                                    <>
+                                      <Clock className="h-4 w-4 text-pink-600" />
+                                      <span>{service.duration! < 60 ? service.duration! : service.duration! / 60} {service.duration! < 60 ? 'minutos' : service.duration! / 60 === 1 ? 'hora' : 'horas'}</span>
+                                    </>
+                                  )}
                                 </CardDescription>
                               </div>
                           </div>
@@ -105,7 +122,7 @@ export default function CategoriesPage() {
                             {editingId === service.id ? (
                                 <>
                                   <Button
-                                    onClick={() => savePrice(service.id)}
+                                    onClick={() => savePriceDuration(service.id)}
                                     variant="outline"
                                     size="sm"
                                     className="gap-1 text-pink-600 border-pink-300 hover:bg-pink-100 cursor-pointer"
@@ -125,7 +142,7 @@ export default function CategoriesPage() {
                                 </>
                               ) : (
                                 <Button
-                                  onClick={() => editPrice(service.id, service.price)}
+                                  onClick={() => editPriceDuration(service.id, service.price!, service.duration!)}
                                   variant="outline"
                                   size="sm"
                                   className="gap-1 cursor-pointer"

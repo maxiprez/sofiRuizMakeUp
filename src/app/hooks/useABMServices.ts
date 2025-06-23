@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getServices, createService, pauseService, resumeService, Service, editPriceService } from "../actions/abmServices";
+import { getServices, createService, pauseService, resumeService, Service, editPriceDurationService } from "../actions/abmServices";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -143,12 +143,12 @@ export function useResumeService(setServices: React.Dispatch<React.SetStateActio
     return { resumeService: handleResumeService, error }
 }
 
-export function useSavePriceService(setServices: React.Dispatch<React.SetStateAction<Service[]>>) {
+export function useSavePriceDurationService(setServices: React.Dispatch<React.SetStateAction<Service[]>>) {
     const [error, setError] = useState<string | null>(null);
   
-    const handleEditPriceService = async (id: string, price: number) => {
+    const handleEditPriceService = async (id: string, price: number, duration: number) => {
       try {
-        const result = await editPriceService(id, price);
+        const result = await editPriceDurationService(id, price, duration);
         if (result.error) {
           setError(result.error);
         } else {
@@ -177,6 +177,5 @@ export function useSavePriceService(setServices: React.Dispatch<React.SetStateAc
         });
       }
     };
-  
-    return { savePriceService: handleEditPriceService, error };
+    return { savePriceDurationService: handleEditPriceService, error };
   }
