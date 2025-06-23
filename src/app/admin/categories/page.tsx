@@ -29,11 +29,10 @@ export default function CategoriesPage() {
   };
   
   const savePriceDuration = (id: string) => {
-    const priceStr = editedPrices[id];
-    const price = Number(priceStr);
-    const durationStr = editedDuration[id];
-    const duration = Number(durationStr);
-    if (!isNaN(price)) {
+    const price = editedPrices[id] ?? Number(services.find(s => s.id === id)?.price);
+    const duration = editedDuration[id] ?? Number(services.find(s => s.id === id)?.duration);
+
+    if (!isNaN(price) && !isNaN(duration)) {
       savePriceDurationService(id, price, duration);
     }
     setEditingId(undefined);

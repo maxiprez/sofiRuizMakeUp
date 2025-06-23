@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getServices, createService, pauseService, resumeService, Service, editPriceDurationService } from "../actions/abmServices";
+import { getServices, createService, pauseService, resumeService, Service, editPriceDurationService } from "@/app/actions/abmServices";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -145,7 +145,7 @@ export function useResumeService(setServices: React.Dispatch<React.SetStateActio
 
 export function useSavePriceDurationService(setServices: React.Dispatch<React.SetStateAction<Service[]>>) {
     const [error, setError] = useState<string | null>(null);
-  
+ 
     const handleEditPriceService = async (id: string, price: number, duration: number) => {
       try {
         const result = await editPriceDurationService(id, price, duration);
@@ -154,28 +154,28 @@ export function useSavePriceDurationService(setServices: React.Dispatch<React.Se
         } else {
           setServices((prevServices: Service[]) =>
             prevServices.map((service) =>
-              service.id === id ? { ...service, price } : service
+              service.id === id ? { ...service, price, duration } : service
             )
           );
           Swal.fire({
             icon: "success",
-            title: "¡Precio editado exitosamente!",
-            text: "Precio editado.",
+            title: "¡Precio y duración editados exitosamente!",
+            text: "Servicio actualizado.",
             timer: 2000,
             showConfirmButton: false,
           });
         }
       } catch (error) {
-        console.error("Error al editar precio:", error);
-        setError("Error al editar precio.");
+        console.error("Error al editar precio/duración:", error);
+        setError("Error al editar precio/duración.");
         Swal.fire({
           icon: "error",
-          title: "¡Error al editar precio!",
-          text: "Error al editar precio.",
+          title: "¡Error al editar precio y duración!",
+          text: "Error al editar el servicio.",
           timer: 2000,
           showConfirmButton: false,
         });
       }
     };
     return { savePriceDurationService: handleEditPriceService, error };
-  }
+}
