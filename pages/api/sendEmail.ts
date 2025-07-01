@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     sendSmtpEmail.subject = subject;
     sendSmtpEmail.sender = { name: 'Sofi Ruiz Turno', email: process.env.EMAIL_SENDER! };
     sendSmtpEmail.to = [{ email: toEmail }];
+    sendSmtpEmail.cc = [{ email: process.env.EMAIL_CC! }];
     sendSmtpEmail.htmlContent = htmlContent;
 
     try {

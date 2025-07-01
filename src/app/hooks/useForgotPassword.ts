@@ -12,12 +12,6 @@ export const useForgotPassword = () => {
         setMessage(null);
         setLoading(true);
 
-        if (!email || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-            setMessage('Por favor, ingresa un email válido.');
-            setLoading(false);
-            return;
-        }
-
         const formData = new FormData();
         formData.set('email', email);
         const result = await resetPassword(formData);
