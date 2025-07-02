@@ -19,8 +19,5 @@ export async function searchDates() {
         console.error("Error al buscar citas:", error);
         return { error: "Error al buscar citas." };
     }
-
-    console.log("data search dates: ", data);
-
     return { data };
 }

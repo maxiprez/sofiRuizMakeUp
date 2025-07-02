@@ -17,7 +17,6 @@ export default function EmailValidateOk() {
       const { data: { session }, error } = await supabase.auth.getSession();
 
       if (session) {
-        console.log('✅ Sesión de usuario activa:', session.user.id);
         // Puedes redirigir a una página de dashboard, perfil, etc.
         router.push('/'); // Ejemplo: Redirige al usuario logueado
       } else {

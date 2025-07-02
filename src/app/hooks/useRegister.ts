@@ -46,8 +46,6 @@ export const useRegister = () => {
     formData.append("password", password);
   
     const result = await createUser(formData);
-
-    console.log("🚀 Resultado del registro: ", result);
   
     if (result?.error) {
       setError(result.error);
@@ -57,7 +55,6 @@ export const useRegister = () => {
   
     setIsSubmitting(false);
   };
-  
 
   return {
     handleSubmit,

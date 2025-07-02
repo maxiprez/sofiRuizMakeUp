@@ -9,6 +9,7 @@ import SignInGoogle from "@/app/components/SignInGoogle";
 import Input from "@/app/components/Input";
 import Button from "@/app/components/CustomBtn";
 import { useLogin } from "@/app/hooks/useLogin";
+import { usePassword } from "@/app/hooks/usePassword";
 
 const loginSchema = z.object({
   email: z.string().email("Por favor ingresa un email válido"),
@@ -19,6 +20,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const { onSubmit, isSubmitting, error } = useLogin();
+  const { showPassword } = usePassword();
   const {
     register,
     handleSubmit,
@@ -46,6 +48,8 @@ export default function Login() {
               labelText="Contraseña"
               id="password"
               type="password"
+              htmlType={showPassword ? 'text' : 'password'} 
+              button={true}
               {...register("password")}
               error={errors.password?.message}
             />

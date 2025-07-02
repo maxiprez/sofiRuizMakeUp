@@ -2,11 +2,11 @@
 
 import { usePathname } from 'next/navigation';
 import Header from './Header';
-import { User } from 'next-auth';
+import { SessionProps } from '@/app/layout';
 
-export default function HeaderWrapper({ user }: { user: User }) {
+export default function HeaderWrapper({ session }: SessionProps) {
   const pathname = usePathname();
-  const isAdminInAdminPage = pathname?.includes('/admin') && user?.role === 'admin';
+  const isAdminInAdminPage = pathname?.includes('/admin') && session?.user?.role === 'admin';
   if (isAdminInAdminPage) return null;
-  return <Header />;
+  return <Header session={session} />;
 }

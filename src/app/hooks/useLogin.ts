@@ -27,8 +27,6 @@ export const useLogin = () => {
         password: data.password,
         callbackUrl: "/"
       });
-
-      console.log("🚀 Resultado del login: ", result);
       
       if (result?.error) {
         if (result.error === "USER_NOT_VERIFIED") {

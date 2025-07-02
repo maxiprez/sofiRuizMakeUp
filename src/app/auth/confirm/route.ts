@@ -13,15 +13,12 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
 
-  console.log("🚀 Entró a /auth/confirm");
-
   if (token_hash && type) {
     const { data: { user }, error: verifyError } = await supabaseAdmin.auth.verifyOtp({
       type,
       token_hash,
     });
     if (!verifyError && user) {
-      console.log("🚀 Usuario verificado en Supabase Auth. ID:", user.id);
       const { error: updateError } = await supabaseAdmin.from("users").update({
         is_verified: true,
       }).eq("id", user.id);
@@ -31,7 +28,6 @@ export async function GET(request: NextRequest) {
         // Podrías redirigir a una página de error más específica si el problema es la base de datos
         redirect('/authCodeError?reason=db_update_failed');
       } else {
-        console.log("🚀 Usuario verificado y tabla 'users' actualizada correctamente.");
         redirect('/emailValidateOk');
       }
     } else {

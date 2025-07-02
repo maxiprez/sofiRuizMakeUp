@@ -23,10 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'La fecha es requerida.' });
     }
 
-
-    console.log("date: ", date);
-    console.log("duration: ", durationInMinutes);
-
     try {
       const auth = new google.auth.GoogleAuth({
         keyFile: serviceAccountKeyPath, // Use the resolved absolute path
@@ -58,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       let availableTimes: string[] = [];
       if (events && Array.isArray(events)) {
         const selectedDateForExtraction = new Date(date);
-        console.log('Fecha para extractAvailableTimes:', selectedDateForExtraction); // Imprime el objeto Date
+
         availableTimes = extractAvailableTimes(events, selectedDateForExtraction, durationInMinutes); // Llama a extractAvailableTimes solo si 'events' es un array
       } else {
         console.warn('No se encontraron eventos en el calendario para la fecha:', date);
