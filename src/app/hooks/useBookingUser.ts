@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import CancelationEmail from '../components/emails/CancelationEmail';
 
 interface Booking {
   id: number;
@@ -39,7 +40,7 @@ interface UseBookingUserResult {
 }
 
 export default function useBookingUser(): UseBookingUserResult {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -98,8 +99,10 @@ export default function useBookingUser(): UseBookingUserResult {
 
   const handleCancelBookingConfirm = async (bookingId: number) => {
     try {
-      //const bookingToCancel = bookings.find((b) => b.id === bookingId);
-      // const eventId = bookingToCancel?.google_event_id;
+      const bookingToCancel = bookings.find((b) => b.id === bookingId);
+
+      console.log("Booking to cancel: ", bookingToCancel);
+    
 
       const response = await fetch('/api/user/bookings/cancel', {
         method: 'POST',
@@ -109,6 +112,74 @@ export default function useBookingUser(): UseBookingUserResult {
         body: JSON.stringify({ bookingId }),
         
       });
+
+
+      // Send cancellation email
+      const userEmail = session?.user?.email;
+      if (userEmail) {
+        const subject = "Cancelación de turno";
+        
+        const formatDate = (dateString: string | undefined, timeString: string | undefined) => {
+          if (!dateString) return 'Fecha no disponible';
+          
+          try {
+            // Basic date parsing - assumes dateString is in YYYY-MM-DD format
+            const [year, month, day] = dateString.split('-').map(Number);
+            const date = new Date(year, month - 1, day); // month is 0-indexed in JS Date
+            
+            // Add time if available
+            if (timeString) {
+              const [hours, minutes] = timeString.split(':').map(Number);
+              date.setHours(hours, minutes, 0, 0);
+            }
+            
+            return date.toLocaleDateString('es-AR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            }).replace(/\//g, '-'); // Convert DD/MM/YYYY to DD-MM-YYYY
+            
+          } catch (error) {
+            console.error('Error formatting date:', error);
+            return dateString; // Return original if parsing fails
+          }
+        };
+
+        const formatTime = (timeString: string | undefined) => {
+          if (!timeString) return '--:--';
+          try {
+            const [hours, minutes] = timeString.split(':').map(part => part.padStart(2, '0'));
+            return `${hours}:${minutes}`;
+          } catch (error) {
+            console.error('Error formatting time:', error);
+            return timeString;
+          }
+        };
+
+        const htmlContent = CancelationEmail({
+          userFullName: session?.user?.name ?? '',
+          service: bookingToCancel?.services?.name ?? 'Servicio',
+          date: bookingToCancel?.date ? formatDate(bookingToCancel?.date, bookingToCancel?.time) : '',
+          time: bookingToCancel?.time ? formatTime(bookingToCancel?.time) : ''
+        });
+
+        const emailResponse = await fetch('/api/sendEmail', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            toEmail: userEmail,
+            ccEmail: process.env.EMAIL_CC!,
+            subject,
+            htmlContent,
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          console.error('Error al enviar el correo de cancelación');
+        }
+      }
      
       if (response.ok) {
         setBookings(bookings.filter((booking) => booking.id !== bookingId));

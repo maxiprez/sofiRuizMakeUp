@@ -39,7 +39,7 @@ export async function resetPassword(formData: FormData) {
       return { error: "Error al actualizar el usuario." };
     }
 
-    const frontendUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const frontendUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000';
     const resetLink = `${frontendUrl}/resetPassword?token=${resetToken}`;
     const htmlContent = ResetPasswordEmail({ userFullName: existingUser.name, resetLink });
 

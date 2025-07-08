@@ -1,7 +1,7 @@
 "use client";
 
 import { SidebarProvider } from "@/app/components/ui/sidebar";
-import { SidebarAdmin } from "../../components/SidebarAdmin";
+import { SidebarAdmin } from "../../components/Sidebaradmin";
 import { SidebarInset } from "@/app/components/ui/sidebar";
 import HeaderAdmin from "../../components/HeaderAdmin";
 import { Calendar, Users, Scissors } from "lucide-react";

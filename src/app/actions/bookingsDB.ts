@@ -4,7 +4,6 @@ import { createClient } from "@supabase/supabase-js";
 import { auth } from "../../../auth";
 import { revalidatePath } from "next/cache";
 import ConfirmationEmail from "@/app/components/emails/ConfirmationEmail";
-// import deleteEvent from "../../../pages/api/deleteCalendarEvent";
  
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;

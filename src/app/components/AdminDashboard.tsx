@@ -1,7 +1,7 @@
 "use client";
 
 import HeaderAdmin from "./HeaderAdmin"
-import { SidebarAdmin } from "./SidebarAdmin"
+import { SidebarAdmin } from "./Sidebaradmin"
 import {
     Calendar,
     Users,

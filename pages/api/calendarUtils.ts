@@ -59,9 +59,10 @@ export async function deleteEvent(eventId: string) {
 
   try {
     await calendar.events.delete({
-      calendarId: process.env.CALENDAR_ID_TEST, // Usa el ID del calendario
+      calendarId: process.env.CALENDAR_ID_TEST,
       eventId: eventId,
     });
+    console.log(`Evento con ID ${eventId} borrado exitosamente`);
   } catch (error) {
     console.error(`Error al borrar el evento con ID ${eventId}:`, error);
     throw new Error(`Error al borrar el evento del calendario: ${error}`);
