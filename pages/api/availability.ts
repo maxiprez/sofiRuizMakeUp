@@ -10,8 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { service, date: queryDate, duration } = req.query;
     const durationInMinutes = Number(duration);
-    
-    console.log('Solicitud de disponibilidad recibida para:', service,", ", queryDate);
+
+    console.log('Solicitud de disponibilidad recibida para:', service, ", ", queryDate);
 
     let date = '';
     if (typeof queryDate === 'string' && queryDate.trim() !== '') { // Verificar si es string y no está vacía después de quitar espacios
@@ -78,63 +78,70 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate: Date, duration: number) {
-  console.log('Original selectedDate:', selectedDate);
-  
-  // Parse the date string to ensure exact date
   const [year, month, day] = selectedDate.toISOString().split('T')[0].split('-').map(Number);
-  
-  // Crea un nuevo objeto Date con los parámetros explícitos
   const localDate = new Date(year, month - 1, day, 0, 0, 0, 0);
   const availableTimes: string[] = [];
-  const startTime = 9; // Hora de inicio del horario de atención (9 AM) cambiar para que sea dinámico
-  const endTime = 19; // Hora de fin del horario de atención (7 PM) cambiar para que sea dinámico
+  const startTime = 9; // Hora de inicio del horario de atención (9 AM)
+  const endTime = 19; // Hora de fin del horario de atención (7 PM)
+  const stepMinutes = 30;
 
-  const dayOfWeek = localDate.getDay(); // Use getDay for local day calculation
-
-  // Verificar si el día de la semana está dentro del horario de atención (Lunes a Sábado)
+  const dayOfWeek = localDate.getDay();
   const isWithinWorkDays = dayOfWeek >= 1 && dayOfWeek <= 6;
 
   if (!isWithinWorkDays) {
-    return []; // No hay disponibilidad fuera del horario de atención
+    return [];
   }
 
-  // Generar todos los posibles horarios de inicio dentro del horario de atención
-  const possibleSlots: Date[] = [];
-  const stepMinutes = 30; //podría ser 30 o 60
+  // Calculate total minutes in a day for indexing
+  //const totalDayMinutes = 24 * 60;
+  const occupiedSlots = new Set<number>(); // Use a Set for efficient lookups
+
+  // Populate occupiedSlots based on existing events
+  events.forEach((event) => {
+    const eventStart = new Date(event.start?.dateTime || event.start?.date || '');
+    const eventEnd = new Date(event.end?.dateTime || event.end?.date || '');
+
+    // Ensure event times are on the selected date for accurate indexing
+    if (eventStart.toDateString() === localDate.toDateString()) {
+      const startMinutes = eventStart.getHours() * 60 + eventStart.getMinutes();
+      const endMinutes = eventEnd.getHours() * 60 + eventEnd.getMinutes();
+
+      for (let i = startMinutes; i < endMinutes; i += stepMinutes) {
+        occupiedSlots.add(Math.floor(i / stepMinutes));
+      }
+    }
+  });
+
+  // Generate possible slots and check for availability
   const slotStart = new Date(localDate);
   slotStart.setHours(startTime, 0, 0, 0);
-  
+
   const slotEndLimit = new Date(localDate);
-  slotEndLimit.setHours(endTime, 0, 0, 0); // El último inicio posible
-  
+  slotEndLimit.setHours(endTime, 0, 0, 0);
+
   while (slotStart.getTime() + duration * 60000 <= slotEndLimit.getTime()) {
-    possibleSlots.push(new Date(slotStart)); // Clonar
-    slotStart.setMinutes(slotStart.getMinutes() + stepMinutes);
-  }
+    const currentSlotStartMinutes = slotStart.getHours() * 60 + slotStart.getMinutes();
+    const currentSlotEndMinutes = currentSlotStartMinutes + duration;
 
-  // Filtrar los horarios que no están ocupados por eventos existentes
-  possibleSlots.forEach((slot) => {
-    const slotEnd = new Date(slot);
-    slotEnd.setMinutes(slotEnd.getMinutes() + duration);
-
-    const isSlotBooked = events.some((event) => {
-      const eventStart = new Date(event.start?.dateTime || event.start?.date || '');
-      const eventEnd = new Date(event.end?.dateTime || event.end?.date || '');
-
-      // Verificar si el posible slot se superpone con algún evento existente
-      return !(slot >= eventEnd || slotEnd <= eventStart);
-    });
+    let isSlotBooked = false;
+    for (let i = currentSlotStartMinutes; i < currentSlotEndMinutes; i += stepMinutes) {
+      if (occupiedSlots.has(Math.floor(i / stepMinutes))) {
+        isSlotBooked = true;
+        break;
+      }
+    }
 
     if (!isSlotBooked) {
-      // Formatear la hora de inicio del slot como una cadena (ej. "09:00 AM")
-      const formattedTime = slot.toLocaleTimeString('es-AR', { 
-        hour: '2-digit', 
+      const formattedTime = slotStart.toLocaleTimeString('es-AR', {
+        hour: '2-digit',
         minute: '2-digit',
         hour12: false
       });
       availableTimes.push(formattedTime);
     }
-  });
+
+    slotStart.setMinutes(slotStart.getMinutes() + stepMinutes);
+  }
 
   return availableTimes;
 }
