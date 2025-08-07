@@ -142,6 +142,5 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
 
     slotStart.setMinutes(slotStart.getMinutes() + stepMinutes);
   }
-
   return availableTimes;
 }
