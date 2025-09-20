@@ -1,6 +1,6 @@
 "use client";
 
-import { updatePassword } from '@/app/actions/resetPassword';
+import { updatePassword } from '@/app/_actions/resetPassword.action';
 import { useState, useEffect } from 'react';
 
 export const useResetPassword = () => {

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { resetPassword } from "@/app/actions/resetPassword";
+import { resetPassword } from "@/app/_actions/resetPassword.action";
 
 export const useForgotPassword = () => {
     const [email, setEmail] = useState('');

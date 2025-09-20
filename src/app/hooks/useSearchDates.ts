@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { searchDates } from "../actions/searchDates";
+import { searchDates } from "../_actions/searchDates.action";
 
 interface Booking {
     created_at: string;
