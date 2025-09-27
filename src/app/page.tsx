@@ -10,9 +10,9 @@ export default function Home() {
   return (
     <main className="flex flex-col">
       <Hero onSearch={handleSearch} />
-        <main>
+        <div>
           {selectedDate && <AvailabilityDates service_id={selectedServiceId} date={selectedDate} duration={selectedDuration} />}
-        </main>
+        </div>
       <Footer />
     </main>
   );
