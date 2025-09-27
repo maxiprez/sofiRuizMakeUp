@@ -73,10 +73,10 @@ export async function resumeService(id: string): Promise<ServiceResponse> {
     return { data: data?.[0] };
 }
 
-export async function editPriceService(id: string, price: number): Promise<ServiceResponse> {
+export async function editPriceDurationService(id: string, price: number, duration: number): Promise<ServiceResponse> {
     const { data, error } = await supabase
     .from('services')
-    .update({ price })
+    .update({ price, duration })
     .eq('id', id)
 
     if(error){

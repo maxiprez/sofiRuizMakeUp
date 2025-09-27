@@ -131,7 +131,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user, account, profile }) {
 
       if (account?.provider === 'google' && profile?.email && profile?.name) {
-        console.log("Inicio de sesión con Google detectado para:", profile.email);
+
         try {
           const { data: existingUser, error: selectError } = await supabaseClient
             .from('users')

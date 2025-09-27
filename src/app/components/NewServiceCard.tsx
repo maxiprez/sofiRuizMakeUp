@@ -1,11 +1,11 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/app/components/ui/dialog";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { createService } from "@/app/actions/abmServices";
+import { Button } from "@/app/components/ui/button";
+import { createService } from "@/app/_actions/abmServices.action";
 
 export default function NewServiceCard() {
   const [open, setOpen] = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { resetPassword } from "@/app/actions/resetPassword";
+import { resetPassword } from "@/app/_actions/resetPassword.action";
 
 export const useForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -11,12 +11,6 @@ export const useForgotPassword = () => {
         e.preventDefault();
         setMessage(null);
         setLoading(true);
-
-        if (!email || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-            setMessage('Por favor, ingresa un email válido.');
-            setLoading(false);
-            return;
-        }
 
         const formData = new FormData();
         formData.set('email', email);

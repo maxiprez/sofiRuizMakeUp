@@ -1,5 +1,5 @@
 "use client";
-import { signInGoogleAction } from "@/app/actions/signInGoogle";
+import { signInGoogleAction } from "@/app/_actions/signInGoogle.action";
 
 export default function SignInGoogle() {
   return (

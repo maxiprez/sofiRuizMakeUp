@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useSession, signOut } from "next-auth/react"
+import { signOut } from "next-auth/react"
 import { useState, useEffect } from "react"
 import { TimesIcon, HamburgerMenu, ChevronDown } from "@/app/icons/icons"
 import {
@@ -10,12 +10,13 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+} from "@/app/components/ui/dropdown-menu"
+import { Button } from "@/app/components/ui/button"
+import { Avatar, AvatarFallback } from "@/app/components/ui/avatar"
+import { SessionProps } from "@/app/layout"
 
-export default function Header() {
-  const { data: session } = useSession();
+export default function Header({ session }: SessionProps) {
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const toggleMobileMenu = () => {

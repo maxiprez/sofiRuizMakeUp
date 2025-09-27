@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/app/components/ui/avatar"
 import { BarChart3, Calendar, Users, Scissors, Clock, Home } from "lucide-react"
 import {
     Sidebar,
@@ -11,7 +11,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/app/components/ui/sidebar"
 
 const menuItems = [
     {
