@@ -1,12 +1,25 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Header from './Header';
-import { SessionProps } from '@/app/layout';
+import { Session } from 'next-auth';
 
-export default function HeaderWrapper({ session }: SessionProps) {
+interface HeaderWrapperProps {
+  session: Session | null;
+}
+
+export default function HeaderWrapper({ session: initialSession }: HeaderWrapperProps) {
+  const { data: session } = useSession();
   const pathname = usePathname();
-  const isAdminInAdminPage = pathname?.includes('/admin') && session?.user?.role === 'admin';
-  if (isAdminInAdminPage) return null;
-  return <Header session={session} />;
+  
+  const currentSession = session || initialSession;
+  
+  const isAdminInAdminPage = pathname?.includes('/admin') && currentSession?.user?.role === 'admin';
+  
+  if (isAdminInAdminPage) {
+    return null;
+  }
+  
+  return <Header session={currentSession} />;
 }

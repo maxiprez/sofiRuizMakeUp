@@ -23,6 +23,10 @@ export default function Header({ session }: SessionProps) {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+  }
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -36,10 +40,12 @@ export default function Header({ session }: SessionProps) {
   return (
     <header className="bg-white shadow-md sticky top-0 p-4 z-30">
       <div className="container mx-auto flex items-center justify-between relative">
-        {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-pink-500">
-          SofiRuiz
-        </Link>
+        {/* Logo - Aseguramos que el logo esté fuera del menú desplegable */}
+        <div className="z-20">
+          <Link href="/" className="text-2xl font-bold text-pink-500 hover:text-pink-600">
+            SofiRuiz
+          </Link>
+        </div>
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-4 gap-8 pr-6">
@@ -98,7 +104,7 @@ export default function Header({ session }: SessionProps) {
         </nav>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden z-20">
+        <div className="md:hidden z-30">
           <Button
             variant="ghost"
             size="icon"
@@ -119,14 +125,26 @@ export default function Header({ session }: SessionProps) {
         className={`md:hidden absolute top-full left-0 w-full bg-white shadow-md z-10 transform transition-all duration-300 ${isMobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
       >
         <nav className="flex flex-col p-4 space-y-2">
-          <Link href="/my-services" className="text-gray-700 hover:text-pink-500 block py-2">
+          <Link 
+            href="/my-services" 
+            className="text-gray-700 hover:text-pink-500 block py-2"
+            onClick={closeMobileMenu}
+          >
             Mis servicios
           </Link>
-          <Link href="/faqs" className="text-gray-700 hover:text-pink-500 block py-2">
+          <Link 
+            href="/faqs" 
+            className="text-gray-700 hover:text-pink-500 block py-2"
+            onClick={closeMobileMenu}
+          >
             Preguntas frecuentes
           </Link>
           {session?.user?.role === "admin" && (
-            <Link href="/admin" className="text-gray-700 hover:text-pink-500 block py-2">
+            <Link 
+              href="/admin" 
+              className="text-gray-700 hover:text-pink-500 block py-2"
+              onClick={closeMobileMenu}
+            >
               Admin
             </Link>
           )}
@@ -155,7 +173,11 @@ export default function Header({ session }: SessionProps) {
                   className="w-56 bg-white border border-gray-200 shadow-lg rounded-md"
                 >
                   <DropdownMenuItem asChild>
-                    <Link href="/my-account" className="cursor-pointer">
+                    <Link 
+                      href="/my-account" 
+                      className="cursor-pointer"
+                      onClick={closeMobileMenu}
+                    >
                       Mi cuenta
                     </Link>
                   </DropdownMenuItem>
@@ -170,7 +192,11 @@ export default function Header({ session }: SessionProps) {
               </DropdownMenu>
             </div>
           ) : (
-            <Link href="/login" className="text-gray-700 hover:text-pink-500 block py-2">
+            <Link 
+              href="/login" 
+              className="text-gray-700 hover:text-pink-500 block py-2"
+              onClick={closeMobileMenu}
+            >
               Iniciar Sesión
             </Link>
           )}
