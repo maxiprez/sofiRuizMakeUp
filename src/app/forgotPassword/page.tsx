@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
             </Link>
           </>
         )}
-        {!isError && (
+        {!isError && !message && (
           <form onSubmit={handleForgotPassword}>
             <Input labelText="E-mail" inputMode="email" name="email" htmlType="email" id="email" required value={email} onChange={(e) => setEmail(e.target.value)} button={false} />
             <Button
