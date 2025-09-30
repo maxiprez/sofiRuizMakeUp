@@ -74,8 +74,6 @@ export async function createUser(formData: FormData) {
         return { error: "Error al crear la cuenta." };
     }
 
-    console.log("auth error: ", authError)
-
     if (authError) {
       console.error("Error al crear la cuenta en Supabase Auth:", authError.message);
       return { error: "Error al crear la cuenta. Intentá de nuevo en unos minutos." };

@@ -8,10 +8,8 @@ const serviceAccountKeyPath = path.resolve(process.cwd(), 'pages/api/config/serv
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    const { service, date: queryDate, duration } = req.query;
+    const { date: queryDate, duration } = req.query;
     const durationInMinutes = Number(duration);
-
-    console.log('Solicitud de disponibilidad recibida para:', service, ", ", queryDate);
 
     let date = '';
     if (typeof queryDate === 'string' && queryDate.trim() !== '') { // Verificar si es string y no está vacía después de quitar espacios

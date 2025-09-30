@@ -100,10 +100,6 @@ export default function useBookingUser(): UseBookingUserResult {
   const handleCancelBookingConfirm = async (bookingId: number) => {
     try {
       const bookingToCancel = bookings.find((b) => b.id === bookingId);
-
-      console.log("Booking to cancel: ", bookingToCancel);
-    
-
       const response = await fetch('/api/user/bookings/cancel', {
         method: 'POST',
         headers: {

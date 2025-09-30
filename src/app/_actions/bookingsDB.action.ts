@@ -102,8 +102,6 @@ export async function createBooking(bookingData: BookingData) {
     if (!response.ok) {
       console.error('Error al enviar el correo de confirmación');
       return { success: false, error: 'Error al enviar el correo de confirmación' };
-    } else {
-      console.log('Email enviado con éxito');
     }
 
     const startDateTime = new Date(`${date}T${time}:00-03:00`);
