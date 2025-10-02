@@ -34,7 +34,7 @@ export default async function createEvent(eventData: EventData) { // eventData d
 
   try {
     const response = await calendar.events.insert({
-      calendarId: process.env.CALENDAR_ID_TEST, // ¡Importante: Usa el ID del calendario de prueba!
+      calendarId: process.env.CALENDAR_ID, // ¡Importante: Usa el ID del calendario de prueba!
       requestBody: event,
     });
     const eventId = response.data.id; 
@@ -59,7 +59,7 @@ export async function deleteEvent(eventId: string) {
 
   try {
     await calendar.events.delete({
-      calendarId: process.env.CALENDAR_ID_TEST,
+      calendarId: process.env.CALENDAR_ID,
       eventId: eventId,
     });
   } catch (error) {

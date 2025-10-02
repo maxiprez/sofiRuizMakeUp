@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       timeMax.setHours(23, 59, 59, 999);
       timeMax.setUTCHours(23, 59, 59, 999); // Asegurar que la hora es 23:59:59.999 UTC
 
-      const calendarId = process.env.CALENDAR_ID_TEST; // quitar el _TEST en caso que queremos usar el calendario real
+      const calendarId = process.env.CALENDAR_ID; // quitar el _TEST en caso que queremos usar el calendario real
 
       const eventsResponse = await calendar.events.list({
         calendarId: calendarId,
