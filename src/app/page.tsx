@@ -6,16 +6,13 @@ import Footer from "@/app/components/Footer";
 import { useServiceBooking } from "@/app/hooks/useServiceBooking";
 
 export default function Home() {
-  const { selectedService, selectedDate, handleSearch } = useServiceBooking();
+  const { selectedServiceId, selectedDate, selectedDuration, handleSearch } = useServiceBooking();
   return (
-    <main className="flex flex-col min-h-screen">
+    <main className="flex flex-col">
       <Hero onSearch={handleSearch} />
-        <main className="flex-grow py-10">
-          <div className="container mx-auto text-center">
-            {/* El contenido principal ahora podría ir aquí o dentro del Hero */}
-          </div>
-          {selectedDate && <AvailabilityDates service={selectedService} date={selectedDate} />}
-        </main>
+        <div>
+          {selectedDate && <AvailabilityDates service_id={selectedServiceId} date={selectedDate} duration={selectedDuration} />}
+        </div>
       <Footer />
     </main>
   );

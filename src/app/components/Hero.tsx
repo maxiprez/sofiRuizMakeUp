@@ -1,49 +1,101 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import useHero from '@/app/hooks/useHero';
-import Button from '@/app/components/Button';
-import { ChevronDown } from '@/app/icons/icons';
+import { Button } from '@/app/components/ui/button';
+import useGetServices from '@/app/hooks/useABMServices';
+import { Service } from '@/app/_actions/abmServices.action';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/app/components/ui/popover";
+import { Calendar } from "@/app/components/ui/calendar";
+import { format, parseISO, startOfToday } from "date-fns";
+import { es } from 'date-fns/locale';
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface HeroProps {
-  onSearch: (service: string, date: string) => void;
+  onSearch: (serviceId: string, date: string, duration: number) => void;
 }
 
-function Hero({ onSearch }: HeroProps) {
-  const { selectedService, handleServiceChange, handleDateChange, selectedDate, handleSearchAndScroll } = useHero(onSearch);
+export default function Hero({ onSearch }: HeroProps) {
+  const { selectedServiceId, handleServiceChange, selectedDate, handleDateChange, handleSearchAndScroll } = useHero(onSearch);
+  const { services } = useGetServices();
+  const dateObj = selectedDate ? parseISO(selectedDate) : undefined;
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  const handleDateSelect = (date: Date | undefined) => {
+    const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
+    handleDateChange(formattedDate);
+    setIsCalendarOpen(false);
+  };
+  const disabledDayStyle = {
+    textDecoration: 'line-through',
+    color: '#a0aec0',
+    opacity: 0.7 
+  };
+  const today = startOfToday()
 
   return (
-    <section className="bg-gradient-to-br from-gray-100 to-pink-100 py-20">
+    <section className="bg-gradient-to-br from-gray-100 to-pink-100 md:py-20 py-10">
       <div className="container mx-auto text-center">
         <h1 className="lg:text-4xl text-2xl font-bold text-gray-800 mb-6">
           Reserva tus turnos de <span className="text-pink-600">Make Up</span> y <span className="text-pink-600">Perfilado de Cejas</span>
         </h1>
         <p className="text-lg text-gray-600 mb-8">Encuentra la disponibilidad perfecta para tu próximo servicio de belleza.</p>
-        <div className="bg-white flex flex-col lg:gap-2 gap-2 sm:flex-row space-y-4 sm:space-x-4 justify-center align-center p-8">
-          <div className="w-full sm:w-auto mb-0 relative">
-            <select
-              className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500"
-              value={selectedService}
-              onChange={handleServiceChange}
-              required
-              id="serviceSelect"
-              name="service"
-              aria-label="Selecciona un servicio"
-            >
-              <option value="Todos los servicios" disabled className="text-gray-400">Todos los servicios</option>
-              <option value="Make Up">Make Up</option>
-              <option value="Make Up Express">Make Up Express</option>
-              <option value="Perfilado de Cejas">Perfilado de Cejas</option>
-            </select>
-            <ChevronDown color="#f472b6" size={22} className="absolute right-2 top-3 transition-transform duration-200" />
-          </div>
-          <div className="relative w-full sm:w-auto mb-0"> {/* Quitar margen inferior del contenedor del input date */}
-            <input type="date" className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-pink-500" value={selectedDate} onChange={(event) => handleDateChange(event.target.value)} required id="dateInput" name="date" aria-label="Selecciona una fecha" />
-          </div>
-          <Button text="Ver Disponibilidad" onClick={handleSearchAndScroll} className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto cursor-pointer" id="searchButton" disabled={false} />
+        <div className="bg-white p-8 rounded-lg shadow-xl flex flex-col lg:flex-row lg:gap-4 gap-4 justify-center items-center">
+          <Select value={selectedServiceId} onValueChange={handleServiceChange} name="service">
+            <SelectTrigger className="w-full sm:w-[240px] min-h-12 border-gray-300 focus:ring-pink-500 focus:border-pink-500">
+              <SelectValue placeholder="Todos los servicios" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border-gray-200">
+              {services.map((service: Service) => (
+                <SelectItem key={service.id} value={service.id}>
+                  {service.name} ${service.price.toLocaleString()}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full sm:w-55 justify-start text-left font-normal min-h-12",
+                  !dateObj && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {dateObj ? format(dateObj, "PPP", { locale: es }) : <span>Seleccioná una fecha</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 bg-white border-gray-200">
+              <Calendar
+                mode="single"
+                selected={dateObj}
+                onSelect={handleDateSelect}
+                locale={es}
+                disabled={{ before: today }}
+                modifiersStyles={{ disabled: disabledDayStyle }}
+              />
+            </PopoverContent>
+          </Popover>
+          <Button
+            onClick={handleSearchAndScroll}
+            className="bg-pink-500 hover:bg-pink-600 md:text-base text-sm text-white font-bold min-h-12 py-4 px-6 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto cursor-pointer"
+            id="searchButton"
+            disabled={!selectedServiceId || !selectedDate}
+          >
+            Ver Disponibilidad
+          </Button>
         </div>
       </div>
     </section>
   );
 }
-export default Hero;

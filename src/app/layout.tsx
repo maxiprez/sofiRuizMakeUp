@@ -1,23 +1,27 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AuthProvider from "@/app/providers/AuthProvider";
-import Header from "@/app/components/Header";
+import HeaderWrapper from "@/app/components/HeaderWrapper";
+import { auth } from "../../auth";
+import { Session } from "next-auth";
 
 export const metadata: Metadata = {
   title: "Sofía Ruiz Make up",
-  description: "App gestión de turnos",
+  description: "App gestión de turnos"
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export interface SessionProps {
+  session: Session | null;
+}
+
+export default async function RootLayout({ children,}: {children: React.ReactNode; }) {
+  const session = await auth();
+
   return (
-    <html lang="en">
+    <html lang="es">
       <body>
         <AuthProvider>
-          <Header />
+          <HeaderWrapper session={session} />
           <main>{children}</main>
         </AuthProvider>
       </body>

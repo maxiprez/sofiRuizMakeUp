@@ -1,51 +1,53 @@
 import { useState, useCallback, useEffect } from 'react';
-import { createBooking } from '../actions/bookingsDB';
+import { createBooking } from '../_actions/bookingsDB.action';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import { useModalTel } from '../hooks/useModalTel';
+import { useModalPhone } from './useModalPhone';
 interface Session {
   user: {
     name?: string | null;
     email?: string | null;
-    image?: string | null;
     tel?: string | null;
   };
 }
 
 export const useServiceBooking = () => {
-  const { isOpenTelModal, openModalTel, closeModalTel } = useModalTel();
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const { isOpenTelModal, openModalPhone, closeModalPhone } = useModalPhone();
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>('');
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isReserving, setIsReserving] = useState<boolean>(false);
   const [bookingSuccess, setBookingSuccess] = useState<boolean>(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
   const [hasShownTelError, setHasShownTelError] = useState(false);
+  const [selectedDuration, setSelectedDuration] = useState(0);
 
   useEffect(() => {
       if (bookingError === "telError") {
-        openModalTel();
+        openModalPhone();
         setHasShownTelError(true);
       }
       if (bookingError !== "telError" && hasShownTelError) {
         setHasShownTelError(false);
       }
-  }, [bookingError, openModalTel, closeModalTel, hasShownTelError]);
+  }, [bookingError, openModalPhone, closeModalPhone, hasShownTelError]);
   
 
-  const handleSearch = useCallback((service: string, date: string) => {
-    setSelectedService(service);
+  const handleSearch = useCallback((service_id: string, date: string, durationService: number) => {
+    setSelectedServiceId(service_id);
     setSelectedDate(date);
+    setSelectedDuration(durationService);
   }, []);
 
   const handleTimeSelect = (time: string) => {
+    document.getElementById('reserveButton')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setSelectedTime(time);
     setBookingSuccess(false);
     setBookingError(null);
   };
 
   const handleReserve = useCallback(
-    async (service: string, date: string, selectedTime: string, session: Session) => {
+    async (service_id: string, date: string, selectedTime: string, session: Session) => {
       if (!session) {
         Swal.fire({
           icon: 'warning',
@@ -57,11 +59,11 @@ export const useServiceBooking = () => {
 
       const tel = session?.user?.tel;
       if (!tel || tel.trim() === '') {
-        openModalTel();
+        openModalPhone();
         return;
       }
 
-      if (!service || !date || !selectedTime) {
+      if (!service_id || !date || !selectedTime) {
         Swal.fire({
           icon: 'warning',
           title: '¡Atención!',
@@ -111,7 +113,7 @@ export const useServiceBooking = () => {
 
             try {
               const bookingData = {
-                service,
+                service_id,
                 date,
                 time: selectedTime,
                 tel,
@@ -156,12 +158,13 @@ export const useServiceBooking = () => {
           }
         });
     },
-    [openModalTel]
+    [openModalPhone]
   );
 
   return {
-    selectedService,
+    selectedServiceId,
     selectedDate,
+    selectedDuration,
     handleSearch,
     selectedTime,
     handleTimeSelect,
@@ -170,8 +173,8 @@ export const useServiceBooking = () => {
     bookingError,
     handleReserve,
     isOpenTelModal,
-    openModalTel,
-    closeModalTel,
+    openModalPhone,
+    closeModalPhone,
     hasShownTelError,
     setHasShownTelError,
   };

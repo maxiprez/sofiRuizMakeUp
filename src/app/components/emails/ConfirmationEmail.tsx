@@ -1,11 +1,11 @@
 interface ConfirmationEmailProps {
     userFullName: string | null | undefined;
-    service: string;
+    serviceName: string;
     date: string;
     time: string;
 }
 
-export default function ConfirmationEmail({ userFullName, service, date, time }: ConfirmationEmailProps) {
+export default function ConfirmationEmail({ userFullName, serviceName, date, time }: ConfirmationEmailProps) {
   return (
    `
    <!DOCTYPE html>
@@ -37,13 +37,12 @@ export default function ConfirmationEmail({ userFullName, service, date, time }:
                 <div class="container">
                     <div class="header">
                         <h1>Hola, ${userFullName}</h1>
-                        <h2>¡Tu Turno ha sido Confirmado!</h2>
+                        <h2>¡Tu Turno ha sido confirmado!</h2>
                     </div>
-
                     <div class="details-section">
                         <h2>Detalles del turno:</h2>
                         <div class="detail-item">
-                            <span class="label">Servicio:</span> <span class="value">${service}</span>
+                            <span class="label">Servicio:</span> <span class="value">${serviceName}</span>
                         </div>
                         <div class="detail-item">
                             <span class="label">Día:</span> <span class="value">${date}</span>
@@ -52,17 +51,12 @@ export default function ConfirmationEmail({ userFullName, service, date, time }:
                             <span class="label">Hora:</span> <span class="value">${time}hs.</span>
                         </div>
                         </div>
-
                     <p>¡Muchas gracias por seguir eligiendome!</p>
-
                     <div class="contact-info">
                         <p>Si tenés alguna pregunta o necesitas realizar algún cambio, no dudes en contactarnos:</p>
                         <p>Email: <a href="mailto:sofiadalilaruiz@gmail.com">sofiadalilaruiz@gmail.com</a></p>
                         </div>
-
-                    <div class="social-links">
-                        </div>
-
+                    <div class="social-links"></div>
                     <div class="footer">
                         <p>© 2025 Sofi Ruiz Makeup. Todos los derechos reservados.</p>
                     </div>

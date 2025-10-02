@@ -19,11 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     sendSmtpEmail.subject = subject;
     sendSmtpEmail.sender = { name: 'Sofi Ruiz Turno', email: process.env.EMAIL_SENDER! };
     sendSmtpEmail.to = [{ email: toEmail }];
+    sendSmtpEmail.cc = [{ email: process.env.EMAIL_CC! }];
     sendSmtpEmail.htmlContent = htmlContent;
 
     try {
-      const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
-      console.log('Correo electrónico enviado:', data);
+      await apiInstance.sendTransacEmail(sendSmtpEmail);
       res.status(200).json({ message: 'Correo electrónico enviado correctamente' });
     } catch (error) {
       console.error('Error al enviar el correo electrónico:', error);

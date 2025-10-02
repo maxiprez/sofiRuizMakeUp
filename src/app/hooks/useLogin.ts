@@ -3,57 +3,53 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { usePassword } from "@/app/hooks/usePassword";
+
+type LoginFormData = {
+  email: string;
+  password: string;
+};
 
 export const useLogin = () => {
-    
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { showPassword } = usePassword();
-
   const router = useRouter();
- 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
 
+  const onSubmit = async (data: LoginFormData) => {
     if (isSubmitting) return;
-
+    
     setError(null);
     setIsSubmitting(true);
 
     try {
-        // **Llama a signIn aquí, en el componente del cliente**
-        const result = await signIn("credentials", {
-          redirect: false, // Evita la redirección automática
-          email,
-          password,
-          callbackUrl: "/" // Ajusta tu callbackUrl
-        });
-
-        console.log("result login: ", result);
-
-        if (result.error == "CredentialsSignin") {
-          setError("E-mail o contraseña incorrecta.");
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+        callbackUrl: "/"
+      });
+      
+      if (result?.error) {
+        if (result.error === "USER_NOT_VERIFIED") {
+          setError("Tu usuario no está verificado. Por favor revisa tu email.");
+        } else if (result.error === "CredentialsSignin") {
+          setError("Correo o contraseña incorrectos.");
+        } else {
+          setError("Ocurrió un error inesperado. Intenta nuevamente.");
+        }
       } else {
-          router.push("/");
+        router.push("/");
       }
     } catch (err) {
       console.error("Unexpected login error:", err);
-      setError("An unexpected error occurred. Please try again.");
+      setError("Ocurrió un error inesperado. Por favor intenta nuevamente.");
     } finally {
       setIsSubmitting(false);
     }
   };
-  return{
-    handleSubmit,
+
+  return {
+    onSubmit,
     error,
-    email,
-    setEmail,
-    password,
-    setPassword,
-    showPassword,
     isSubmitting,
-  }
+  };
 };
