@@ -44,6 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         timeMax: timeMax.toISOString(),
         singleEvents: true,
         orderBy: 'startTime',
+        timeZone: 'America/Argentina/Buenos_Aires'
       });
 
       const events = eventsResponse.data?.items;
