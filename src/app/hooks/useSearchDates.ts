@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { searchDates } from "../_actions/searchDates.action";
+import { searchDates } from "@/app/_actions/searchDates.action";
 
 interface Booking {
     created_at: string;
@@ -60,6 +60,6 @@ export function useSearchDates() {
 
     useEffect(() => {
         fetchDates();
-    },[]);
+    });
     return { bookings, loading, error, fetchDates };
 }

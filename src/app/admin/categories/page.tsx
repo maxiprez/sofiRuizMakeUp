@@ -1,16 +1,15 @@
-
 "use client";
 
 import { SidebarProvider } from "@/app/components/ui/sidebar";
-import { SidebarAdmin } from "../../components/Sidebaradmin";
+import { SidebarAdmin } from "@/app/components/Sidebaradmin";
 import { SidebarInset } from "@/app/components/ui/sidebar";
-import HeaderAdmin from "../../components/HeaderAdmin";
+import HeaderAdmin from "@/app/components/HeaderAdmin";
 import { Card, CardDescription, CardTitle } from "@/app/components/ui/card";
 import { Calendar, Users, Scissors, Pencil, Pause, Play, Save, X, Clock, Sparkles } from "lucide-react";
-import useGetServices, { usePauseService, useResumeService, useSavePriceDurationService } from "../../hooks/useABMServices";
+import useGetServices, { usePauseService, useResumeService, useSavePriceDurationService } from "@/app/hooks/useABMServices";
 import { Button } from "@/app/components/ui/button";
-import { QuickActionCard } from "../../components/QuickActionsCardsAdmin";
-import NewServiceCard from "../../components/NewServiceCard";
+import { QuickActionCard } from "@/app/components/QuickActionsCardsAdmin";
+import NewServiceCard from "@/app/components/NewServiceCard";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useState } from "react";
 
