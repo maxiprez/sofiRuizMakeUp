@@ -1,10 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { google, calendar_v3 } from 'googleapis';
 import { JWT } from 'google-auth-library';
-import path from 'path';
-
-// Use path resolution to get the absolute path to the service account key
-const serviceAccountKeyPath = path.resolve(process.cwd(), 'pages/api/config/serviceAccountKey.json');
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -22,10 +18,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
+      const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!);
+      credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
       const auth = new google.auth.GoogleAuth({
-        keyFile: serviceAccountKeyPath, // Use the resolved absolute path
-        scopes: ['https://www.googleapis.com/auth/calendar'], // permiso de lectura y escritura
-      });
+          credentials,
+          scopes: ['https://www.googleapis.com/auth/calendar'],
+        });
 
       const client = await auth.getClient() as JWT;
       const calendar = google.calendar({ version: 'v3', auth: client });
