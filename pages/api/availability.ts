@@ -7,36 +7,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { date: queryDate, duration } = req.query;
     const durationInMinutes = Number(duration);
 
+    console.log('[REQUEST] Parámetros recibidos:', { queryDate, duration });
+
     let date = '';
-    if (typeof queryDate === 'string' && queryDate.trim() !== '') { // Verificar si es string y no está vacía después de quitar espacios
+    if (typeof queryDate === 'string' && queryDate.trim() !== '') {
       date = queryDate.trim();
-    } else if (Array.isArray(queryDate) && queryDate.length > 0 && queryDate[0].trim() !== '') { // Verificar si es array, no vacío y el primer elemento no está vacío
-      date = queryDate[0].trim(); // Tomar el primer elemento si es un array y no está vacío
+    } else if (Array.isArray(queryDate) && queryDate.length > 0 && queryDate[0].trim() !== '') {
+      date = queryDate[0].trim();
     } else {
-      // Manejar el caso en que 'date' no se proporciona o está vacía en la consulta
+      console.warn('[VALIDATION] La fecha no fue proporcionada o está vacía.');
       return res.status(400).json({ error: 'La fecha es requerida.' });
     }
 
     try {
+      console.log('[AUTH] Inicializando credenciales de Google...');
       const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!);
       credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
       const auth = new google.auth.GoogleAuth({
-          credentials,
-          scopes: ['https://www.googleapis.com/auth/calendar'],
-        });
+        credentials,
+        scopes: ['https://www.googleapis.com/auth/calendar'],
+      });
 
-      const client = await auth.getClient() as JWT;
+      const client = (await auth.getClient()) as JWT;
       const calendar = google.calendar({ version: 'v3', auth: client });
 
-      // Formatea la fecha para usarla en las consultas de Google Calendar (puedes necesitar ajustar esto)
       const timeMin = new Date(date);
       timeMin.setHours(0, 0, 0, 0);
-      timeMin.setUTCHours(0, 0, 0, 0); // Asegurar que la hora es 00:00:00 UTC
+      timeMin.setUTCHours(0, 0, 0, 0);
       const timeMax = new Date(date);
       timeMax.setHours(23, 59, 59, 999);
-      timeMax.setUTCHours(23, 59, 59, 999); // Asegurar que la hora es 23:59:59.999 UTC
+      timeMax.setUTCHours(23, 59, 59, 999);
 
-      const calendarId = process.env.CALENDAR_ID; // quitar el _TEST en caso que queremos usar el calendario real
+      const calendarId = process.env.CALENDAR_ID;
+      console.log('[CALENDAR] Consultando eventos...', {
+        calendarId,
+        timeMin: timeMin.toISOString(),
+        timeMax: timeMax.toISOString(),
+      });
 
       const eventsResponse = await calendar.events.list({
         calendarId: calendarId,
@@ -44,18 +51,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         timeMax: timeMax.toISOString(),
         singleEvents: true,
         orderBy: 'startTime',
-        timeZone: 'America/Argentina/Buenos_Aires'
+        timeZone: 'America/Argentina/Buenos_Aires',
       });
 
       const events = eventsResponse.data?.items;
+      console.log('[CALENDAR] Eventos obtenidos:', events?.length || 0);
+
       let availableTimes: string[] = [];
       if (events && Array.isArray(events)) {
         const selectedDateForExtraction = new Date(date);
-
-        availableTimes = extractAvailableTimes(events, selectedDateForExtraction, durationInMinutes); // Llama a extractAvailableTimes solo si 'events' es un array
+        availableTimes = extractAvailableTimes(events, selectedDateForExtraction, durationInMinutes);
+        console.log('[SLOTS] Horarios disponibles calculados:', availableTimes);
       } else {
-        console.warn('No se encontraron eventos en el calendario para la fecha:', date);
-        availableTimes = []; // Si no hay eventos, devolvemos un array vacío
+        console.warn('[SLOTS] No se encontraron eventos para la fecha:', date);
+        availableTimes = [];
       }
 
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -64,52 +73,49 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json({ availableTimes });
 
     } catch (error) {
-      console.error('Error al obtener eventos del calendario:', error);
+      console.error('[ERROR] Al obtener eventos del calendario:', error);
       res.status(500).json({ error: `Error al obtener la disponibilidad del calendario: ${error}` });
     }
 
   } else {
+    console.warn('[METHOD] Método no permitido:', req.method);
     res.setHeader('Allow', ['GET']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
 
 function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate: Date, duration: number) {
+  console.log('[EXTRACT] Iniciando extracción de horarios...', { selectedDate, duration });
+
   const [year, month, day] = selectedDate.toISOString().split('T')[0].split('-').map(Number);
   const localDate = new Date(year, month - 1, day, 0, 0, 0, 0);
   const availableTimes: string[] = [];
-  const startTime = 9; // Hora de inicio del horario de atención (9 AM)
-  const endTime = 19; // Hora de fin del horario de atención (7 PM)
+  const startTime = 9;
+  const endTime = 19;
   const stepMinutes = 30;
 
   const dayOfWeek = localDate.getDay();
   const isWithinWorkDays = dayOfWeek >= 1 && dayOfWeek <= 6;
 
   if (!isWithinWorkDays) {
+    console.warn('[EXTRACT] La fecha no es un día laboral:', localDate.toDateString());
     return [];
   }
 
-  // Calculate total minutes in a day for indexing
-  //const totalDayMinutes = 24 * 60;
-  const occupiedSlots = new Set<number>(); // Use a Set for efficient lookups
+  const occupiedSlots = new Set<number>();
 
-  // Populate occupiedSlots based on existing events
   events.forEach((event) => {
     const eventStart = new Date(event.start?.dateTime || event.start?.date || '');
     const eventEnd = new Date(event.end?.dateTime || event.end?.date || '');
-
-    // Ensure event times are on the selected date for accurate indexing
     if (eventStart.toDateString() === localDate.toDateString()) {
       const startMinutes = eventStart.getHours() * 60 + eventStart.getMinutes();
       const endMinutes = eventEnd.getHours() * 60 + eventEnd.getMinutes();
-
       for (let i = startMinutes; i < endMinutes; i += stepMinutes) {
         occupiedSlots.add(Math.floor(i / stepMinutes));
       }
     }
   });
 
-  // Generate possible slots and check for availability
   const slotStart = new Date(localDate);
   slotStart.setHours(startTime, 0, 0, 0);
 
@@ -132,12 +138,14 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
       const formattedTime = slotStart.toLocaleTimeString('es-AR', {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false
+        hour12: false,
       });
       availableTimes.push(formattedTime);
     }
 
     slotStart.setMinutes(slotStart.getMinutes() + stepMinutes);
   }
+
+  console.log('[EXTRACT] Horarios finales generados:', availableTimes);
   return availableTimes;
 }
