@@ -31,12 +31,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const client = (await auth.getClient()) as JWT;
       const calendar = google.calendar({ version: 'v3', auth: client });
 
-      const timeMin = new Date(date);
-      timeMin.setHours(0, 0, 0, 0);
-      timeMin.setUTCHours(0, 0, 0, 0);
-      const timeMax = new Date(date);
-      timeMax.setHours(23, 59, 59, 999);
-      timeMax.setUTCHours(23, 59, 59, 999);
+      // Parse the date string and create UTC dates
+      const [year, month, day] = date.split('-').map(Number);
+      const timeMin = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+      const timeMax = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
 
       const calendarId = process.env.CALENDAR_ID;
       console.log('[CALENDAR] Consultando eventos...', {
