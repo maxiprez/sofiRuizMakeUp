@@ -85,18 +85,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate: Date, duration: number) {
   console.log('[EXTRACT] Iniciando extracción de horarios...', { selectedDate, duration });
 
-  const [year, month, day] = selectedDate.toISOString().split('T')[0].split('-').map(Number);
-  const localDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+  // Use UTC date components to avoid timezone issues
+  const year = selectedDate.getUTCFullYear();
+  const month = selectedDate.getUTCMonth();
+  const day = selectedDate.getUTCDate();
+  const localDate = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+  
   const availableTimes: string[] = [];
   const startTime = 9;
   const endTime = 19;
   const stepMinutes = 30;
 
-  const dayOfWeek = localDate.getDay();
+  const dayOfWeek = localDate.getUTCDay();
   const isWithinWorkDays = dayOfWeek >= 1 && dayOfWeek <= 6;
 
   if (!isWithinWorkDays) {
-    console.warn('[EXTRACT] La fecha no es un día laboral:', localDate.toDateString());
+    console.warn('[EXTRACT] La fecha no es un día laboral:', localDate.toISOString());
     return [];
   }
 
@@ -105,9 +109,20 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
   events.forEach((event) => {
     const eventStart = new Date(event.start?.dateTime || event.start?.date || '');
     const eventEnd = new Date(event.end?.dateTime || event.end?.date || '');
-    if (eventStart.toDateString() === localDate.toDateString()) {
-      const startMinutes = eventStart.getHours() * 60 + eventStart.getMinutes();
-      const endMinutes = eventEnd.getHours() * 60 + eventEnd.getMinutes();
+    
+    // Compare dates in the Argentina timezone
+    // Convert to Argentina time (UTC-3) for comparison
+    const argOffset = -3 * 60; // Argentina is UTC-3
+    const eventStartArg = new Date(eventStart.getTime() + argOffset * 60000);
+    const eventEndArg = new Date(eventEnd.getTime() + argOffset * 60000);
+    
+    const eventDateStr = eventStartArg.toISOString().split('T')[0];
+    const selectedDateStr = localDate.toISOString().split('T')[0];
+    
+    if (eventDateStr === selectedDateStr) {
+      // Use Argentina local time hours (not UTC)
+      const startMinutes = eventStartArg.getUTCHours() * 60 + eventStartArg.getUTCMinutes();
+      const endMinutes = eventEndArg.getUTCHours() * 60 + eventEndArg.getUTCMinutes();
       for (let i = startMinutes; i < endMinutes; i += stepMinutes) {
         occupiedSlots.add(Math.floor(i / stepMinutes));
       }
@@ -115,13 +130,13 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
   });
 
   const slotStart = new Date(localDate);
-  slotStart.setHours(startTime, 0, 0, 0);
+  slotStart.setUTCHours(startTime, 0, 0, 0);
 
   const slotEndLimit = new Date(localDate);
-  slotEndLimit.setHours(endTime, 0, 0, 0);
+  slotEndLimit.setUTCHours(endTime, 0, 0, 0);
 
   while (slotStart.getTime() + duration * 60000 <= slotEndLimit.getTime()) {
-    const currentSlotStartMinutes = slotStart.getHours() * 60 + slotStart.getMinutes();
+    const currentSlotStartMinutes = slotStart.getUTCHours() * 60 + slotStart.getUTCMinutes();
     const currentSlotEndMinutes = currentSlotStartMinutes + duration;
 
     let isSlotBooked = false;
@@ -137,11 +152,12 @@ function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate:
         hour: '2-digit',
         minute: '2-digit',
         hour12: false,
+        timeZone: 'UTC',
       });
       availableTimes.push(formattedTime);
     }
 
-    slotStart.setMinutes(slotStart.getMinutes() + stepMinutes);
+    slotStart.setUTCMinutes(slotStart.getUTCMinutes() + stepMinutes);
   }
 
   console.log('[EXTRACT] Horarios finales generados:', availableTimes);
