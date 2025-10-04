@@ -30,9 +30,15 @@ export default async function createEvent(eventData: EventData) {
 
   const event: calendar_v3.Schema$Event = {
     summary: eventData.summary,
+    start: {
+      dateTime: eventData.start.dateTime,
+      timeZone: 'America/Argentina/Buenos_Aires',
+    },
+    end: {
+      dateTime: eventData.end.dateTime,
+      timeZone: 'America/Argentina/Buenos_Aires',
+    },
     description: eventData.description,
-    start: eventData.start,
-    end: eventData.end,
   };
 
   try {
