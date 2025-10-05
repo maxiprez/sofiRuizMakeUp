@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { randomBytes } from 'crypto';
 import { createClient } from "@supabase/supabase-js";
 import ResetPasswordEmail from "@/app/components/emails/ResetPassword";
+import { NEXTAUTH_URL } from "@/utils/urls";
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -43,7 +45,7 @@ export async function resetPassword(formData: FormData) {
     const resetLink = `${frontendUrl}/resetPassword?token=${resetToken}`;
     const htmlContent = ResetPasswordEmail({ userFullName: existingUser.name, resetLink });
 
-    await fetch(`${process.env.NEXTAUTH_URL}/api/sendEmail`, {
+    await fetch(`${NEXTAUTH_URL}/api/sendEmail`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
