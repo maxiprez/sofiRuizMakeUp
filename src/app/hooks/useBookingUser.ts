@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import CancelationEmail from '../components/emails/CancelationEmail';
+import { NEXTAUTH_URL } from '@/utils/urls';
 
 interface Booking {
   id: number;
@@ -159,7 +160,7 @@ export default function useBookingUser(): UseBookingUserResult {
           time: bookingToCancel?.time ? formatTime(bookingToCancel?.time) : ''
         });
 
-        const emailResponse = await fetch('/api/sendEmail', {
+        const emailResponse = await fetch(`${NEXTAUTH_URL}/api/sendEmail`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

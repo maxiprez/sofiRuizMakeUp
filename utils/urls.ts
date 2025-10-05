@@ -1,0 +1,1 @@
+export const NEXTAUTH_URL = process.env.NEXTAUTH_URL ?? 'https://sofiruiz.com.ar';
