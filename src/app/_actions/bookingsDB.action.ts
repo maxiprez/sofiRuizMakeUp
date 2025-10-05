@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { auth } from "../../../auth";
 import { revalidatePath } from "next/cache";
 import ConfirmationEmail from "@/app/components/emails/ConfirmationEmail";
+import { NEXTAUTH_URL } from "@/utils/urls";
  
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
@@ -87,7 +88,7 @@ export async function createBooking(bookingData: BookingData) {
     const dateEmail = formatter.format(new Date(`${date}T${time}:00-03:00`));
     const htmlContent = ConfirmationEmail({ userFullName, serviceName: service.name, date: dateEmail, time });
 
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/sendEmail`, {
+    const response = await fetch(`${NEXTAUTH_URL}/api/sendEmail`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
