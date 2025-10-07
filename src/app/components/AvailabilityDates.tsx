@@ -45,20 +45,20 @@ function AvailabilityDates({ service_id, date, duration }: AvailabilityDatesProp
         {availableTimes.length > 0 && (
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Horarios Disponibles</h2>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {availableTimes.map((time) => (
             <Button
               key={time}
               disabled={isReserving}
               onClick={() => handleTimeSelect(time)}
               text={time}
-              className={`border border-pink-300 text-pink-500 rounded-md py-3 px-6 hover:bg-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1 cursor-pointer ${selectedTime === time ? 'bg-pink-500 text-white hover:bg-pink-400' : ''}`}
+              className={`border border-pink-300 text-pink-500 rounded-md py-2 px-4 hover:bg-pink-100 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1 cursor-pointer ${selectedTime === time ? 'bg-pink-500 text-white hover:bg-pink-400' : ''}`}
               />
           ))}
         </div>
       </div>
       {availableTimes.length > 0 && (
-        <div className="mt-6 container mx-auto text-center p-4">
+        <div className="md:mt-6 my-2 container mx-auto text-center p-4">
           <Button
             text="Reservar"
             id="reserveButton"

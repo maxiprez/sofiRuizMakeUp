@@ -34,7 +34,7 @@ export default function CancelationEmail({
         </div>
   
         <div style="text-align: center; margin-top: 25px;">
-          <a href="https://sofiaruizmakeup.com.ar"
+          <a href="https://sofiaruiz.com.ar"
              style="display: inline-block; background-color: #e91e63; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">
             Reprogramar turno
           </a>
