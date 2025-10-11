@@ -42,13 +42,13 @@ export default function Hero({ onSearch }: HeroProps) {
   const today = startOfToday()
 
   return (
-    <section className="bg-gradient-to-br from-gray-100 to-pink-100 md:py-20 py-10">
+    <section className="md:py-20 py-10 px-4">
       <div className="container mx-auto text-center">
         <h1 className="lg:text-4xl text-2xl font-bold text-gray-800 mb-6">
           Reserva tus turnos de <span className="text-pink-600">Make Up</span> y <span className="text-pink-600">Perfilado de Cejas</span>
         </h1>
         <p className="text-lg text-gray-600 mb-8">Encuentra la disponibilidad perfecta para tu próximo servicio de belleza.</p>
-        <div className="bg-white p-8 rounded-lg shadow-xl flex flex-col lg:flex-row lg:gap-4 gap-4 justify-center items-center">
+        <div className="bg-white md:p-8 p-6 rounded-lg shadow-xl flex flex-col lg:flex-row lg:gap-4 gap-4 justify-center items-center">
           <Select value={selectedServiceId} onValueChange={handleServiceChange} name="service">
             <SelectTrigger className="w-full sm:w-[240px] min-h-12 border-gray-300 focus:ring-pink-500 focus:border-pink-500">
               <SelectValue placeholder="Todos los servicios" />

@@ -8,12 +8,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu"
 import { Button } from "@/app/components/ui/button"
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar"
 import { SessionProps } from "@/app/layout"
+import { Calendar, LogOut, User } from "lucide-react"
 
 export default function Header({ session }: SessionProps) {
 
@@ -83,15 +83,22 @@ export default function Header({ session }: SessionProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-md">
                 <DropdownMenuItem asChild>
-                  <Link href="/my-account" className="cursor-pointer">
-                    Mi cuenta
+                  <Link href="/my-bookings" className="cursor-pointer">
+                    <Calendar className="mr-1 h-4 w-4" />
+                    Mi citas
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/my-account" className="cursor-pointer">
+                    <User className="mr-1 h-4 w-4" />
+                    Mis datos
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-red-500 focus:text-red-500 cursor-pointer"
                   onClick={() => signOut({ callbackUrl: "/" })}
                 >
+                  <LogOut className="mr-1 h-4 w-4" />
                   Cerrar Sesión
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -112,9 +119,9 @@ export default function Header({ session }: SessionProps) {
             className="text-gray-700 hover:text-pink-500 hover:bg-transparent focus:bg-transparent"
           >
             {isMobileMenuOpen ? (
-              <TimesIcon color="currentColor" size={24} />
+              <TimesIcon color="currentColor" size={24} strokeWidth={2} />
             ) : (
-              <HamburgerMenu color="currentColor" size={24} />
+              <HamburgerMenu color="currentColor" size={24} strokeWidth={2} />
             )}
           </Button>
         </div>
@@ -174,18 +181,29 @@ export default function Header({ session }: SessionProps) {
                 >
                   <DropdownMenuItem asChild>
                     <Link 
+                      href="/my-bookings" 
+                      className="cursor-pointer"
+                      onClick={closeMobileMenu}
+                    >
+                      <Calendar className="mr-1 h-4 w-4" />
+                      Mis citas
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link 
                       href="/my-account" 
                       className="cursor-pointer"
                       onClick={closeMobileMenu}
                     >
-                      Mi cuenta
+                      <User className="mr-1 h-4 w-4" />
+                      Mis datos
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="text-red-500 focus:text-red-500 cursor-pointer"
                     onClick={() => signOut({ callbackUrl: "/" })}
                   >
+                    <LogOut className="mr-1 h-4 w-4" />
                     Cerrar Sesión
                   </DropdownMenuItem>
                 </DropdownMenuContent>
