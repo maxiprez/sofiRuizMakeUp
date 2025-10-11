@@ -8,7 +8,7 @@ import { useServiceBooking } from "@/app/hooks/useServiceBooking";
 export default function Home() {
   const { selectedServiceId, selectedDate, selectedDuration, handleSearch } = useServiceBooking();
   return (
-    <main className="flex flex-col">
+    <main className={`bg-gradient-to-br from-gray-100 to-pink-100 flex flex-col ${selectedDate ? "h-auto" : "h-screen"}`}>
       <Hero onSearch={handleSearch} />
         <div>
           {selectedDate && <AvailabilityDates service_id={selectedServiceId} date={selectedDate} duration={selectedDuration} />}

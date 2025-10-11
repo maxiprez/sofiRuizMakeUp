@@ -51,7 +51,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                     id="tel"
                     htmlType="tel"
                     required
-                    placeholder="Ej: 1129993848"
+                    placeholder="1129993848"
                     value={tel}
                     onChange={(e) => setTel(e.target.value)}
                     button={false}

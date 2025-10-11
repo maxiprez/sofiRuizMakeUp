@@ -22,7 +22,7 @@ export default async function RootLayout({ children,}: {children: React.ReactNod
       <body>
         <AuthProvider>
           <HeaderWrapper session={session} />
-          <main>{children}</main>
+          {children}
         </AuthProvider>
       </body>
     </html>
