@@ -9,6 +9,7 @@ import { User, Edit3, Check, X } from 'lucide-react';
 import BeatLoader from 'react-spinners/BeatLoader';
 import { useSession } from 'next-auth/react';
 import { useUpdatePhone } from '@/app/hooks/useUpdatePhone'; 
+import { formatToNumbersOnly } from '@/utils/utilsFormat';
 
 export default function UserProfilePage() {
   const { data: session } = useSession();
@@ -102,9 +103,9 @@ export default function UserProfilePage() {
                 <span className="font-semibold">E-mail:</span>
                 <span className="font-normal">{session?.user?.email}</span>
               </div>
-              
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center flex-wrap gap-2"> 
+              {user.tel && (
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center flex-wrap gap-2"> 
                     <span className="font-semibold whitespace-nowrap">Teléfono:</span>
 
                     {!editing ? (
@@ -127,7 +128,8 @@ export default function UserProfilePage() {
                                 required
                                 value={newPhone}
                                 inputMode='tel'
-                                onChange={(e) => setNewPhone(e.target.value)}
+                                maxLength={10}
+                                onChange={(e) => setNewPhone(formatToNumbersOnly(e.target.value))}
                                 className="border-pink-200 focus-visible:ring-pink-300 w-full sm:w-48"
                             />
                             
@@ -157,16 +159,16 @@ export default function UserProfilePage() {
                             </div>
                         </>
                     )}
-                </div>
-
-                {(error || success) && (
-                  <div className="text-sm mt-1">
-                    {error && <p className="text-red-500">{error}</p>}
-                    {success && <p className="text-green-600">Teléfono actualizado correctamente.</p>}
                   </div>
-                )}
-              </div>
-              
+
+               {(error || success) && (
+                 <div className="text-sm mt-1">
+                   {error && <p className="text-red-500">{error}</p>}
+                   {success && <p className="text-green-600">Teléfono actualizado correctamente.</p>}
+                 </div>
+               )}
+                </div>
+              )}  
             </div>
           </CardContent>
         </Card>

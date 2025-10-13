@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/app/_actions/authDB.action";
+import { ValidateEmail } from "@/utils/utilsFormat";
 
 export const useRegister = () => {
   const [name, setName] = useState("");
@@ -24,9 +25,8 @@ export const useRegister = () => {
       setIsSubmitting(false);
       return;
     }
-  
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+
+    if (!ValidateEmail.validate(email)) {
       setError("El correo electrónico no es válido.");
       setIsSubmitting(false);
       return;
