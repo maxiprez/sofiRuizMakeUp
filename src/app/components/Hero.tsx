@@ -56,9 +56,11 @@ export default function Hero({ onSearch }: HeroProps) {
             </SelectTrigger>
             <SelectContent className="bg-white border-gray-200">
               {services.map((service: Service) => (
-                <SelectItem key={service.id} value={service.id}>
-                  {service.name} ${FormatNumber.number(service.price)}
-                </SelectItem>
+                service.status === true && (
+                  <SelectItem key={service.id} value={service.id}>
+                    {service.name} ${FormatNumber.number(service.price)}
+                  </SelectItem>
+                )
               ))}
             </SelectContent>
           </Select>
