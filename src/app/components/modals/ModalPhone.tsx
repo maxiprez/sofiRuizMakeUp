@@ -4,6 +4,7 @@ import { useRegister } from "../../hooks/useRegister";
 import Button from "../CustomBtn";
 import { useUpdatePhone } from "@/app/hooks/useUpdatePhone";
 import { Session } from "next-auth";
+import { formatToNumbersOnly } from '@/utils/utilsFormat';
 
 export interface ModalPhoneProps {
   isOpen: boolean;
@@ -46,16 +47,17 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <Input
-                    labelText="Número de teléfono"
-                    name="tel"
-                    id="tel"
-                    htmlType="tel"
-                    required
-                    placeholder="1129993848"
-                    value={tel}
-                    onChange={(e) => setTel(e.target.value)}
-                    button={false}
-                    inputMode="tel"
+                      labelText="Número de teléfono"
+                      name="tel"
+                      id="tel"
+                      htmlType="tel"
+                      required
+                      placeholder="1129993848"
+                      value={tel}
+                      onChange={(e) => setTel(formatToNumbersOnly(e.target.value))}
+                      button={false}
+                      inputMode="tel"
+                      maxLength={10}
                     />
                     <div className="flex justify-end gap-2 mt-4">
                         <Button 
@@ -67,7 +69,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                         <Button 
                           type="submit"
                           text="Confirmar"
-
                           className={`bg-pink-500 text-white hover:bg-pink-600 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1 cursor-pointer`}
                         />
                     </div>

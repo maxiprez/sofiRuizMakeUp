@@ -5,6 +5,7 @@ import Input from "@/app/components/Input";
 import { usePassword } from "@/app/hooks/usePassword";
 import Button from "@/app/components/CustomBtn";
 import { useRegister } from "../hooks/useRegister";
+import { formatToNumbersOnly } from "@/utils/utilsFormat";
 
 export default function Register() {
   const { handleSubmit, error, name, setName, email, setEmail, tel, setTel, password, setPassword, confirmPassword, setConfirmPassword, isSubmitting } = useRegister();
@@ -17,7 +18,7 @@ export default function Register() {
         <form onSubmit={handleSubmit}>
           <Input labelText="Nombre y apellido" placeholder="Alicia Gómez" inputMode="text" name="name" id="name" htmlType="text" required value={name} onChange={(e) => setName(e.target.value)} button={false} />
           <Input labelText="Correo Electrónico" placeholder="alicia.gomez@gmail.com" inputMode="email" name="email" id="email" htmlType="text" required value={email} onChange={(e) => setEmail(e.target.value)} button={false} />
-          <Input labelText="Celular" placeholder="1129993848" inputMode="tel" name="tel" id="tel" htmlType="text" required value={tel} onChange={(e) => setTel(e.target.value)} button={false} />
+          <Input labelText="Celular" maxLength={10} onChange={(e) => setTel(formatToNumbersOnly(e.target.value))} placeholder="1129993848" inputMode="tel" name="tel" id="tel" htmlType="text" required value={tel} button={false} />
           <Input labelText="Contraseña" name="password" htmlType="password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)} button={true} />
           <Input labelText="Confirmar Contraseña" name="confirmPassword" htmlType={showPassword ? 'text' : 'password'} id="confirmPassword" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} button={true} />
           <Button 

@@ -7,6 +7,7 @@ import { JSX } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { FormatNumber } from "@/utils/utilsFormat";
 
 const iconMap: Record<string, JSX.Element> = {
   "perfilado de cejas": <Eye className="w-7 h-7 text-pink-600" />,
@@ -14,9 +15,6 @@ const iconMap: Record<string, JSX.Element> = {
   "makeup": <Sparkles className="w-7 h-7 text-pink-600" />,
   "makeup express": <Brush className="w-7 h-7 text-pink-600" />,
 };
-
-const formatPrice = (price: number) =>
-  price.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
 
 export default function ServiciosSection() {
   const { services, loading, error } = useABMServices();
@@ -60,11 +58,11 @@ export default function ServiciosSection() {
                     </h3>
 
                     <p className="bg-pink-100 text-pink-700 text-lg font-bold px-4 py-2 rounded-full inline-block mt-2"> {/* Estilo de precio más premium, rounded-full, inline-block */}
-                      {formatPrice(service.price)}
+                      {FormatNumber.number(service.price)}
                     </p>
 
                     <Link
-                      href={`/`} // Enlaza a una página de reserva específica, mejor UX
+                      href={`/`}
                       className="mt-6 flex items-center justify-center gap-2 bg-pink-500 text-white font-semibold px-8 py-3 rounded-full shadow-lg
                                  hover:bg-pink-600 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5
                                  focus:outline-none focus:ring-4 focus:ring-pink-300"

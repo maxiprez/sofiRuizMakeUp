@@ -18,6 +18,7 @@ import { format, parseISO, startOfToday } from "date-fns";
 import { es } from 'date-fns/locale';
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FormatNumber } from "@/utils/utilsFormat";
 
 interface HeroProps {
   onSearch: (serviceId: string, date: string, duration: number) => void;
@@ -56,7 +57,7 @@ export default function Hero({ onSearch }: HeroProps) {
             <SelectContent className="bg-white border-gray-200">
               {services.map((service: Service) => (
                 <SelectItem key={service.id} value={service.id}>
-                  {service.name} ${service.price.toLocaleString()}
+                  {service.name} ${FormatNumber.number(service.price)}
                 </SelectItem>
               ))}
             </SelectContent>

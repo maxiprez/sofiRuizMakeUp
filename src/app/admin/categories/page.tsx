@@ -12,6 +12,7 @@ import { QuickActionCard } from "@/app/components/QuickActionsCardsAdmin";
 import NewServiceCard from "@/app/components/NewServiceCard";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useState } from "react";
+import { FormatNumber } from "@/utils/utilsFormat";
 
 export default function CategoriesPage() {
   const { services, loading, setServices } = useGetServices();
@@ -81,7 +82,7 @@ export default function CategoriesPage() {
                                     {editingId === service.id ? (
                                       <input
                                           type="number"
-                                          value={editedPrices[service.id] ?? Number(service.price)}
+                                          value={editedPrices[service.id] ?? FormatNumber.number(service.price)}
                                           onChange={(e) =>
                                           setEditedPrices((prev: { [id: string]: number }) => ({
                                             ...prev,
