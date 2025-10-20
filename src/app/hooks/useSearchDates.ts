@@ -60,6 +60,6 @@ export function useSearchDates() {
 
     useEffect(() => {
         fetchDates();
-    });
+    },[]);
     return { bookings, loading, error, fetchDates };
 }
