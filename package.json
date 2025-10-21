@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.8.0",
-    "@getbrevo/brevo": "1.0.1",
     "@googleapis/calendar": "^9.8.0",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.1.1",
@@ -41,7 +40,6 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.58.1",
     "react-spinners": "^0.16.1",
-    "sib-api-v3-sdk": "^8.4.0",
     "supabase": "^2.20.12",
     "sweetalert2": "^11.6.13",
     "tailwind-merge": "^3.3.0",
