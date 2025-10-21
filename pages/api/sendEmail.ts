@@ -1,3 +1,4 @@
+export const runtime = "nodejs";
 import { NextApiRequest, NextApiResponse } from 'next';
 
 type SendEmailProps = {
@@ -32,10 +33,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error('Error al enviar correo Brevo:', error);
-      return res.status(500).json({ error: 'Error al enviar el correo electrónico' });
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Error al enviar correo Brevo:', errorData);
+      return res.status(500).json({
+        error: errorData?.message || 'Error al enviar el correo electrónico',
+      });
     }
+
 
     res.status(200).json({ message: 'Correo enviado correctamente' });
   } catch (error) {
