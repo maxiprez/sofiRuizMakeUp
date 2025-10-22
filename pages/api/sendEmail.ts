@@ -1,5 +1,8 @@
 export const runtime = "nodejs";
 import { NextApiRequest, NextApiResponse } from 'next';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 type SendEmailProps = {
   toEmail: string;
@@ -16,34 +19,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { toEmail, subject, htmlContent } = req.body as SendEmailProps;
 
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
-        'content-type': 'application/json',
-        'api-key': process.env.BREVO_API_KEY!,
-      },
-      body: JSON.stringify({
-        sender: { name: 'Sofi Ruiz Turno', email: process.env.EMAIL_SENDER! },
-        to: [{ email: toEmail }],
-        cc: process.env.EMAIL_CC ? [{ email: process.env.EMAIL_CC! }] : [],
-        subject,
-        htmlContent,
-      }),
+    const response = await resend.emails.send({
+      from: `Sofi Ruiz <${process.env.EMAIL_SENDER!}>`,
+      to: [toEmail],
+      subject,
+      html: htmlContent,
+      cc: process.env.EMAIL_CC ? [process.env.EMAIL_CC!] : [],
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('Error al enviar correo Brevo:', errorData);
-      return res.status(500).json({
-        error: errorData?.message || 'Error al enviar el correo electrónico',
-      });
+    if (response.error) {
+      console.error("Error al enviar correo Resend: ", response.error);
+      return res.status(500).json({ error: response.error.message });
     }
 
-
-    res.status(200).json({ message: 'Correo enviado correctamente' });
+    res.status(200).json({ message: 'Correo enviado correctamente con Resend' });
   } catch (error) {
-    console.error('Error general al enviar correo:', error);
+    console.error('Error general al enviar correo con Resend:', error);
     res.status(500).json({ error: 'Error al enviar el correo electrónico' });
   }
 }
