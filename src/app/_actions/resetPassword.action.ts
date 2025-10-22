@@ -3,7 +3,7 @@
 import bcrypt from "bcryptjs";
 import { randomBytes } from 'crypto';
 import { createClient } from "@supabase/supabase-js";
-import ResetPasswordEmail from "@/app/components/emails/ResetPassword";
+import { ResetPasswordEmail }from "@/app/components/emails/ResetPassword";
 import { NEXTAUTH_URL } from "@/utils/urls";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
