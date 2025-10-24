@@ -42,7 +42,7 @@ export function CancelationEmail({
   
         <div style="text-align: center; margin-top: 30px; color: #777; font-size: 13px;">
           <p>¿Tenés dudas o necesitás ayuda?</p>
-          <p>Escribinos a <a href="mailto:sofiadalilaruiz@gmail.com" style="color: #e91e63; text-decoration: none;">sofiadalilaruiz@gmail.com</a></p>
+          <p>Escribinos a <a href="mailto:info@sofiruiz.com.ar" style="color: #e91e63; text-decoration: none;">info@sofiruiz.com.ar</a></p>
         </div>
   
         <div style="text-align: center; margin-top: 30px; color: #aaa; font-size: 12px;">
