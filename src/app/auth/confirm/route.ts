@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       redirect('/authCodeError?reason=otp_verification_failed');
     }
   } else {
-    // Si faltan los parámetros esenciales en la URL
+    // Si faltan los parámetros esenciales en la URL  
     console.error("❌ Faltan parámetros en la URL (token_hash o type).");
     redirect('/authCodeError?reason=missing_params');
   }

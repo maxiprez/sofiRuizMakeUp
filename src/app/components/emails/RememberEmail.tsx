@@ -50,7 +50,7 @@ export default function ReminderEmail({ userFullName, serviceName, date, time }:
                     <p>Te espero 💖</p>
                     <div class="contact-info">
                         <p>Si necesitás reprogramar o tenés alguna consulta, escribime:</p>
-                        <p>Email: <a href="mailto:sofiadalilaruiz@gmail.com">sofiadalilaruiz@gmail.com</a></p>
+                        <p>Email: <a href="mailto:info@sofiruiz.com.ar">info@sofiruiz.com.ar</a></p>
                     </div>
                     <div class="footer">
                         <p>© 2025 Sofi Ruiz Makeup. Todos los derechos reservados.</p>
