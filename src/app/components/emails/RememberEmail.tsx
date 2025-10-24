@@ -1,11 +1,4 @@
-interface ReminderEmailProps {
-    userFullName: string | null | undefined;
-    serviceName: string;
-    date: string;
-    time: string;
-}
-
-export default function ReminderEmail({ userFullName, serviceName, date, time }: ReminderEmailProps) {
+export function RememberEmail({ userFullName, serviceName, date, time }: { userFullName: string | null | undefined; serviceName: string; date: string; time: string; }) {
   return (
    `
    <!DOCTYPE html>
