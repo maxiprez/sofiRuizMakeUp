@@ -5,7 +5,7 @@ import { RememberEmail } from '@/app/components/emails/RememberEmail';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_KEY!
 );
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -19,26 +19,32 @@ export async function GET(req: Request) {
     const now = new Date();
     const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
     const next24hUTC = new Date(nowUTC.getTime() + 24 * 60 * 60 * 1000);
+    
+    const nowISODate = nowUTC.toISOString().slice(0, 10);
+    const nextISODate = next24hUTC.toISOString().slice(0, 10);
 
     const { data: bookings, error: bookingsError } = await supabase
-      .from('bookings')
-      .select('id, user_id, service_id, date, time')
-      .eq('status', true)
-      .filter('date', 'gte', nowUTC.toISOString().slice(0, 10))
-      .filter('date', 'lte', next24hUTC.toISOString().slice(0, 10));
+    .from('bookings')
+    .select('id, user_id, service_id, date, time')
+    .eq('status', true)
+    .gte('date', nowISODate)
+    .lte('date', nextISODate);
 
     if (bookingsError) throw bookingsError;
-
-    const upcomingBookings = bookings.filter(b => {
-      const bookingDateTime = new Date(`${b.date}T${b.time}`);
-      return bookingDateTime >= nowUTC && bookingDateTime <= next24hUTC;
+    
+    const finalBookings = bookings.filter(b => {
+        const [year, month, day] = b.date.split('-').map(Number);
+        const [hour, minute, second] = b.time.split(':').map(Number);
+        const bookingDateTimeUTC = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+        
+        return bookingDateTimeUTC >= nowUTC && bookingDateTimeUTC <= next24hUTC;
     });
 
-    if (!upcomingBookings || upcomingBookings.length === 0) {
+    if (!finalBookings || finalBookings.length === 0) {
       return NextResponse.json({ success: true, message: 'No hay turnos próximos.' });
     }
 
-    const userIds = upcomingBookings.map(b => b.user_id);
+    const userIds = finalBookings.map(b => b.user_id);
     const { data: users, error: usersError } = await supabase
       .from('users')
       .select('id, name, email')
@@ -46,7 +52,7 @@ export async function GET(req: Request) {
 
     if (usersError) throw usersError;
 
-    const serviceIds = upcomingBookings.map(b => b.service_id);
+    const serviceIds = finalBookings.map(b => b.service_id);
     const { data: services, error: servicesError } = await supabase
       .from('services')
       .select('id, name')
@@ -58,7 +64,7 @@ export async function GET(req: Request) {
     const serviceMap = Object.fromEntries(services.map(s => [s.id, s.name]));
 
     let sentEmails = 0;
-    for (const booking of upcomingBookings) {
+    for (const booking of finalBookings) {
       const user = userMap[booking.user_id];
       const serviceName = serviceMap[booking.service_id];
       if (!user?.email) continue;
