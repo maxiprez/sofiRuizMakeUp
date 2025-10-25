@@ -3,13 +3,12 @@
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "../../../auth";
 import { revalidatePath } from "next/cache";
-import ConfirmationEmail from "@/app/components/emails/ConfirmationEmail";
 import { NEXTAUTH_URL } from "@/utils/urls";
+import { ConfirmationEmail } from "@/app/components/emails/ConfirmationEmail";
  
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
 interface BookingData {
   service_id: string;
   date: string;
@@ -85,14 +84,19 @@ export async function createBooking(bookingData: BookingData) {
       day: 'numeric',
       timeZone: 'America/Argentina/Buenos_Aires',
     });
+
     const dateEmail = formatter.format(new Date(`${date}T${time}:00-03:00`));
-    const htmlContent = ConfirmationEmail({ userFullName, serviceName: service.name, date: dateEmail, time });
+
+    const htmlContent = ConfirmationEmail({
+      userFullName,
+      serviceName: service.name,
+      date: dateEmail,
+      time,
+    });
 
     const response = await fetch(`${NEXTAUTH_URL}/api/sendEmail`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         toEmail: userMail,
         subject,
@@ -100,10 +104,10 @@ export async function createBooking(bookingData: BookingData) {
       }),
     });
 
-    if (!response.ok) {
-      console.error('Error al enviar el correo de confirmación');
-      return { success: false, error: 'Error al enviar el correo de confirmación' };
-    }
+if (!response.ok) {
+  console.error('Error al enviar el correo de confirmación');
+  return { success: false, error: 'Error al enviar el correo de confirmación' };
+}
 
     const startDateTime = new Date(`${date}T${time}:00-03:00`);
     const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);

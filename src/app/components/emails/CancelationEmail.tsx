@@ -1,4 +1,4 @@
-export default function CancelationEmail({
+export function CancelationEmail({
     userFullName,
     service,
     date,
@@ -34,7 +34,7 @@ export default function CancelationEmail({
         </div>
   
         <div style="text-align: center; margin-top: 25px;">
-          <a href="https://sofiaruiz.com.ar"
+          <a href="https://sofiruiz.com.ar"
              style="display: inline-block; background-color: #e91e63; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">
             Reprogramar turno
           </a>
@@ -42,7 +42,7 @@ export default function CancelationEmail({
   
         <div style="text-align: center; margin-top: 30px; color: #777; font-size: 13px;">
           <p>¿Tenés dudas o necesitás ayuda?</p>
-          <p>Escribinos a <a href="mailto:sofiadalilaruiz@gmail.com" style="color: #e91e63; text-decoration: none;">sofiadalilaruiz@gmail.com</a></p>
+          <p>Escribinos a <a href="mailto:info@sofiruiz.com.ar" style="color: #e91e63; text-decoration: none;">info@sofiruiz.com.ar</a></p>
         </div>
   
         <div style="text-align: center; margin-top: 30px; color: #aaa; font-size: 12px;">
