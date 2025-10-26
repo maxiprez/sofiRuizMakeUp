@@ -69,6 +69,11 @@ export async function GET(req: Request) {
       const serviceName = serviceMap[booking.service_id];
       if (!user?.email) continue;
 
+      const [year, month, day] = booking.date.split('-');
+      const [hour, minute] = booking.time.split(':');
+      const formattedDate = `${day}-${month}-${year}`;
+      const formattedTime = `${hour}:${minute}`;
+
       await resend.emails.send({
         from: 'no-reply@sofiruiz.com.ar',
         to: user.email,
@@ -76,8 +81,8 @@ export async function GET(req: Request) {
         html: RememberEmail({
           userFullName: user.name,
           serviceName,
-          date: booking.date,
-          time: booking.time,
+          date: formattedDate,
+          time: formattedTime,
         }),
       });
 
