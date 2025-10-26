@@ -77,6 +77,7 @@ export async function GET(req: Request) {
       await resend.emails.send({
         from: 'no-reply@sofiruiz.com.ar',
         to: user.email,
+        cc: process.env.EMAIL_CC ? [process.env.EMAIL_CC!] : [],
         subject: 'Recordatorio de tu turno',
         html: RememberEmail({
           userFullName: user.name,
