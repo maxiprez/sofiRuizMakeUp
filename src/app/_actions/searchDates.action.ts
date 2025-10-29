@@ -13,7 +13,6 @@ export async function searchDates() {
   const { data, error } = await supabase
     .from("bookings")
     .select(`*, users:users(*), services:services(*)`)
-    .eq("status", true)
     .gte("date", todayISO)
     .order("date", { ascending: true })
     .order("time", { ascending: true });

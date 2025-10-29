@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchDates } from "../hooks/useSearchDates"
+import { useSearchDates } from "@/app/hooks/useSearchDates"
 import {Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/app/components/ui/card"
 import {Button} from "@/app/components/ui/button"
 import { Filter, Plus } from "lucide-react"
