@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@supabase/supabase-js";
-import { auth } from "../../../auth";
+import { auth } from "auth";
 import { revalidatePath } from "next/cache";
 import { NEXTAUTH_URL } from "@/utils/urls";
 import { ConfirmationEmail } from "@/app/components/emails/ConfirmationEmail";

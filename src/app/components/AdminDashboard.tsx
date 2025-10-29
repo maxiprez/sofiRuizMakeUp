@@ -1,7 +1,7 @@
 "use client";
 
-import HeaderAdmin from "./HeaderAdmin"
-import { SidebarAdmin } from "./Sidebaradmin"
+import HeaderAdmin from "@/app/components/HeaderAdmin"
+import { SidebarAdmin } from "@/app/components/Sidebaradmin"
 import {
     Calendar,
     Users,
