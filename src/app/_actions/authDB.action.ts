@@ -25,7 +25,7 @@ export async function createUser(formData: FormData) {
   try {
     const { data: existingUserByEmail, error: emailError } = await supabase
       .from("users")
-      .select("id")
+      .select("id, email, is_verified")
       .eq("email", email)
       .maybeSingle();
 
@@ -33,8 +33,32 @@ export async function createUser(formData: FormData) {
       console.error("Error al verificar el mail:", emailError);
       return { error: "Error al verificar el mail." };
     }
+
     if (existingUserByEmail) {
-      return { error: "El mail ya está registrado." };
+      if (existingUserByEmail.is_verified) {
+        return { error: "El mail ya está registrado." };
+      } else {
+        console.warn("Eliminando usuario no verificado anterior...");
+
+        const { error: deleteUserError } = await supabase
+          .from("users")
+          .delete()
+          .eq("email", email);
+
+        if (deleteUserError) {
+          console.error("Error al eliminar usuario no verificado:", deleteUserError);
+          return { error: "Error al limpiar usuario no verificado." };
+        }
+
+        const { error: deleteAuthError } = await supabase.auth.admin.deleteUser(
+          existingUserByEmail.id
+        );
+
+        if (deleteAuthError) {
+          console.error("Error al eliminar usuario en Auth:", deleteAuthError);
+          return { error: "Error al limpiar usuario en Auth." };
+        }
+      }
     }
 
     const { data: existingUserByTel, error: telError } = await supabase
@@ -57,26 +81,28 @@ export async function createUser(formData: FormData) {
       password,
     });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const { error: insertError } = await supabase.from("users").insert({
-      id: data.user?.id,
-      name,
-      email,
-      tel,
-      password: hashedPassword,
-      is_verified: false,
-    });
-
-    if (insertError) {
-        console.error("Error al insertar el usuario en la base de datos:", insertError);
-        return { error: "Error al crear la cuenta." };
-    }
-
     if (authError) {
       console.error("Error al crear la cuenta en Supabase Auth:", authError.message);
       return { error: "Error al crear la cuenta. Intentá de nuevo en unos minutos." };
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const { error: insertError } = await supabase
+      .from("users")
+      .insert({
+        id: data.user?.id,
+        name,
+        email,
+        tel,
+        password: hashedPassword,
+        is_verified: false,
+      });
+
+    if (insertError) {
+      console.error("Error al insertar el usuario en la base de datos:", insertError);
+      return { error: "Error al crear la cuenta." };
     }
 
     revalidatePath("/login");
