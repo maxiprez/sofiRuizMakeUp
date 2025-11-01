@@ -8,6 +8,7 @@ export default function useAvailability(service: string | null, date: string | n
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!date) return;
     setLoading(true);
     setError(null);
     let url = `/api/availability?date=${date}`;

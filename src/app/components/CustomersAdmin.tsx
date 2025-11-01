@@ -7,9 +7,30 @@ import { Filter, Plus } from "lucide-react"
 import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow,} from "@/app/components/ui/table"
 import {Avatar,AvatarFallback,} from "@/app/components/ui/avatar"
 import {Badge} from "@/app/components/ui/badge"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import { MoreHorizontal, Eye, Edit, Trash2 } from "lucide-react";
+import { ModalBookingsAdmin } from "@/app/components/modals/ModalBookingsAdmin";
+import { useState } from "react";
+import useGetCustomers from "@/app/hooks/useABMCustomers";
+import useGetServices from "@/app/hooks/useABMServices";
 
 export function CustomersAdmin() {
     const { bookings } = useSearchDates();
+    const [openModal, setOpenModal] = useState(false);
+    const { customers } = useGetCustomers();
+    const { services } = useGetServices();
+
+    const validServices = Array.isArray(services) ? services.filter(service => 
+        Boolean(service.status) &&
+        service.id &&
+        service.name &&
+        typeof service.duration === 'number'
+      )
+      .map(({ id, name, duration }) => ({ id, name, duration }))
+  : [];
+
+
+
     return (
         <Card className="border-purple-100">
             <CardHeader>
@@ -27,10 +48,17 @@ export function CustomersAdmin() {
                     <Filter className="h-4 w-4 mr-2" />
                     Filtrar
                 </Button>
-                <Button disabled={true} size="sm" className="bg-pink-600 hover:bg-pink-700 text-white">
-                    <Plus className="h-4 w-4 mr-2" />
+               <Button onClick={() => setOpenModal(true)} size="sm" className="bg-pink-600 text-white">
+                    <Plus className="mr-2 h-4 w-4" />
                     Nueva Cita
-                </Button>
+                    </Button>
+
+                    <ModalBookingsAdmin
+                    open={openModal}
+                    onOpenChange={setOpenModal}
+                    clients={customers}
+                    services={validServices}
+                    />
                 </div>
             </div>
             </CardHeader>
@@ -44,11 +72,12 @@ export function CustomersAdmin() {
                     <TableHead>Fecha</TableHead>
                     <TableHead>Hora</TableHead>
                     <TableHead>Estado</TableHead>
-                    {/* <TableHead className="text-right">Acciones</TableHead> */}
+                    <TableHead>Acciones</TableHead>
                 </TableRow>
                 </TableHeader>
                 <TableBody>
                 {bookings.map((booking) => (
+                    console.log(booking.status),
                     <TableRow key={booking.id}>
                         <TableCell className="font-medium">
                             <div className="flex items-center gap-3">
@@ -66,47 +95,65 @@ export function CustomersAdmin() {
                         <TableCell>{booking.time.slice(0, 5)}hs.</TableCell>
                         <TableCell>
                             <Badge
-                            variant={
-                                booking.status === true
-                                ? "default"
-                                : booking.status === false
-                                    ? "secondary"
-                                    : "destructive"
-                            }
-                            className={
-                                booking.status === true
-                                ? "bg-green-100 text-green-800 hover:bg-green-100"
-                                : booking.status === false
-                                ? "bg-red-100 text-red-800 hover:bg-red-100"
-                                : "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
-                            }
+                                variant={
+                                    booking.status === true
+                                    ? "default"
+                                    : booking.status === false
+                                        ? "secondary"
+                                        : "destructive"
+                                }
+                                className={
+                                    booking.status === true
+                                    ? "bg-green-100 text-green-800 hover:bg-green-100"
+                                    : booking.status === false
+                                    ? "bg-red-100 text-red-800 hover:bg-red-100"
+                                    : "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
+                                }
                             >
                             {booking.status ? "Confirmada" : "Cancelada"}
                             </Badge>
                         </TableCell>
-                        <TableCell className="text-right">
-                        {/* <DropdownMenu>
+                       <TableCell className="text-right">
+                        <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="h-4 w-4" />
-                                </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="hover:bg-purple-50 focus-visible:ring-1 focus-visible:ring-purple-200 flex items-center justify-center" 
+                            >
+                                <MoreHorizontal className="h-4 w-4 text-gray-500 align-middle" />
+                            </Button>
                             </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
-                                <Eye className="h-4 w-4 mr-2" />
+
+                            <DropdownMenuContent
+                            align="start"
+                            sideOffset={6}
+                            className="w-44 bg-white shadow-md border border-gray-100 rounded-lg p-1 z-50"
+                            >
+                            <DropdownMenuItem
+                                className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                            >
+                                <Eye className="h-4 w-4 mr-2 text-gray-500" />
                                 Ver detalles
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                <Edit className="h-4 w-4 mr-2" />
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                                className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                            >
+                                <Edit className="h-4 w-4 mr-2 text-gray-500" />
                                 Editar
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-red-600">
-                                <Trash2 className="h-4 w-4 mr-2" />
+                            </DropdownMenuItem>
+
+                            <DropdownMenuSeparator className="my-1 bg-gray-100 h-px" />
+
+                            <DropdownMenuItem
+                                className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+                            >
+                                <Trash2 className="h-4 w-4 mr-2 text-red-500" />
                                 Cancelar
-                                </DropdownMenuItem>
-                            </DropdownMenuContent> 
-                        </DropdownMenu> */}
+                            </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                         </TableCell>
                     </TableRow>
                 ))}
