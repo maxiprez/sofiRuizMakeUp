@@ -1,16 +1,16 @@
 "use client";
 
 import { SidebarProvider } from "@/app/components/ui/sidebar";
-import { SidebarAdmin } from "../../components/Sidebaradmin";
+import { SidebarAdmin } from "@/app/components/Sidebaradmin";
 import { SidebarInset } from "@/app/components/ui/sidebar";
-import HeaderAdmin from "../../components/HeaderAdmin";
+import HeaderAdmin from "@/app/components/HeaderAdmin";
 import { Calendar, Users, Scissors } from "lucide-react";
-import { QuickActionCard } from "../../components/QuickActionsCardsAdmin";
+import { QuickActionCard } from "@/app/components/QuickActionsCardsAdmin";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/app/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/app/components/ui/table";
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
 import { Badge } from "@/app/components/ui/badge";
-import useGetCustomers from "../../hooks/useABMCustomers";
+import useGetCustomers from "@/app/hooks/useABMCustomers";
 import { BeatLoader } from "react-spinners";
 
 type Customer = {

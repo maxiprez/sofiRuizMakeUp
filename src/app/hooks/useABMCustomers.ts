@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getCustomers } from "../_actions/abmCustomers.action";
-import { Customer } from "../_actions/abmCustomers.action";
+import { getCustomers } from "@/app/_actions/abmCustomers.action";
+import { Customer } from "@/app/_actions/abmCustomers.action";
 
 export default function useGetCustomers() {
     const [customers, setCustomers] = useState<Customer[]>([]);

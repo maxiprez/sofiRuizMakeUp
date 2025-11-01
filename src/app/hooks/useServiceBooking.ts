@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
-import { createBooking } from '../_actions/bookingsDB.action';
+import { createBooking } from '@/app/_actions/bookingsDB.action';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import { useModalPhone } from './useModalPhone';
+import { useModalPhone } from '@/app/hooks/useModalPhone';
 interface Session {
   user: {
     name?: string | null;
