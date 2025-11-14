@@ -13,20 +13,21 @@ interface BookingData {
   service_id: string;
   date: string;
   time: string;
+  user_id?: string;
 }
 
 export async function createBooking(bookingData: BookingData) {
   const session = await auth();
-  const userId = session?.user?.id;
-  const userMail = session?.user?.email;
-  const userFullName = session?.user?.name;
-  const userTel = session?.user?.tel;
+  const targetUserId = bookingData.user_id || session?.user?.id;
+  const userMail = bookingData.user_id ? null : session?.user?.email;
+  const userFullName = bookingData.user_id ? null : session?.user?.name;
+  const userTel = bookingData.user_id ? null : session?.user?.tel;
 
-  if(!session || !userId || !userMail){
-    return {error: "Tenés que iniciar sesión para crear una cita.", success: false, login: false};
+  if(!session || !targetUserId) {
+    return {error: "Error de autenticación al crear la cita.", success: false, login: false};
   }
 
-  if(!userTel){
+  if(!bookingData.user_id && !userTel) {
     return {error: "Tenés que completar tu número de teléfono para crear una cita.", success: false, tel: false};
   }
 
@@ -47,7 +48,7 @@ export async function createBooking(bookingData: BookingData) {
     const { data: existingBooking, error: existingBookingError } = await supabase
       .from("bookings")
       .select("id, status")
-      .eq("user_id", userId)
+      .eq("user_id", targetUserId)
       .eq("date", date);
 
     if (existingBookingError) {
@@ -58,57 +59,77 @@ export async function createBooking(bookingData: BookingData) {
     if (existingBooking && existingBooking.length > 0 && existingBooking[0].status) {
         return { error: "Ya tienes una reserva para este día.", success: false };
     }
-    const {data, error: insertError} = await supabase
-    .from("bookings")
-    .insert({
-      user_id: userId,
-      date,
-      time,
-      service_id,
-      status: true,
-      google_event_id: ""
-    })
-    .select(`*, services(*)`)
-    .single();
+    const { data, error } = await supabase
+      .from("bookings")
+      .insert([
+        {
+          user_id: targetUserId,
+          date,
+          time,
+          service_id,
+          status: true,
+          google_event_id: ""
+        }
+      ])
+      .select(`*, services(*)`)
+      .single();
 
 
-    if(insertError){
-      console.error("Error al crear la cita:", insertError);
+    if(error){
+      console.error("Error al crear la cita:", error);
       return {error: "Ocurrió un error al crear la cita."};
     }
 
-    const subject = "Confirmación de turno";
-    const formatter = new Intl.DateTimeFormat('es-AR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'America/Argentina/Buenos_Aires',
-    });
+    let targetUserEmail = userMail;
+    let targetUserName = userFullName;
+    
+    if (bookingData.user_id && !userMail) {
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email, name')
+        .eq('id', targetUserId)
+        .single();
+      
+      if (userError) {
+        console.error('Error al obtener el email del usuario:', userError);
+      } else if (userData) {
+        targetUserEmail = userData.email;
+        targetUserName = userData.name || targetUserName;
+      }
+    }
 
-    const dateEmail = formatter.format(new Date(`${date}T${time}:00-03:00`));
+    if (targetUserEmail) {
+      const subject = "Confirmación de turno";
+      const formatter = new Intl.DateTimeFormat('es-AR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'America/Argentina/Buenos_Aires',
+      });
 
-    const htmlContent = ConfirmationEmail({
-      userFullName,
-      serviceName: service.name,
-      date: dateEmail,
-      time,
-    });
+      const dateEmail = formatter.format(new Date(`${date}T${time}:00-03:00`));
 
-    const response = await fetch(`${NEXTAUTH_URL}/api/sendEmail`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        toEmail: userMail,
-        subject,
-        htmlContent,
-      }),
-    });
+      const htmlContent = ConfirmationEmail({
+        userFullName: targetUserName,
+        serviceName: service.name,
+        date: dateEmail,
+        time,
+      });
 
-if (!response.ok) {
-  console.error('Error al enviar el correo de confirmación');
-  return { success: false, error: 'Error al enviar el correo de confirmación' };
-}
+      const response = await fetch(`${NEXTAUTH_URL}/api/sendEmail`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toEmail: targetUserEmail,
+          subject,
+          htmlContent,
+        }),
+      });
 
+      if (!response.ok) {
+        console.error('Error al enviar el correo de confirmación');
+      }
+    }
     const startDateTime = new Date(`${date}T${time}:00-03:00`);
     const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);
     const calendarEvent = {

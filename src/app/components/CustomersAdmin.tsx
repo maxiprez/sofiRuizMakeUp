@@ -29,8 +29,6 @@ export function CustomersAdmin() {
       .map(({ id, name, duration }) => ({ id, name, duration }))
   : [];
 
-
-
     return (
         <Card className="border-purple-100">
             <CardHeader>
@@ -77,7 +75,6 @@ export function CustomersAdmin() {
                 </TableHeader>
                 <TableBody>
                 {bookings.map((booking) => (
-                    console.log(booking.status),
                     <TableRow key={booking.id}>
                         <TableCell className="font-medium">
                             <div className="flex items-center gap-3">

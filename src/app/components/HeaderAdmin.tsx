@@ -16,9 +16,11 @@ import { Input } from "@/app/components/ui/input"
 import { Button } from "@/app/components/ui/button"
 import { Bell } from "lucide-react"
 import { ChevronDown } from "lucide-react"
-
+import { useSession } from 'next-auth/react';
 
 export default function HeaderAdmin() {
+     const { data: session } = useSession();
+
     return (
         <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-sm border-b border-purple-100">
         <div className="flex h-16 items-center gap-4 px-6">
@@ -41,9 +43,9 @@ export default function HeaderAdmin() {
                 <Button variant="ghost" className="flex items-center gap-2 text-purple-700 hover:bg-purple-50">
                 <Avatar className="h-8 w-8">
                     {/* <AvatarImage src="/" /> */}
-                    <AvatarFallback className="bg-pink-100 text-pink-700">MP</AvatarFallback>
+                    <AvatarFallback className="bg-pink-100 text-pink-700 uppercase">{session?.user?.name?.slice(0, 2)}</AvatarFallback>
                 </Avatar>
-                <span className="hidden md:inline">maxi prez</span>
+                <span className="hidden md:inline capitalize">{session?.user?.name}</span>
                 <ChevronDown className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>
