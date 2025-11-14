@@ -6,6 +6,7 @@ export const useServiceBookingAdmin = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const handleAdminReserve = async (service_id: string, date: string, time: string, user: { user: string }) => {
+
     if (!service_id || !date || !time || !user?.user) {
       Swal.fire({
         icon: 'warning',
@@ -19,6 +20,7 @@ export const useServiceBookingAdmin = () => {
       setIsSaving(true);
       const bookingResult = await createBooking({
         service_id,
+        user_id: user.user,
         date,
         time,
       });

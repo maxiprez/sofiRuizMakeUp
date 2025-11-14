@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { auth } from '../../../../../../auth';
+import { auth } from 'auth';
 import { NextResponse } from 'next/server';
 import { deleteEvent } from '../../../../../../pages/api/calendarUtils';
 
