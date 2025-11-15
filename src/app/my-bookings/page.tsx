@@ -15,7 +15,7 @@ export default function MyAccount() {
   
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <Card className="w-full max-w-md mx-4 border-purple-100">
           <CardContent className="flex flex-col items-center justify-center p-8 space-y-4">
             <div className="p-4 bg-pink-100 rounded-full">
@@ -33,7 +33,7 @@ export default function MyAccount() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-purple-50 to-pink-50 flex items-center justify-center">
         <Card className="w-full max-w-md mx-4 border-purple-100">
           <CardContent className="flex flex-col items-center justify-center p-8 space-y-4">
             <div className="p-4 bg-pink-100 rounded-full">
@@ -51,7 +51,7 @@ export default function MyAccount() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
+      <div className="min-h-screen bg-linear-to-br from-purple-50 to-pink-50 p-6">
         <div className="max-w-4xl mx-auto">
           <Alert className="border-red-200 bg-red-50">
             <AlertCircle className="h-4 w-4 text-red-600" />
@@ -83,12 +83,12 @@ export default function MyAccount() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+    <div className="min-h-screen bg-linear-to-br from-purple-50 to-pink-50">
       <div className="max-w-6xl mx-auto p-6 space-y-8">
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3">
             <Avatar className="h-16 w-16">
-              <AvatarFallback className="bg-gradient-to-br from-pink-500 to-purple-600 text-white text-xl font-bold">
+              <AvatarFallback className="bg-linear-to-br from-pink-500 to-purple-600 text-white text-xl font-bold">
                 M
               </AvatarFallback>
             </Avatar>
@@ -182,7 +182,7 @@ export default function MyAccount() {
                 </div>
                 <Button
                   asChild
-                  className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+                  className="bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
                 >
                   <Link href="/" className="flex items-center gap-2 text-white">
                     <Sparkles className="h-4 w-4" />
@@ -200,7 +200,7 @@ export default function MyAccount() {
                       hidden={showHistory && isUpcoming(booking.date)}
                       className={`transition-all hover:shadow-md ${
                         isUpcoming(booking.date)
-                          ? "border-pink-200 bg-gradient-to-r from-pink-50 to-purple-50"
+                          ? "border-pink-200 bg-linear-to-r from-pink-50 to-purple-50"
                           : "border-gray-200 bg-gray-50"
                       }`}
                     >
@@ -253,7 +253,7 @@ export default function MyAccount() {
                     </Card>
                   )
                 })}
-                <Card className="border-dashed border-2 border-pink-200 bg-gradient-to-r from-pink-50 to-purple-50 hover:border-pink-300 transition-colors">
+                <Card className="border-dashed border-2 border-pink-200 bg-linear-to-r from-pink-50 to-purple-50 hover:border-pink-300 transition-colors">
                   <CardContent className="p-6">
                     <div className="text-center space-y-4">
                       <div className="flex justify-center">
