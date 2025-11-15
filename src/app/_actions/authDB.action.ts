@@ -79,6 +79,11 @@ export async function createUser(formData: FormData) {
     const { error: authError, data } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          full_name: name
+        }
+      }
     });
 
     if (authError) {
