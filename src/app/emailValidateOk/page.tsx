@@ -27,19 +27,19 @@ export default function EmailValidateOk() {
 
   if (!sessionLoaded) {
     return (
-      <section className={`flex justify-center items-center h-screen bg-gray-100`}>
-        <div className={`bg-white p-8 rounded-md shadow-md w-96 mx-4`}>
+      <section className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="bg-white p-8 rounded-md shadow-md w-96 mx-4">
         <BeatLoader color="#f472b6" size={16} />
         </div>
       </section>
     );
   }
   return (
-    <section className={`flex justify-center items-center h-screen bg-gray-100`}>
-        <div className={`bg-white p-8 rounded-md shadow-md w-96 mx-4`}>
-          <h1 className={`text-2xl font-bold mb-6 text-gray-700 text-center`}>¡Tu email ha sido verificado con éxito!</h1>
+    <section className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex flex-col items-center justify-center bg-white p-8 rounded-md shadow-md w-96 mx-4">
+          <h1 className="text-2xl font-bold mb-4 text-gray-700 text-center">¡Tu email ha sido verificado con éxito!</h1>
           <BeatLoader color="#f472b6" size={16} />
-          <p className={`text-sm text-center text-gray-700 mb-2`}>Redireccionando...</p>
+          <p className="text-sm text-center text-gray-700 mt-2">Redireccionando...</p>
         </div>
     </section>
   );

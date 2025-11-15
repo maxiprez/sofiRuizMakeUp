@@ -47,7 +47,7 @@ export function ModalBookingsAdmin({ open, onOpenChange, clients, services }: Mo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg bg-amber-50">
+      <DialogContent className="sm:max-w-lg bg-white">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold text-gray-900">Agendar Nueva Cita</DialogTitle>
         </DialogHeader>
@@ -56,7 +56,7 @@ export function ModalBookingsAdmin({ open, onOpenChange, clients, services }: Mo
           {/* Cliente */}
           <div>
             <label className="text-sm text-gray-600">Cliente</label>
-            <div className="bg-amber-50 rounded-md border border-gray-300">
+            <div className="bg-white rounded-md border border-gray-300">
               <Command className="max-h-45">
                 <CommandInput placeholder="Buscar cliente..." />
                 <CommandList>
@@ -83,7 +83,7 @@ export function ModalBookingsAdmin({ open, onOpenChange, clients, services }: Mo
               <SelectTrigger>
                 <SelectValue placeholder="Seleccionar servicio" />
               </SelectTrigger>
-              <SelectContent className="bg-amber-50">
+              <SelectContent className="bg-white">
                 {services.map((service) => (
                   <SelectItem key={service.id} value={service.id}>
                     {service.name}
@@ -96,7 +96,7 @@ export function ModalBookingsAdmin({ open, onOpenChange, clients, services }: Mo
           {/* Fecha */}
           <div>
             <label className="text-sm text-gray-600">Fecha</label>
-            <Input type="date" onChange={(e) => setSelectedDate(e.target.value)} className="bg-amber-50" />
+            <Input type="date" onChange={(e) => setSelectedDate(e.target.value)} className="bg-white" />
           </div>
 
           {/* Horarios disponibles */}
@@ -126,11 +126,11 @@ export function ModalBookingsAdmin({ open, onOpenChange, clients, services }: Mo
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="cursor-pointer">
             Cancelar
           </Button>
           <Button
-            className="bg-pink-600 text-white hover:bg-pink-700"
+            className="bg-pink-600 text-white hover:bg-pink-700 cursor-pointer"
             onClick={() => {
               if (!selectedClient || !selectedService || !selectedDate || !selectedTime) return;
               handleAdminReserve(selectedService, selectedDate, selectedTime, { user: selectedClient });
