@@ -12,8 +12,8 @@ export default function Register() {
   const { showPassword } = usePassword();
   
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-md shadow-md w-96">
+    <div className="flex justify-center items-center min-h-screen bg-linear-to-br from-gray-100 to-gray-200 px-4">
+      <div className="bg-white p-6 sm:p-8 md:p-10 rounded-xl shadow-lg w-full max-w-sm sm:max-w-md md:max-w-lg">
         <h1 className="text-2xl font-bold mb-6 text-gray-700 text-center">Registrarme</h1>
         <form onSubmit={handleSubmit}>
           <Input labelText="Nombre y apellido" placeholder="Alicia Gómez" inputMode="text" name="name" id="name" htmlType="text" required value={name} onChange={(e) => setName(e.target.value)} button={false} />
@@ -24,7 +24,7 @@ export default function Register() {
           <Button 
            type="submit"
            text="Confirmar"
-           className={`cursor-pointer w-full ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''} bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1`}
+           className={`cursor-pointer w-full ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''} bg-pink-500 text-white px-4 py-3 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1`}
            loading={isSubmitting}
            disabled={isSubmitting}
           />

@@ -11,8 +11,8 @@ function UpdatePasswordPage() {
   const isSuccess = !!messageSuccess;
 
   return (
-    <section className={`flex justify-center items-center h-screen bg-gray-100`}>
-      <div className={`bg-white p-8 rounded-md shadow-md w-96 mx-4`}>
+    <section className='flex justify-center items-center min-h-screen bg-linear-to-br from-gray-100 to-gray-200 px-4'>
+      <div className='bg-white p-6 sm:p-8 md:p-10 rounded-xl shadow-lg w-full max-w-sm sm:max-w-md md:max-w-lg'>
         <h1 className={`text-2xl font-bold mb-6 text-gray-700 text-center`}>
           {isSuccess ? '¡Contraseña Actualizada!' : 'Actualizar Contraseña'}
         </h1>
@@ -57,7 +57,7 @@ function UpdatePasswordPage() {
               <Button
                 text="Iniciar Sesión"
                 type="button"
-                className="w-full bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1"
+                className="bg-pink-500 text-white px-4 py-3 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-1"
                 id="loginButton"
               />
             </Link>
