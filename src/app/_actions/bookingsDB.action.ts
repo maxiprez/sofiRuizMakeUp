@@ -132,9 +132,10 @@ export async function createBooking(bookingData: BookingData) {
     }
     const startDateTime = new Date(`${date}T${time}:00-03:00`);
     const endDateTime = new Date(startDateTime.getTime() + service.duration * 60000);
+    const displayUserName = targetUserName || session?.user?.name || "Cliente";
     const calendarEvent = {
-      summary: `Turno: ${service.name}`,
-      description: `Turno reservado para ${userFullName}`,
+      summary: `Turno: ${service.name} para ${displayUserName}`,
+      description: `Turno reservado para ${displayUserName}`,
       start: {
         dateTime: startDateTime.toISOString(),
         timeZone: 'America/Argentina/Buenos_Aires',
