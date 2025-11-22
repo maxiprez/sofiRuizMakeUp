@@ -13,12 +13,14 @@ import { ModalBookingsAdmin } from "@/app/components/modals/ModalBookingsAdmin";
 import { useState } from "react";
 import useGetCustomers from "@/app/hooks/useABMCustomers";
 import useGetServices from "@/app/hooks/useABMServices";
+import useBookingUser from "@/app/hooks/useBookingUser";
 
 export function CustomersAdmin() {
     const { bookings } = useSearchDates();
     const [openModal, setOpenModal] = useState(false);
     const { customers } = useGetCustomers();
     const { services } = useGetServices();
+    const { handleCancelBooking } = useBookingUser();
 
     const validServices = Array.isArray(services) ? services.filter(service => 
         Boolean(service.status) &&
@@ -144,6 +146,14 @@ export function CustomersAdmin() {
                             <DropdownMenuSeparator className="my-1 bg-gray-100 h-px" />
 
                             <DropdownMenuItem
+                                onClick={() => handleCancelBooking(booking.id, {
+                                    id: booking.id,
+                                    service: booking.services.name,
+                                    date: booking.date,
+                                    time: booking.time,
+                                    services: booking.services,
+                                    users: booking.users,
+                                })}
                                 className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
                             >
                                 <Trash2 className="h-4 w-4 mr-2 text-red-500" />
