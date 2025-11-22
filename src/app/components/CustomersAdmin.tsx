@@ -13,12 +13,14 @@ import { ModalBookingsAdmin } from "@/app/components/modals/ModalBookingsAdmin";
 import { useState } from "react";
 import useGetCustomers from "@/app/hooks/useABMCustomers";
 import useGetServices from "@/app/hooks/useABMServices";
+import useBookingUser from "@/app/hooks/useBookingUser";
 
 export function CustomersAdmin() {
     const { bookings } = useSearchDates();
     const [openModal, setOpenModal] = useState(false);
     const { customers } = useGetCustomers();
     const { services } = useGetServices();
+    const { handleCancelBooking } = useBookingUser();
 
     const validServices = Array.isArray(services) ? services.filter(service => 
         Boolean(service.status) &&
@@ -110,48 +112,59 @@ export function CustomersAdmin() {
                             {booking.status ? "Confirmada" : "Cancelada"}
                             </Badge>
                         </TableCell>
-                       <TableCell className="text-right">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="hover:bg-purple-50 focus-visible:ring-1 focus-visible:ring-purple-200 flex items-center justify-center" 
-                            >
-                                <MoreHorizontal className="h-4 w-4 text-gray-500 align-middle" />
-                            </Button>
-                            </DropdownMenuTrigger>
+                       {
+                            booking.status === true && (
+                            <TableCell className="text-right">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="hover:bg-purple-50 focus-visible:ring-1 focus-visible:ring-purple-200 flex items-center justify-center" 
+                                    >
+                                        <MoreHorizontal className="h-4 w-4 text-gray-500 align-middle" />
+                                    </Button>
+                                    </DropdownMenuTrigger>
 
-                            <DropdownMenuContent
-                            align="start"
-                            sideOffset={6}
-                            className="w-44 bg-white shadow-md border border-gray-100 rounded-lg p-1 z-50"
-                            >
-                            <DropdownMenuItem
-                                className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                            >
-                                <Eye className="h-4 w-4 mr-2 text-gray-500" />
-                                Ver detalles
-                            </DropdownMenuItem>
+                                    <DropdownMenuContent
+                                    align="start"
+                                    sideOffset={6}
+                                    className="w-44 bg-white shadow-md border border-gray-100 rounded-lg p-1 z-50"
+                                    >
+                                    <DropdownMenuItem
+                                        className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                                    >
+                                        <Eye className="h-4 w-4 mr-2 text-gray-500" />
+                                        Ver detalles
+                                    </DropdownMenuItem>
 
-                            <DropdownMenuItem
-                                className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                            >
-                                <Edit className="h-4 w-4 mr-2 text-gray-500" />
-                                Editar
-                            </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                                    >
+                                        <Edit className="h-4 w-4 mr-2 text-gray-500" />
+                                        Editar
+                                    </DropdownMenuItem>
 
-                            <DropdownMenuSeparator className="my-1 bg-gray-100 h-px" />
+                                    <DropdownMenuSeparator className="my-1 bg-gray-100 h-px" />
 
-                            <DropdownMenuItem
-                                className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
-                            >
-                                <Trash2 className="h-4 w-4 mr-2 text-red-500" />
-                                Cancelar
-                            </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        </TableCell>
+                                    <DropdownMenuItem
+                                        onClick={() => handleCancelBooking(booking.id, {
+                                            id: booking.id,
+                                            service: booking.services.name,
+                                            date: booking.date,
+                                            time: booking.time,
+                                            services: booking.services,
+                                            users: booking.users,
+                                        })}
+                                        className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+                                    >
+                                        <Trash2 className="h-4 w-4 mr-2 text-red-500" />
+                                        Cancelar
+                                    </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TableCell>
+                        )}
                     </TableRow>
                 ))}
                 </TableBody>

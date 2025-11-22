@@ -1,6 +1,6 @@
 'use client';
 
-import useBookingUser from "../hooks/useBookingUser";
+import useBookingUser from "@/app/hooks/useBookingUser";
 import BeatLoader from 'react-spinners/BeatLoader';
 import Link from "next/link";
 import { Calendar, Clock, Scissors, AlertCircle, CalendarX, Sparkles, ArrowRight, Trash2 } from "lucide-react"

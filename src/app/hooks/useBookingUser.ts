@@ -8,30 +8,36 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import { CancelationEmail } from '@/app/components/emails/CancelationEmail';
 
 interface Booking {
-  id: number;
+  id: number | string;
   service: string;
   date: string;
   time: string;
-  services: Services;
+  services?: Services;
+  users?: {
+    id?: string;
+    name?: string;
+    email?: string;
+    tel?: string;
+  };
 }
 interface Services{
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
   duration?:number;
-  price:number;
-  createdAt: string;
-  status: boolean;
+  price?:number;
+  createdAt?: string;
+  status?: boolean;
 }
 interface UseBookingUserResult {
   bookings: Booking[];
   loading: boolean;
   error: string | null;
   fetchUserBookings: () => Promise<void>;
-  handleCancelBooking: (bookingId: number) => Promise<void>;
-  cancelLoadingId: number | null;
-  setCancelLoadingId: React.Dispatch<React.SetStateAction<number | null>>;
-  cancelErrorId: number | null;
-  setCancelErrorId: React.Dispatch<React.SetStateAction<number | null>>;
+  handleCancelBooking: (bookingId: number | string, fallbackBooking?: Booking) => Promise<void>;
+  cancelLoadingId: number | string | null;
+  setCancelLoadingId: React.Dispatch<React.SetStateAction<number | string | null>>;
+  cancelErrorId: number | string | null;
+  setCancelErrorId: React.Dispatch<React.SetStateAction<number | string | null>>;
   isAuthenticated: boolean;
   isUpcoming: (date: string) => boolean;
   filteredBookings: Booking[];
@@ -45,8 +51,8 @@ export default function useBookingUser(): UseBookingUserResult {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [cancelLoadingId, setCancelLoadingId] = useState<number | null>(null);
-  const [cancelErrorId, setCancelErrorId] = useState<number | null>(null);
+  const [cancelLoadingId, setCancelLoadingId] = useState<number | string | null>(null);
+  const [cancelErrorId, setCancelErrorId] = useState<number | string | null>(null);
   const isAuthenticated = status === 'authenticated';
   const [showHistory, setShowHistory] = useState(false);
 
@@ -70,11 +76,11 @@ export default function useBookingUser(): UseBookingUserResult {
     }
   };
 
-  const handleCancelBooking = async (bookingId: number) => {
+  const handleCancelBooking = async (bookingId: number | string, fallbackBooking?: Booking) => {
     setCancelLoadingId(bookingId);
     setCancelErrorId(null);
 
-     const swalWithBootstrapButtons = Swal.mixin({
+    const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
         confirmButton: "bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",
         cancelButton: "bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 rounded cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 mr-4"
@@ -92,15 +98,22 @@ export default function useBookingUser(): UseBookingUserResult {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        handleCancelBookingConfirm(bookingId);
+        handleCancelBookingConfirm(bookingId, fallbackBooking);
       }
     });
   };
 
-  const handleCancelBookingConfirm = async (bookingId: number) => {
+  const handleCancelBookingConfirm = async (bookingId: number | string, fallbackBooking?: Booking) => {
     try {
-      const bookingToCancel = bookings.find((b) => b.id === bookingId);
-      const response = await fetch('/api/user/bookings/cancel', {
+      const normalizedId = String(bookingId);
+      const bookingToCancel = bookings.find((b) => String(b.id) === normalizedId);
+      const bookingDetails = bookingToCancel ?? fallbackBooking;
+
+      const cancelEndpoint = session?.user?.role === 'admin'
+        ? '/api/admin/bookings/cancel'
+        : '/api/user/bookings/cancel';
+
+      const response = await fetch(cancelEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,76 +122,83 @@ export default function useBookingUser(): UseBookingUserResult {
         
       });
 
-
-      // Send cancellation email
-      const userEmail = session?.user?.email;
-      if (userEmail) {
+      if (bookingDetails && session?.user?.role !== 'admin') {
         const subject = "Cancelación de turno";
-        
+
         const formatDate = (dateString: string | undefined, timeString: string | undefined) => {
           if (!dateString) return 'Fecha no disponible';
-          
+
           try {
-            // Basic date parsing - assumes dateString is in YYYY-MM-DD format
-            const [year, month, day] = dateString.split('-').map(Number);
-            const date = new Date(year, month - 1, day); // month is 0-indexed in JS Date
-            
-            // Add time if available
+            const normalized = dateString.includes('/')
+              ? (() => {
+                  const [day, month, year] = dateString.split('/');
+                  return `${year.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                })()
+              : dateString;
+
+            const [year, month, day] = normalized.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+
+            if (Number.isNaN(date.getTime())) return dateString;
+
             if (timeString) {
-              const [hours, minutes] = timeString.split(':').map(Number);
-              date.setHours(hours, minutes, 0, 0);
+              const [hours = '00', minutes = '00'] = timeString.split(':');
+              date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
             }
-            
+
             return date.toLocaleDateString('es-AR', {
               day: '2-digit',
               month: '2-digit',
               year: 'numeric'
-            }).replace(/\//g, '-'); // Convert DD/MM/YYYY to DD-MM-YYYY
-            
+            }).replace(/\//g, '-');
           } catch (error) {
             console.error('Error formatting date:', error);
-            return dateString; // Return original if parsing fails
+            return dateString;
           }
         };
 
         const formatTime = (timeString: string | undefined) => {
           if (!timeString) return '--:--';
           try {
-            const [hours, minutes] = timeString.split(':').map(part => part.padStart(2, '0'));
-            return `${hours}:${minutes}`;
+            const [hours = '00', minutes = '00'] = timeString.split(':');
+            return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
           } catch (error) {
             console.error('Error formatting time:', error);
             return timeString;
           }
         };
 
-        const htmlContent = CancelationEmail({
-          userFullName: session?.user?.name ?? '',
-          service: bookingToCancel?.services?.name ?? 'Servicio',
-          date: bookingToCancel?.date ? formatDate(bookingToCancel?.date, bookingToCancel?.time) : '',
-          time: bookingToCancel?.time ? formatTime(bookingToCancel?.time) : ''
-        });
+        const recipientName = bookingDetails?.users?.name ?? session?.user?.name ?? 'Cliente';
+        const targetEmail = bookingDetails?.users?.email ?? session?.user?.email;
 
-        const emailResponse = await fetch('/api/sendEmail', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            toEmail: userEmail,
-            ccEmail: process.env.EMAIL_CC!,
-            subject,
-            htmlContent,
-          }),
-        });
+        if (targetEmail) {
+          const htmlContent = CancelationEmail({
+            userFullName: recipientName,
+            service: bookingDetails?.services?.name ?? bookingDetails?.service ?? 'Servicio',
+            date: bookingDetails?.date ? formatDate(bookingDetails?.date, bookingDetails?.time) : 'Fecha no disponible',
+            time: bookingDetails?.time ? formatTime(bookingDetails?.time) : '--:--'
+          });
 
-        if (!emailResponse.ok) {
-          console.error('Error al enviar el correo de cancelación');
+          const emailResponse = await fetch('/api/sendEmail', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              toEmail: targetEmail,
+              ccEmail: process.env.EMAIL_CC!,
+              subject,
+              htmlContent,
+            }),
+          });
+
+          if (!emailResponse.ok) {
+            console.error('Error al enviar el correo de cancelación');
+          }
         }
-      }
-     
+      }    
       if (response.ok) {
-        setBookings(bookings.filter((booking) => booking.id !== bookingId));
+        setBookings(bookings.filter((booking) => String(booking.id) !== normalizedId));
       } else {
         const errorData = await response.json();
         setCancelErrorId(bookingId);
