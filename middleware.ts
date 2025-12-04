@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { auth } from "./auth";
+import { auth } from "auth";
 import { NextResponse } from "next/server";
 
 export const config = { 
