@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback } from 'react';
-import useGetServices from './useABMServices';
-import { Service } from '../_actions/abmServices.action';
+import useGetServices from '@/app/hooks/useABMServices';
+import { Service } from '@/app/_actions/abmServices.action';
 
 export default function useHero(onSearchCallback: (serviceId: string, date: string, duration: number) => void) {
   const { services } = useGetServices();

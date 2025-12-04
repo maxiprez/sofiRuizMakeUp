@@ -18,7 +18,8 @@
     "hooks": "@/hooks",
     "auth": "@/auth",
     "app": "@/app",
-    "pages": "@/pages"
+    "pages": "@/pages",
+    "supabase": "@/types/supabase"
   },
   "iconLibrary": "lucide"
 }
