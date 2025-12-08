@@ -72,11 +72,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 function extractAvailableTimes(events: calendar_v3.Schema$Event[], selectedDate: Date, duration: number) {
   const localDate = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate()));
   const startTime = 9;
-  const endTime = 19;
+  let endTime = 19;
   const stepMinutes = 30;
   const availableTimes: string[] = [];
 
   if (localDate.getUTCDay() === 0 || localDate.getUTCDay() === 6) return [];
+  if (localDate.getUTCDay() === 2) endTime = 20;
 
   const occupiedSlots = new Set<number>();
 
