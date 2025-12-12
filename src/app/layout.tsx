@@ -6,6 +6,7 @@ import { auth } from "auth";
 import { Session } from "next-auth";
 import { getActiveNotification } from "@/app/_actions/getActiveNotification.action";
 import AnnouncementModal from "@/app/components/modals/AnnouncementModal";
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: "Sofía Ruiz Make up",
@@ -28,6 +29,7 @@ export default async function RootLayout({ children,}: {children: React.ReactNod
           {notification && <AnnouncementModal announcement={notification} />}
           {children}
         </AuthProvider>
+        <Analytics/>
       </body>
     </html>
   );
