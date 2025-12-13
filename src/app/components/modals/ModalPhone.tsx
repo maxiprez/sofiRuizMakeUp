@@ -1,10 +1,11 @@
 "use client";
-import Input from "../Input";
-import { useRegister } from "../../hooks/useRegister";
-import Button from "../CustomBtn";
+
+import Input from "@/app/components/Input";
+import { useRegister } from "@/app/hooks/useRegister";
+import Button from "@/app/components/CustomBtn";
 import { useUpdatePhone } from "@/app/hooks/useUpdatePhone";
 import { Session } from "next-auth";
-import { formatToNumbersOnly } from '@/utils/utilsFormat';
+import { formatToNumbersOnly } from 'utils/utilsFormat';
 
 export interface ModalPhoneProps {
   isOpen: boolean;

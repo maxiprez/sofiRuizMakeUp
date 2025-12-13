@@ -3,7 +3,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "auth";
 import { revalidatePath } from "next/cache";
-import { NEXTAUTH_URL } from "@/utils/urls";
+import { NEXTAUTH_URL } from "utils/urls";
 import { ConfirmationEmail } from "@/app/components/emails/ConfirmationEmail";
  
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;

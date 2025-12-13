@@ -56,7 +56,7 @@ export function SidebarAdmin() {
       <Sidebar className="border-r border-purple-100">
         <SidebarHeader className="border-b border-purple-100 p-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 text-white font-bold text-sm">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-pink-500 to-purple-600 text-white font-bold text-sm">
               S
             </div>
             <div>

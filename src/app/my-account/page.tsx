@@ -9,7 +9,7 @@ import { User, Edit3, Check, X } from 'lucide-react';
 import BeatLoader from 'react-spinners/BeatLoader';
 import { useSession } from 'next-auth/react';
 import { useUpdatePhone } from '@/app/hooks/useUpdatePhone'; 
-import { formatToNumbersOnly } from '@/utils/utilsFormat';
+import { formatToNumbersOnly } from 'utils/utilsFormat';
 
 export default function UserProfilePage() {
   const { data: session } = useSession();

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/app/_actions/authDB.action";
-import { ValidateEmail } from "@/utils/utilsFormat";
+import { ValidateEmail } from "utils/utilsFormat";
 
 export const useRegister = () => {
   const [name, setName] = useState("");
