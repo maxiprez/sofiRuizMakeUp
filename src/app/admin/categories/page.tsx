@@ -12,7 +12,7 @@ import { QuickActionCard } from "@/app/components/QuickActionsCardsAdmin";
 import NewServiceCard from "@/app/components/NewServiceCard";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useState } from "react";
-import { FormatNumber } from "@/utils/utilsFormat";
+import { FormatNumber } from "utils/utilsFormat";
 
 export default function CategoriesPage() {
   const { services, loading, setServices } = useGetServices();
@@ -50,7 +50,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+    <div className="min-h-screen bg-linear-to-br from-purple-50 to-pink-50">
       <SidebarProvider>
         <SidebarAdmin />
         <SidebarInset>

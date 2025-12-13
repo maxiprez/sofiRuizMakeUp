@@ -1,15 +1,10 @@
-"use client";
-
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card"
-import { CalendarDays } from "lucide-react"
-import { DollarSign, TrendingUp, UserCheck } from "lucide-react"
-import { useInfoAdmin } from "@/app/hooks/useInfoAdmin";
-// import { useGetCustomers } from "@/app/hooks/useABMCustomers";
+import { CalendarDays, XCircle, UserCheck, DollarSign } from "lucide-react"
+import { RevenueData, DailyBookingData, CancelledBookingsData } from "types/entities";
+import { TrendBadge } from '@/app/components/ui/TrendBadge';
+import { Customer } from "@/app/_actions/abmCustomers.action";
 
-export default function CardsAdminWrapper() {
-    const { bookings, difference, icon, iconColor } = useInfoAdmin();
-    // const { customersCount } = useGetCustomers();
+export default function CardsAdminWrapper({ revenue, dailyBookingComparison, cancelledBookings, customers }: { revenue: RevenueData, dailyBookingComparison: DailyBookingData, cancelledBookings: CancelledBookingsData, customers: Customer[] }) {
 
     return (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -19,11 +14,8 @@ export default function CardsAdminWrapper() {
                     <CalendarDays className="h-4 w-4 text-pink-600" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold text-gray-900">{bookings.today ?? 0}</div>
-                    <p className={`text-xs ${iconColor} flex items-center gap-1`}>
-                        {icon && React.createElement(icon, { className: "h-3 w-3" })}
-                        {difference}
-                    </p>
+                    <div className="text-2xl font-bold text-gray-900">{dailyBookingComparison.today}</div>
+                    <TrendBadge trend={dailyBookingComparison.trend} integer={dailyBookingComparison.difference}/>
                 </CardContent>
             </Card>
 
@@ -33,11 +25,8 @@ export default function CardsAdminWrapper() {
                     <DollarSign className="h-4 w-4 text-pink-600" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold text-gray-900">$300.000</div>
-                    <p className={`text-xs ${iconColor} flex items-center gap-1`}>
-                    {/* <TrendingDown className="h-3 w-3" /> */}
-                    +12% vs mes anterior
-                    </p>
+                    <div className="text-2xl font-bold text-gray-900">{revenue.currentTotal}</div>
+                    <TrendBadge trend={revenue.trend} percentage={revenue.percentageChange}/>
                 </CardContent>
             </Card>
 
@@ -47,11 +36,19 @@ export default function CardsAdminWrapper() {
                     <UserCheck className="h-4 w-4 text-pink-600" />
                 </CardHeader>
                 <CardContent>
-                    {/* <div className="text-2xl font-bold text-gray-900">{ customersCount }</div> */}
-                    <p className="text-xs text-green-600 flex items-center gap-1">
-                    <TrendingUp className="h-3 w-3" />
-                    +8 este mes
-                    </p>
+                    <div className="text-2xl font-bold text-gray-900">{customers.length}</div>
+                    <p className="text-xs text-gray-500 mt-2">Total de usuarios registrados</p>
+                </CardContent>
+            </Card>
+
+             <Card className="border-purple-100 hover:shadow-lg transition-shadow">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-gray-600">Cancelaciones del mes</CardTitle>
+                    <XCircle className="h-4 w-4 text-red-600" />
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold text-gray-900">{cancelledBookings.today}</div>
+                    <TrendBadge trend={cancelledBookings.trend} integer={cancelledBookings.difference}/>
                 </CardContent>
             </Card>
         </div>

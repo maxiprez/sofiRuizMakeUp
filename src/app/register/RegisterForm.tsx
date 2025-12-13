@@ -5,7 +5,7 @@ import Input from "@/app/components/Input";
 import { usePassword } from "@/app/hooks/usePassword";
 import Button from "@/app/components/CustomBtn";
 import { useRegister } from "../hooks/useRegister";
-import { formatToNumbersOnly } from "@/utils/utilsFormat";
+import { formatToNumbersOnly } from "utils/utilsFormat";
 
 export default function Register() {
   const { handleSubmit, error, name, setName, email, setEmail, tel, setTel, password, setPassword, confirmPassword, setConfirmPassword, isSubmitting } = useRegister();
