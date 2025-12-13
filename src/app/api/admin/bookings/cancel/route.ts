@@ -69,8 +69,8 @@ export async function POST(req: Request) {
       if (recipientEmail) {
         const recipientName = booking.users?.name ?? 'Cliente';
         const formattedDate = new Date(`${booking.date}T${booking.time}`).toLocaleDateString('es-AR', {
-          day: '2-digit',
-          month: '2-digit',
+          day: 'numeric',
+          month: 'long',
           year: 'numeric'
         }).replace(/\//g, '-');
         const formattedTime = booking.time?.slice(0, 5) ?? '--:--';

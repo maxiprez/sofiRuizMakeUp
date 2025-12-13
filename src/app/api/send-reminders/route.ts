@@ -69,9 +69,12 @@ export async function GET(req: Request) {
       const serviceName = serviceMap[booking.service_id];
       if (!user?.email) continue;
 
-      const [year, month, day] = booking.date.split('-');
       const [hour, minute] = booking.time.split(':');
-      const formattedDate = `${day}-${month}-${year}`;
+      const formattedDate = new Date(`${booking.date}T${booking.time}`).toLocaleDateString('es-AR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+      }).replace(/\//g, '-');
       const formattedTime = `${hour}:${minute}`;
 
       await resend.emails.send({
