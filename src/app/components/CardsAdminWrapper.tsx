@@ -43,7 +43,7 @@ export default function CardsAdminWrapper({ revenue, dailyBookingComparison, can
 
              <Card className="border-purple-100 hover:shadow-lg transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-gray-600">Cancelaciones del mes</CardTitle>
+                    <CardTitle className="text-sm font-medium text-gray-600">Cancelaciones del día</CardTitle>
                     <XCircle className="h-4 w-4 text-red-600" />
                 </CardHeader>
                 <CardContent>
