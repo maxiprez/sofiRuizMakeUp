@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import { SidebarProvider } from "@/app/components/ui/sidebar";
 import { SidebarAdmin } from "@/app/components/Sidebaradmin";
@@ -10,8 +10,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/app
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/app/components/ui/table";
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
 import { Badge } from "@/app/components/ui/badge";
-import useGetCustomers from "@/app/hooks/useABMCustomers";
-import { BeatLoader } from "react-spinners";
+import { getCustomers } from "@/app/_actions/abmCustomers.action";
 
 type Customer = {
     id: string;
@@ -22,10 +21,11 @@ type Customer = {
     role?: string;
 }
 
-export default function CustomersPage() {
-    const { customers, loading, error } = useGetCustomers();
+export default async function CustomersPage() {
+    const response = await getCustomers();
+    const customers = response.data || [];
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+        <div className="min-h-screen bg-linear-to-br from-purple-50 to-pink-50">
             <SidebarProvider>
                 <SidebarAdmin />
                     <SidebarInset>
@@ -45,15 +45,6 @@ export default function CustomersPage() {
                                             </div>
                                         </div>
                                     </CardHeader>
-                                    {loading ? (
-                                       <div className="flex justify-center items-center h-32">
-                                            <BeatLoader color="#f472b6" size={16} />
-                                       </div>
-                                    ) : error ? (
-                                        <div className="flex items-center justify-center h-64">
-                                            <p className="text-red-500">{error}</p>
-                                        </div>
-                                    ) : (
                                     <CardContent>
                                         <Table>
                                             <TableHeader>
@@ -131,7 +122,6 @@ export default function CustomersPage() {
                                             </TableBody>
                                         </Table>
                                     </CardContent>
-                                    )}
                                 </Card> 
                                 <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                     <QuickActionCard

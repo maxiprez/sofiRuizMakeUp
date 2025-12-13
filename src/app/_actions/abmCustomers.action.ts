@@ -17,9 +17,10 @@ export interface Customer {
 
 export async function getCustomers() {
     const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    if(error){
+        .from('users')
+        .select('*')
+        .eq('role', 'user');
+    if (error) {
         console.error("Error al buscar clientes:", error);
         return { error: "Error al buscar clientes." };
     }

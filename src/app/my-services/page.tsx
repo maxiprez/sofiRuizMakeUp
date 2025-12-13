@@ -7,7 +7,7 @@ import { JSX } from "react";
 import BeatLoader from "react-spinners/BeatLoader";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FormatNumber } from "@/utils/utilsFormat";
+import { FormatNumber } from "utils/utilsFormat";
 
 const iconMap: Record<string, JSX.Element> = {
   "perfilado de cejas": <Eye className="w-7 h-7 text-pink-600" />,

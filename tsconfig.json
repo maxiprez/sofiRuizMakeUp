@@ -19,11 +19,10 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/utils/*": ["./utils/*"]
-    },
-    "baseUrl": "."
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "postcss.config.msj"],
   "exclude": ["node_modules", ".next/types/validator.ts"]
