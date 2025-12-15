@@ -23,7 +23,7 @@ export const trendConfig = {
   same: {
     icon: Equal,
     className: "text-gray-500 bg-gray-100",
-    sign: "=",
+    sign: "",
   },
 } as const;
 
@@ -35,7 +35,7 @@ export function TrendBadge({ trend, percentage, integer }: TrendBadgeProps) {
     >
       <Icon className="h-3 w-3" />
       {sign}
-      {percentage && `${percentage}% vs. mes anterior`}
+      {percentage && `${percentage}% vs. mismo periodo`}
       {integer && `${integer} nuevos`}
     </span>
   );
