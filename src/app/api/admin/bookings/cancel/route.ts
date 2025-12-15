@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from 'auth';
 import { createClient } from '@supabase/supabase-js';
-import { deleteEvent } from '../../../../../../pages/api/calendarUtils';
+import { deleteEvent } from 'pages/api/calendarUtils';
 import { CancelationEmail } from '@/app/components/emails/CancelationEmail';
 import { resend } from '@/lib/resend';
 

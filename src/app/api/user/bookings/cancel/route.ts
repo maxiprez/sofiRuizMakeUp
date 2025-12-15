@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { auth } from 'auth';
 import { NextResponse } from 'next/server';
-import { deleteEvent } from '../../../../../../pages/api/calendarUtils';
+import { deleteEvent } from 'pages/api/calendarUtils';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
