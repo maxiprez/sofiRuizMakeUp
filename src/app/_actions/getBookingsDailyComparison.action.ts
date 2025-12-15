@@ -21,6 +21,7 @@ export async function getDailyBookingsComparison() {
   const { data, error } = await supabase
     .from("bookings")
     .select("date")
+    .eq("status", true)
     .in("date", [todayStr, yesterdayStr]);
 
   if (error || !data) {

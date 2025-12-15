@@ -36,14 +36,25 @@ async function getRevenueByRange(start: Date, end: Date): Promise<number> {
 }
 
 export async function getMonthlyRevenueComparison(): Promise<MonthlyRevenueResult> {
-  "use server";
-
   const now = new Date();
 
   const currentStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const currentEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+  const currentEnd = now;
+
+  const safeDay = Math.min(
+    now.getDate(),
+    new Date(now.getFullYear(), now.getMonth(), 0).getDate()
+  );
+
   const previousStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-  const previousEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+  const previousEnd = new Date(
+    now.getFullYear(),
+    now.getMonth() - 1,
+    safeDay,
+    23,
+    59,
+    59
+  );
 
   const currentTotal = await getRevenueByRange(currentStart, currentEnd);
   const previousTotal = await getRevenueByRange(previousStart, previousEnd);
@@ -62,12 +73,13 @@ export async function getMonthlyRevenueComparison(): Promise<MonthlyRevenueResul
       currency: "ARS",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-  }).format(value);
+    }).format(value);
 
   return {
     currentTotal: formatARS(currentTotal),
     previousTotal: formatARS(previousTotal),
     percentageChange: Number(percentageChange.toFixed(2)),
-    trend: percentageChange > 0 ? "up" : percentageChange < 0 ? "down" : "same"
+    trend: percentageChange > 0 ? "up" : percentageChange < 0 ? "down" : "same",
   };
 }
+
