@@ -17,9 +17,26 @@ import { Button } from "@/app/components/ui/button"
 import { Bell } from "lucide-react"
 import { ChevronDown } from "lucide-react"
 import { useSession } from 'next-auth/react';
+import { useDebouncedCallback } from "use-debounce";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function HeaderAdmin() {
     const { data: session } = useSession();
+
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const handleSearch = useDebouncedCallback((value: string) => {
+    const params = new URLSearchParams(searchParams?.toString());
+
+    if (value) {
+      params.set("q", value);
+    } else {
+      params.delete("q");
+    }
+
+    router.push(`?${params.toString()}`);
+    }, 400);
 
     return (
         <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-sm border-b border-purple-100">
@@ -31,6 +48,8 @@ export default function HeaderAdmin() {
                         <Input
                             placeholder="Buscar clientes, citas..."
                             className="pl-10 border-purple-200 focus:border-pink-300 focus:ring-pink-200"
+                            defaultValue={searchParams?.get("q") ?? ""}
+                            onChange={(e) => handleSearch(e.target.value)}
                         />
                         </div>
                     </div>
