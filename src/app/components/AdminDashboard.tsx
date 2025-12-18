@@ -4,7 +4,7 @@ import { AdminDashboardClient } from "@/app/components/AdminDashboardClient";
 import { getMonthlyRevenueComparison } from "@/app/_actions/getRevenue.action";
 import { getDailyBookingsComparison } from "@/app/_actions/getBookingsDailyComparison.action";
 import { getDailyCancelledBookingsComparison } from "@/app/_actions/getCancellationBookins.action";
-import { getCustomers } from "../_actions/abmCustomers.action";
+import { getCustomers } from "@/app/_actions/abmCustomers.action";
 
 export default async function AdminDashboard() {
   const revenue = await getMonthlyRevenueComparison();

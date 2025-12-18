@@ -4,7 +4,7 @@ import Link from "next/link";
 import Input from "@/app/components/Input";
 import { usePassword } from "@/app/hooks/usePassword";
 import Button from "@/app/components/CustomBtn";
-import { useRegister } from "../hooks/useRegister";
+import { useRegister } from "@/app/hooks/useRegister";
 import { formatToNumbersOnly } from "utils/utilsFormat";
 
 export default function Register() {
