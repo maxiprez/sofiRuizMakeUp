@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar"
 import { BarChart3, Calendar, Users, Scissors, Clock, Home } from "lucide-react"
 import {
