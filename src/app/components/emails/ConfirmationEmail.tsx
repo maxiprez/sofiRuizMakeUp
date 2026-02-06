@@ -9,6 +9,7 @@ export function ConfirmationEmail({
   date: string;
   time: string;
 }) {
+  const currentYear = new Date().getFullYear();
   return `
   <!DOCTYPE html>
   <html lang="es">
@@ -46,7 +47,7 @@ export function ConfirmationEmail({
         </div>
   
         <div style="text-align: center; margin-top: 30px; color: #aaa; font-size: 12px;">
-          © 2025 Sofi Ruiz Makeup. Todos los derechos reservados.
+          © ${currentYear} Sofi Ruiz Makeup. Todos los derechos reservados.
         </div>
       </div>
     </body>
