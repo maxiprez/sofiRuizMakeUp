@@ -4,7 +4,8 @@ interface ResetPasswordEmailProps {
 }
 
 export function ResetPasswordEmail({ userFullName, resetLink }: ResetPasswordEmailProps) {
-return `
+  const currentYear = new Date().getFullYear();
+  return `
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -39,7 +40,7 @@ return `
         <p>Si vos no solicitaste este cambio, podés ignorar este mensaje. Tu contraseña actual seguirá siendo válida.</p>
 
         <div class="footer">
-            <p>© 2025 Sofi Ruiz Makeup. Todos los derechos reservados.</p>
+            <p>© ${currentYear} Sofi Ruiz Makeup. Todos los derechos reservados.</p>
         </div>
     </div>
 </body>

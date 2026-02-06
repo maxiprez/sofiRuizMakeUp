@@ -1,4 +1,5 @@
 export function RememberEmail({ userFullName, serviceName, date, time }: { userFullName: string | null | undefined; serviceName: string; date: string; time: string; }) {
+  const currentYear = new Date().getFullYear();
   return (
    `
    <!DOCTYPE html>
@@ -42,11 +43,16 @@ export function RememberEmail({ userFullName, serviceName, date, time }: { userF
                     </div>
                     <p>Te espero 💖</p>
                     <div class="contact-info">
-                        <p>Si necesitás reprogramar o tenés alguna consulta, escribime:</p>
-                        <p>Email: <a href="mailto:info@sofiruiz.com.ar">info@sofiruiz.com.ar</a></p>
+                        <p>Si necesitás reprogramar el turno, hacé clic en el siguiente enlace:</p>
+                       <div style="text-align: center; margin-top: 10px;">
+                            <a href="https://www.sofiruiz.com.ar/my-bookings"
+                                style="display: inline-block; background-color: #e91e63; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">
+                                Ver mis turnos / Reprogramar
+                            </a>
+                        </div>
                     </div>
-                    <div class="footer">
-                        <p>© 2025 Sofi Ruiz Makeup. Todos los derechos reservados.</p>
+                   <div class="footer">
+                        <p>© ${currentYear} Sofi Ruiz Makeup. Todos los derechos reservados.</p>
                     </div>
                 </div>
             </body>
