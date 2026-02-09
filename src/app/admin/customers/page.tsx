@@ -26,7 +26,8 @@ export default async function CustomersPage({
 }: {
   searchParams: { q?: string };
 }) {
-    const q = searchParams.q;
+    const resolvedParams = await searchParams;
+    const q = resolvedParams.q;
     const response = await getCustomers(q);
     const customers = response.data || [];
    

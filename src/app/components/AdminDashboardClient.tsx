@@ -36,7 +36,7 @@ export async function AdminDashboardClient({ revenue, dailyBookingComparison, ca
             </div>
             <CardsAdminWrapper revenue={revenue} dailyBookingComparison={dailyBookingComparison} cancelledBookings={cancelledBookings} customers={customers} />
 
-            <CustomersAdmin customers={customers} searchParams={searchParams} />
+            <CustomersAdmin customers={customers} searchParams={Promise.resolve(searchParams)} />
             <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <QuickActionCard
                 icon={<Calendar className="h-6 w-6 text-pink-600" />}
