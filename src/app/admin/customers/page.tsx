@@ -21,9 +21,16 @@ type Customer = {
     role?: string;
 }
 
-export default async function CustomersPage() {
-    const response = await getCustomers();
+export default async function CustomersPage({
+  searchParams,
+}: {
+  searchParams: { q?: string };
+}) {
+    const resolvedParams = await searchParams;
+    const q = resolvedParams.q;
+    const response = await getCustomers(q);
     const customers = response.data || [];
+   
     return (
         <div className="min-h-screen bg-linear-to-br from-purple-50 to-pink-50">
             <SidebarProvider>
