@@ -21,11 +21,7 @@ type Customer = {
     role?: string;
 }
 
-export default async function CustomersPage({
-  searchParams,
-}: {
-  searchParams: { q?: string };
-}) {
+export default async function CustomersPage({ searchParams }: { searchParams: Promise<{ q: string }> }) {
     const resolvedParams = await searchParams;
     const q = resolvedParams.q;
     const response = await getCustomers(q);
