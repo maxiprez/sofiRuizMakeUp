@@ -1,8 +1,10 @@
 export type Customer = {
   id: string;
   name: string;
-  email: string;
-  phone: string;
+  tel: string;
+  email?: string;
+  is_verified?: boolean;
+  role?: string;
 };
 
 export type Trend = "up" | "down" | "same";

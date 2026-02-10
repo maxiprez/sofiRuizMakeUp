@@ -116,6 +116,7 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                         <Button
+                                            id={`booking-menu-${booking.id}`}
                                             variant="ghost"
                                             size="icon"
                                             className="hover:bg-purple-50 focus-visible:ring-1 focus-visible:ring-purple-200 flex items-center justify-center" 
