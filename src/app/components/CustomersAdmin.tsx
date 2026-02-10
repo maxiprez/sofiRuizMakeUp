@@ -4,10 +4,10 @@ import { CustomersAdminClient } from "@/app/components/CustomersAdminClient";
 import { searchDates } from "@/app/_actions/searchDates.action";
 import { Customer } from "types/entities";
 
-export default async function CustomersAdmin({ customers, searchParams }: { customers: Customer[]; searchParams: Promise<{ q?: string }> }) {
+export default async function CustomersAdmin({ customers, searchParams }: { customers: Customer[]; searchParams: Promise<{ q: string }> }) {
   const { data: bookings } = await searchDates();
   const resolvedParams = await searchParams;
-  const q = resolvedParams?.q?.toLowerCase().trim() ?? "";
+  const q = resolvedParams?.q?.toLowerCase().trim();
 
     const filteredBookings = q
     ? bookings?.filter((booking) =>

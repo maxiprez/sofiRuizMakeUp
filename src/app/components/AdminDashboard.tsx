@@ -5,7 +5,8 @@ import { getMonthlyRevenueComparison } from "@/app/_actions/getRevenue.action";
 import { getDailyBookingsComparison } from "@/app/_actions/getBookingsDailyComparison.action";
 import { getDailyCancelledBookingsComparison } from "@/app/_actions/getCancellationBookins.action";
 
-export default async function AdminDashboard({searchParams}: { searchParams: { q?: string }}) {
+export default async function AdminDashboard({searchParams}: { searchParams: Promise<{ q?: string }>}) {
+ const resolvedSearchParams = await searchParams;
   const revenue = await getMonthlyRevenueComparison();
   const dailyBookingComparison = await getDailyBookingsComparison();
   const cancelledBookings = await getDailyCancelledBookingsComparison();
@@ -16,7 +17,7 @@ export default async function AdminDashboard({searchParams}: { searchParams: { q
         revenue={revenue} 
         dailyBookingComparison={dailyBookingComparison} 
         cancelledBookings={cancelledBookings}
-        searchParams={searchParams}
+        searchParams={resolvedSearchParams}
       />
     </div>
   );

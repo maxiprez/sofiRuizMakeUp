@@ -3,7 +3,8 @@ import AdminDashboard from "@/app/components/AdminDashboard";
 export default async function AdminMain({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q: string }>;
 }) {
-  return <AdminDashboard searchParams={searchParams}/>
+  const resolvedSearchParams = await searchParams;
+  return <AdminDashboard searchParams={Promise.resolve(resolvedSearchParams)} />
 }
