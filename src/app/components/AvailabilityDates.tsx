@@ -10,7 +10,7 @@ import Button from '@/app/components/CustomBtn';
 
 interface AvailabilityDatesProps {
   service_id: string | null;
-  date: string | null;
+  date: string;
   duration: number;
 }
 
