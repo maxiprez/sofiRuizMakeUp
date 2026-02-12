@@ -39,7 +39,7 @@ export function ModalBookingsAdmin({ open, onOpenChange, clients, services, clie
 
   const { availableTimes, loading } = useAvailability(
     services.find(s => s.id === selectedService)?.name || null,
-    selectedDate,
+    selectedDate!,
     duration
   );
   const { handleAdminReserve, handleEditBooking, isSaving } = useServiceBookingAdmin();
@@ -61,12 +61,17 @@ export function ModalBookingsAdmin({ open, onOpenChange, clients, services, clie
   }, [client]);
 
   useEffect(() => {
-      if (service && modalMode === 'edit') {
-          setSelectedService(service.id);
-      } else if (modalMode === 'new') {
-          setSelectedService(null);
-      }
-  }, [service, modalMode]);
+    if (service && modalMode === 'edit') {
+        setSelectedService(service.id);
+        const currentService = services.find(s => s.id === service.id);
+        if (currentService?.duration) {
+            setDuration(currentService.duration);
+        }
+    } else if (modalMode === 'new') {
+        setSelectedService(null);
+        setDuration(0);
+    }
+}, [service, modalMode, services]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

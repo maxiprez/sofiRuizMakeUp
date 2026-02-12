@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from "react";
 
-export default function useAvailability(service: string | null, date: string | null, duration: number) {
+export default function useAvailability(service: string | null, date: string, duration: number) {
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!date) return;
+    if (!date || duration <= 0) {
+      setAvailableTimes([]);
+      return;
+    }
     setLoading(true);
     setError(null);
     let url = `/api/availability?date=${date}`;
