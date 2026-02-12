@@ -2,7 +2,7 @@
 
 import {Card,CardContent,CardDescription,CardHeader,CardTitle} from "@/app/components/ui/card"
 import {Button} from "@/app/components/ui/button"
-import { Filter, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow,} from "@/app/components/ui/table"
 import {Avatar,AvatarFallback,} from "@/app/components/ui/avatar"
 import {Badge} from "@/app/components/ui/badge"
@@ -14,11 +14,17 @@ import useGetServices from "@/app/hooks/useABMServices";
 import useBookingUser from "@/app/hooks/useBookingUser";
 import { Customer } from "@/app/_actions/abmCustomers.action"
 import { Booking } from "types/entities";
+import { formatDateTime } from "utils/utilsFormat";
 
 export function CustomersAdminClient({ customers, bookings }: { customers: Customer[], bookings: Booking[] }) {
     const [openModal, setOpenModal] = useState(false);
     const { services } = useGetServices();
     const { handleCancelBooking } = useBookingUser();
+    const [modalMode, setModalMode] = useState<'new' | 'edit'>('new');
+    const [selectedClient, setSelectedClient] = useState<{ id: string; name: string } | null>(null);
+    const [bookingEditing, setBookingEditing] = useState<string | null>(null);
+    const [selectedService, setSelectedService] = useState<{ id: string; name: string } | null>(null);
+    const [bookingId, setBookingId] = useState<string | null>(null);
 
     const validServices = Array.isArray(services) ? services.filter(service => 
         Boolean(service.status) &&
@@ -38,25 +44,25 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                 <CardDescription>Gestiona las próximas citas de tus clientes</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                <Button
+                {/* <Button
                     variant="outline"
                     size="sm"
                     className="border-purple-200 text-purple-700 hover:bg-purple-50"
                 >
                     <Filter className="h-4 w-4 mr-2" />
                     Filtrar
-                </Button>
-               <Button onClick={() => setOpenModal(true)} size="sm" className="bg-pink-600 text-white">
+                </Button> */}
+               <Button onClick={() => {
+                    setModalMode('new');
+                    setSelectedClient(null);
+                    setBookingEditing(null);
+                    setSelectedService(null);
+                    setBookingId(null);
+                    setOpenModal(true);
+                }} size="sm" className="bg-pink-600 text-white">
                     <Plus className="mr-2 h-4 w-4" />
                     Nueva Cita
-                    </Button>
-
-                    <ModalBookingsAdmin
-                    open={openModal}
-                    onOpenChange={setOpenModal}
-                    clients={customers}
-                    services={validServices}
-                    />
+                </Button>
                 </div>
             </div>
             </CardHeader>
@@ -88,7 +94,7 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                             </TableCell>    
                             <TableCell>{booking.users.tel}</TableCell>
                             <TableCell>{booking.services.name}</TableCell>
-                            <TableCell>{booking.date}</TableCell>
+                            <TableCell>{formatDateTime(booking.date!,"10:00")}</TableCell>
                             <TableCell>{booking.time.slice(0, 5)}hs.</TableCell>
                             <TableCell>
                                 <Badge
@@ -137,7 +143,15 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                                             Ver detalles
                                         </DropdownMenuItem>
 
-                                        <DropdownMenuItem
+                                       <DropdownMenuItem
+                                            onClick={() => {
+                                                setSelectedClient({ id: booking.users.id, name: booking.users.name });
+                                                setModalMode('edit');
+                                                setOpenModal(true);
+                                                setBookingEditing(booking.date);
+                                                setBookingId(booking.id);
+                                                setSelectedService({id: booking.services.id, name: booking.services.name});
+                                            }}
                                             className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
                                         >
                                             <Edit className="h-4 w-4 mr-2 text-gray-500" />
@@ -169,6 +183,17 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                     </TableBody>
                 </Table>
             </CardContent>
+            <ModalBookingsAdmin
+                open={openModal}
+                onOpenChange={setOpenModal}
+                clients={modalMode === 'new' ? customers : undefined}
+                client={modalMode === 'edit' ? (selectedClient as { id: string; name: string }) : undefined}
+                services={validServices}
+                modalMode={modalMode}
+                bookingDate={bookingEditing || undefined}
+                service={selectedService || undefined}
+                bookingId={bookingId || undefined}
+            />
         </Card> 
     )
 }

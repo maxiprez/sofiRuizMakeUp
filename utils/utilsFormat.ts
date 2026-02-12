@@ -18,3 +18,11 @@ export class FormatNumber {
     return formatter.format(number);
   }
 }
+
+export function formatDateTime(date: string, time: string): string {
+  return new Intl.DateTimeFormat('es-AR', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric'
+  }).format(new Date(`${date}T${time}:00-03:00`));
+}
