@@ -1,5 +1,3 @@
-"use client";
-
 import ClipLoader from 'react-spinners/ClipLoader';
 
 type AllowedButtonTypes = "submit" | "reset" | "button";
@@ -14,7 +12,7 @@ type ButtonProps = {
     loading?: boolean;
   };
 
-export default function CustomBtn({ className, icon, text, id, type, disabled, onClick, loading }: ButtonProps) {
+export function CustomBtn({ className, icon, text, id, type, disabled, onClick, loading }: ButtonProps) {
   return (
     <button
     className={className}

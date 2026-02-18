@@ -1,7 +1,7 @@
 "use client";
 
 import Input from '@/app/components/Input';
-import Button from '@/app/components/CustomBtn';
+import { CustomBtn as Button } from '@/app/components/CustomBtn';
 import { useResetPassword } from '@/app/hooks/useResetPassword';
 import Link from 'next/link';
 

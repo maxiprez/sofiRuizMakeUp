@@ -6,7 +6,7 @@ import BeatLoader from 'react-spinners/BeatLoader';
 import { useServiceBooking } from '@/app/hooks/useServiceBooking';
 import { useSession } from 'next-auth/react'; 
 import ModalPhone from '@/app/components/modals/ModalPhone';
-import Button from '@/app/components/CustomBtn';
+import { CustomBtn as Button } from '@/app/components/CustomBtn';
 
 interface AvailabilityDatesProps {
   service_id: string | null;

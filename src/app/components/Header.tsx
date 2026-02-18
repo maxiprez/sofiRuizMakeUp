@@ -40,14 +40,11 @@ export default function Header({ session }: SessionProps) {
   return (
     <header className="bg-white shadow-md sticky top-0 p-4 z-30">
       <div className="container mx-auto flex items-center justify-between relative">
-        {/* Logo - Aseguramos que el logo esté fuera del menú desplegable */}
         <div className="z-20">
           <Link href="/" className="text-2xl font-bold text-pink-500 hover:text-pink-600">
             SofiRuiz
           </Link>
         </div>
-
-        {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-4 gap-8 pr-6">
           <div className="flex items-center space-x-4">
             <Link href="/my-services" className="text-gray-700 hover:text-pink-500">
@@ -109,8 +106,6 @@ export default function Header({ session }: SessionProps) {
             </Link>
           )}
         </nav>
-
-        {/* Mobile Menu Button */}
         <div className="md:hidden z-30">
           <Button
             variant="ghost"
@@ -126,8 +121,6 @@ export default function Header({ session }: SessionProps) {
           </Button>
         </div>
       </div>
-
-      {/* Mobile Menu (Dropdown) */}
       <div
         className={`md:hidden absolute top-full left-0 w-full bg-white shadow-md z-10 transform transition-all duration-300 ${isMobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
       >
@@ -155,7 +148,6 @@ export default function Header({ session }: SessionProps) {
               Admin
             </Link>
           )}
-
           {session?.user ? (
             <div className="py-2">
               <DropdownMenu>

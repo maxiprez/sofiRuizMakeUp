@@ -1,7 +1,7 @@
 'use client';
 
 import Input from "@/app/components/Input";
-import Button from "@/app/components/CustomBtn";
+import { CustomBtn as Button } from "@/app/components/CustomBtn";
 import { useForgotPassword } from "@/app/hooks/useForgotPassword";
 import Link from "next/link";
 

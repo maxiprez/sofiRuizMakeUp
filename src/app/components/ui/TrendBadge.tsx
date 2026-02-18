@@ -1,5 +1,3 @@
-"use client";
-
 import { TrendingUp, TrendingDown, Equal } from "lucide-react";
 import { Trend } from "types/entities"
 
@@ -35,7 +33,7 @@ export function TrendBadge({ trend, percentage, integer }: TrendBadgeProps) {
     >
       <Icon className="h-3 w-3" />
       {sign}
-      {percentage && `${percentage}% vs. mismo periodo`}
+      {percentage && `${percentage}% vs. mismo periodo del mes pasado`}
       {integer && `${integer} nuevos`}
     </span>
   );

@@ -44,14 +44,6 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                 <CardDescription>Gestiona las próximas citas de tus clientes</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                {/* <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-purple-200 text-purple-700 hover:bg-purple-50"
-                >
-                    <Filter className="h-4 w-4 mr-2" />
-                    Filtrar
-                </Button> */}
                <Button onClick={() => {
                     setModalMode('new');
                     setSelectedClient(null);
