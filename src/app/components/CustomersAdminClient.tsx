@@ -26,6 +26,13 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
     const [selectedService, setSelectedService] = useState<{ id: string; name: string } | null>(null);
     const [bookingId, setBookingId] = useState<string | null>(null);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentBookings = bookings.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(bookings.length / itemsPerPage);
+
     const validServices = Array.isArray(services) ? services.filter(service => 
         Boolean(service.status) &&
         service.id &&
@@ -72,7 +79,7 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                     </TableRow>
                     </TableHeader>
                     <TableBody>
-                    {bookings.map((booking) => (
+                    {currentBookings.map((booking) => (
                         <TableRow key={booking.id}>
                             <TableCell className="font-medium">
                                 <div className="flex items-center gap-3">
@@ -174,6 +181,34 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                     ))}
                     </TableBody>
                 </Table>
+                <div className="flex items-center justify-between space-x-2 py-4">
+                    <div className="text-sm text-muted-foreground">
+                        Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, bookings.length)} de {bookings.length} citas
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="cursor-pointer bg-pink-600 text-white hover:bg-pink-400 disabled:bg-transparent disabled:text-gray-500"
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                        >
+                            Anterior
+                        </Button>
+                        <div className="flex items-center justify-center text-sm font-medium">
+                            Página {currentPage} de {totalPages}
+                        </div>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="cursor-pointer bg-pink-600 text-white hover:bg-pink-400 disabled:bg-transparent disabled:text-gray-500"
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                        >
+                            Siguiente
+                        </Button>
+                    </div>
+                </div>
             </CardContent>
             <ModalBookingsAdmin
                 open={openModal}

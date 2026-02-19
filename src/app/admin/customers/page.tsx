@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
 import { Badge } from "@/app/components/ui/badge";
 import { getCustomers } from "@/app/_actions/abmCustomers.action";
+import { PaginationControls } from "@/app/components/ui/paginationControls";
 
 type Customer = {
     id: string;
@@ -21,12 +22,13 @@ type Customer = {
     role?: string;
 }
 
-export default async function CustomersPage({ searchParams }: { searchParams: Promise<{ q: string }> }) {
-    const resolvedParams = await searchParams;
-    const q = resolvedParams.q;
-    const response = await getCustomers(q);
-    const customers = response.data || [];
-   
+export default async function CustomersPage({ searchParams }: { searchParams: Promise<{ q: string, page?: string }> }) {
+    const { q = "", page = "1" } = await searchParams;
+    const currentPage = Number(page);
+    const pageSize = 20
+    const { data: customers, count } = await getCustomers(q, currentPage, pageSize);
+    const totalPages = Math.ceil((count || 0) / pageSize);
+
     return (
         <div className="min-h-screen bg-linear-to-br from-purple-50 to-pink-50">
             <SidebarProvider>
@@ -124,6 +126,14 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                                                 ))}
                                             </TableBody>
                                         </Table>
+                                        {count > 0 && (
+                                            <PaginationControls 
+                                                currentPage={currentPage}
+                                                totalPages={totalPages}
+                                                totalItems={count}
+                                                itemsPerPage={pageSize}
+                                            />
+                                        )}
                                     </CardContent>
                                 </Card> 
                                 <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

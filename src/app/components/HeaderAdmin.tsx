@@ -22,20 +22,21 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export default function HeaderAdmin() {
     const { data: session } = useSession();
-
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const handleSearch = useDebouncedCallback((value: string) => {
-    const params = new URLSearchParams(searchParams?.toString());
+        const params = new URLSearchParams(searchParams?.toString());
 
-    if (value) {
-      params.set("q", value);
-    } else {
-      params.delete("q");
-    }
+        if (value) {
+        params.set("q", value);
+        } else {
+        params.delete("q");
+        }
 
-    router.push(`?${params.toString()}`);
+        params.set("page", "1");
+
+        router.push(`?${params.toString()}`);
     }, 400);
 
     return (
