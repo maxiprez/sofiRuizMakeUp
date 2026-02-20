@@ -6,7 +6,11 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-export interface Customer {
+export interface Customers {
+  data: Customer[];
+  count: number;
+}
+interface Customer {
   id: string;
   name: string;
   tel: string;
@@ -22,7 +26,7 @@ export async function getCustomers(q?: string, page: number = 1, pageSize: numbe
 
     let query = supabase
       .from("users")
-      .select("*", { count: 'exact' }) 
+      .select("*", { count: 'exact' })
       .eq("role", "user");
 
     if (q && q.trim() !== "") {
@@ -43,6 +47,7 @@ export async function getCustomers(q?: string, page: number = 1, pageSize: numbe
       data: (data as Customer[]) || [], 
       count: count || 0 
     };
+   
   } catch (err) {
     console.error("Critical Error:", err);
     return { error: "Error interno del servidor", data: [], count: 0 };

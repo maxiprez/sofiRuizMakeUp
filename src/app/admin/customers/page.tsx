@@ -127,7 +127,8 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                                             </TableBody>
                                         </Table>
                                         {count > 0 && (
-                                            <PaginationControls 
+                                            <PaginationControls
+                                                name={'clientes'}
                                                 currentPage={currentPage}
                                                 totalPages={totalPages}
                                                 totalItems={count}

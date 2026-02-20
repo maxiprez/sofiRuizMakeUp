@@ -12,11 +12,12 @@ import { ModalBookingsAdmin } from "@/app/components/modals/ModalBookingsAdmin";
 import { useState } from "react";
 import useGetServices from "@/app/hooks/useABMServices";
 import useBookingUser from "@/app/hooks/useBookingUser";
-import { Customer } from "@/app/_actions/abmCustomers.action"
+import { Customers } from "@/app/_actions/abmCustomers.action"
 import { Booking } from "types/entities";
 import { formatDateTime } from "utils/utilsFormat";
+import { PaginationControls } from "@/app/components/ui/paginationControls";
 
-export function CustomersAdminClient({ customers, bookings }: { customers: Customer[], bookings: Booking[] }) {
+export function CustomersAdminClient({ customers, bookings }: { customers: Customers, bookings: Booking[] }) {
     const [openModal, setOpenModal] = useState(false);
     const { services } = useGetServices();
     const { handleCancelBooking } = useBookingUser();
@@ -181,39 +182,19 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                     ))}
                     </TableBody>
                 </Table>
-                <div className="flex items-center justify-between space-x-2 py-4">
-                    <div className="text-sm text-muted-foreground">
-                        Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, bookings.length)} de {bookings.length} citas
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="cursor-pointer bg-pink-600 text-white hover:bg-pink-400 disabled:bg-transparent disabled:text-gray-500"
-                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                            disabled={currentPage === 1}
-                        >
-                            Anterior
-                        </Button>
-                        <div className="flex items-center justify-center text-sm font-medium">
-                            Página {currentPage} de {totalPages}
-                        </div>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="cursor-pointer bg-pink-600 text-white hover:bg-pink-400 disabled:bg-transparent disabled:text-gray-500"
-                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                            disabled={currentPage === totalPages || totalPages === 0}
-                        >
-                            Siguiente
-                        </Button>
-                    </div>
-                </div>
+                <PaginationControls 
+                    name="citas"
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={bookings.length}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={(page) => setCurrentPage(page)}
+                />
             </CardContent>
             <ModalBookingsAdmin
                 open={openModal}
                 onOpenChange={setOpenModal}
-                clients={modalMode === 'new' ? customers : undefined}
+                clients={modalMode === 'new' ? customers.data : undefined}
                 client={modalMode === 'edit' ? (selectedClient as { id: string; name: string }) : undefined}
                 services={validServices}
                 modalMode={modalMode}

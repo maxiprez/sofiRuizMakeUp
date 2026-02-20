@@ -19,7 +19,10 @@ import { getCustomers } from "@/app/_actions/abmCustomers.action";
 export async function AdminDashboardClient({ revenue, dailyBookingComparison, cancelledBookings, searchParams }: { revenue: RevenueData, dailyBookingComparison: DailyBookingData, cancelledBookings: CancelledBookingsData, searchParams: { q?: string } }) {
   const session = await auth();
   const response = await getCustomers();
-  const customers = response.data || [];
+  const customersInfo = {
+    data: response.data || [],
+    count: response.count || 0
+};
 
   return (
     <SidebarProvider>
@@ -34,9 +37,9 @@ export async function AdminDashboardClient({ revenue, dailyBookingComparison, ca
                Bienvenid@ de vuelta, <b>{session?.user?.name}</b> Aquí tienes un resumen de tu negocio.
               </p>
             </div>
-            <CardsAdminWrapper revenue={revenue} dailyBookingComparison={dailyBookingComparison} cancelledBookings={cancelledBookings} customers={customers} />
+            <CardsAdminWrapper revenue={revenue} dailyBookingComparison={dailyBookingComparison} cancelledBookings={cancelledBookings} customers={customersInfo} />
 
-            <CustomersAdmin customers={customers} searchParams={Promise.resolve({ q: searchParams.q || "" })} />
+            <CustomersAdmin customers={customersInfo.data} searchParams={Promise.resolve({ q: searchParams.q || "" })} />
             <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <QuickActionCard
                 icon={<Calendar className="h-6 w-6 text-pink-600" />}
