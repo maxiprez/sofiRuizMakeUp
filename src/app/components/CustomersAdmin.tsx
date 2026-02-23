@@ -2,13 +2,17 @@
 
 import { CustomersAdminClient } from "@/app/components/CustomersAdminClient";
 import { searchDates } from "@/app/_actions/searchDates.action";
-import { Customer } from "types/entities";
+import { getCustomers } from "@/app/_actions/obtainCustomers.action";
 
-export default async function CustomersAdmin({ customers, searchParams }: { customers: Customer[]; searchParams: Promise<{ q: string }> }) {
+export default async function CustomersAdmin({ searchParams }: { searchParams: Promise<{ q: string }> }) {
   const { data: bookings } = await searchDates();
   const resolvedParams = await searchParams;
   const q = resolvedParams?.q?.toLowerCase().trim();
 
+  const response = await getCustomers();
+  const customersInfo = {
+      allCustomers: response.allData
+  };
     const filteredBookings = q
     ? bookings?.filter((booking) =>
         booking.users.name.toLowerCase().includes(q) ||
@@ -19,7 +23,10 @@ export default async function CustomersAdmin({ customers, searchParams }: { cust
     
   return(
         <CustomersAdminClient 
-            customers={customers}
+           customers={{
+              data: customersInfo.allCustomers,
+              count: customersInfo.allCustomers.length
+            }}
             bookings={filteredBookings || []}
         />
     )

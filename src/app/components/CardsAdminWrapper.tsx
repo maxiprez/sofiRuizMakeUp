@@ -2,9 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/ca
 import { CalendarDays, XCircle, UserCheck, DollarSign } from "lucide-react"
 import { RevenueData, DailyBookingData, CancelledBookingsData } from "types/entities";
 import { TrendBadge } from '@/app/components/ui/TrendBadge';
-import { Customer } from "@/app/_actions/abmCustomers.action";
+import { Customers } from "@/app/_actions/obtainCustomers.action";
 
-export default function CardsAdminWrapper({ revenue, dailyBookingComparison, cancelledBookings, customers }: { revenue: RevenueData, dailyBookingComparison: DailyBookingData, cancelledBookings: CancelledBookingsData, customers: Customer[] }) {
+export default function CardsAdminWrapper({ revenue, dailyBookingComparison, cancelledBookings, customers }: { revenue: RevenueData, dailyBookingComparison: DailyBookingData, cancelledBookings: CancelledBookingsData, customers: Customers }) {
 
     return (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -36,7 +36,7 @@ export default function CardsAdminWrapper({ revenue, dailyBookingComparison, can
                     <UserCheck className="h-4 w-4 text-pink-600" />
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold text-gray-900">{customers.length}</div>
+                    <div className="text-2xl font-bold text-gray-900">{customers.count}</div>
                     <p className="text-xs text-gray-500 mt-2">Total de usuarios registrados</p>
                 </CardContent>
             </Card>

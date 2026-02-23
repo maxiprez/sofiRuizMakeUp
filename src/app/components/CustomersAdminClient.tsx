@@ -12,11 +12,12 @@ import { ModalBookingsAdmin } from "@/app/components/modals/ModalBookingsAdmin";
 import { useState } from "react";
 import useGetServices from "@/app/hooks/useABMServices";
 import useBookingUser from "@/app/hooks/useBookingUser";
-import { Customer } from "@/app/_actions/abmCustomers.action"
+import { Customers } from "@/app/_actions/obtainCustomers.action"
 import { Booking } from "types/entities";
 import { formatDateTime } from "utils/utilsFormat";
+import { PaginationControls } from "@/app/components/ui/paginationControls";
 
-export function CustomersAdminClient({ customers, bookings }: { customers: Customer[], bookings: Booking[] }) {
+export function CustomersAdminClient({ customers, bookings }: { customers: Customers, bookings: Booking[] }) {
     const [openModal, setOpenModal] = useState(false);
     const { services } = useGetServices();
     const { handleCancelBooking } = useBookingUser();
@@ -25,6 +26,13 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
     const [bookingEditing, setBookingEditing] = useState<string | null>(null);
     const [selectedService, setSelectedService] = useState<{ id: string; name: string } | null>(null);
     const [bookingId, setBookingId] = useState<string | null>(null);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentBookings = bookings.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(bookings.length / itemsPerPage);
 
     const validServices = Array.isArray(services) ? services.filter(service => 
         Boolean(service.status) &&
@@ -72,7 +80,7 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                     </TableRow>
                     </TableHeader>
                     <TableBody>
-                    {bookings.map((booking) => (
+                    {currentBookings.map((booking) => (
                         <TableRow key={booking.id}>
                             <TableCell className="font-medium">
                                 <div className="flex items-center gap-3">
@@ -174,11 +182,19 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                     ))}
                     </TableBody>
                 </Table>
+                <PaginationControls 
+                    name="citas"
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={bookings.length}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={(page) => setCurrentPage(page)}
+                />
             </CardContent>
             <ModalBookingsAdmin
                 open={openModal}
                 onOpenChange={setOpenModal}
-                clients={modalMode === 'new' ? customers : undefined}
+                clients={modalMode === 'new' ? customers.data : undefined}
                 client={modalMode === 'edit' ? (selectedClient as { id: string; name: string }) : undefined}
                 services={validServices}
                 modalMode={modalMode}
