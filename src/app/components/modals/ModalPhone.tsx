@@ -2,7 +2,7 @@
 
 import Input from "@/app/components/Input";
 import { useRegister } from "@/app/hooks/useRegister";
-import Button from "@/app/components/CustomBtn";
+import { CustomBtn as Button } from "@/app/components/CustomBtn";
 import { useUpdatePhone } from "@/app/hooks/useUpdatePhone";
 import { Session } from "next-auth";
 import { formatToNumbersOnly } from 'utils/utilsFormat';

@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardDescription, CardTitle } from "@/app/components/ui/card";
 
 export function QuickActionCard({

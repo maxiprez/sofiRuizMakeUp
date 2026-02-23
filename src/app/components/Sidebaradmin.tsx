@@ -46,11 +46,6 @@ const menuItems = [
       icon: Clock,
       url: "/admin/schedules",
     },
-    // {
-    //   title: "Configuración",
-    //   icon: Settings,
-    //   url: "#settings",
-    // },
 ]
 
 export function SidebarAdmin() {
