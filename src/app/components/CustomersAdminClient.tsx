@@ -12,7 +12,7 @@ import { ModalBookingsAdmin } from "@/app/components/modals/ModalBookingsAdmin";
 import { useState } from "react";
 import useGetServices from "@/app/hooks/useABMServices";
 import useBookingUser from "@/app/hooks/useBookingUser";
-import { Customers } from "@/app/_actions/abmCustomers.action"
+import { Customers } from "@/app/_actions/obtainCustomers.action"
 import { Booking } from "types/entities";
 import { formatDateTime } from "utils/utilsFormat";
 import { PaginationControls } from "@/app/components/ui/paginationControls";

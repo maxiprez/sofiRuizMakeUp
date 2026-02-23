@@ -13,7 +13,7 @@ import CustomersAdmin from "@/app/components/CustomersAdmin";
 import { QuickActionCard } from "@/app/components/QuickActionsCardsAdmin";
 import CardsAdminWrapper from "@/app/components/CardsAdminWrapper";
 import { RevenueData, DailyBookingData, CancelledBookingsData } from "types/entities";
-import { getCustomers } from "@/app/_actions/abmCustomers.action";
+import { getCustomers } from "@/app/_actions/obtainCustomers.action";
 
 
 export async function AdminDashboardClient({ revenue, dailyBookingComparison, cancelledBookings, searchParams }: { revenue: RevenueData, dailyBookingComparison: DailyBookingData, cancelledBookings: CancelledBookingsData, searchParams: { q?: string } }) {
@@ -39,7 +39,7 @@ export async function AdminDashboardClient({ revenue, dailyBookingComparison, ca
             </div>
             <CardsAdminWrapper revenue={revenue} dailyBookingComparison={dailyBookingComparison} cancelledBookings={cancelledBookings} customers={customersInfo} />
 
-            <CustomersAdmin customers={customersInfo.data} searchParams={Promise.resolve({ q: searchParams.q || "" })} />
+            <CustomersAdmin searchParams={Promise.resolve({ q: searchParams.q || "" })} />
             <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <QuickActionCard
                 icon={<Calendar className="h-6 w-6 text-pink-600" />}

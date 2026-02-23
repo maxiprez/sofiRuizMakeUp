@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/app
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/app/components/ui/table";
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
 import { Badge } from "@/app/components/ui/badge";
-import { getCustomers } from "@/app/_actions/abmCustomers.action";
+import { getCustomers } from "@/app/_actions/obtainCustomers.action";
 import { PaginationControls } from "@/app/components/ui/paginationControls";
 
 type Customer = {

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/ca
 import { CalendarDays, XCircle, UserCheck, DollarSign } from "lucide-react"
 import { RevenueData, DailyBookingData, CancelledBookingsData } from "types/entities";
 import { TrendBadge } from '@/app/components/ui/TrendBadge';
-import { Customers } from "@/app/_actions/abmCustomers.action";
+import { Customers } from "@/app/_actions/obtainCustomers.action";
 
 export default function CardsAdminWrapper({ revenue, dailyBookingComparison, cancelledBookings, customers }: { revenue: RevenueData, dailyBookingComparison: DailyBookingData, cancelledBookings: CancelledBookingsData, customers: Customers }) {
 
