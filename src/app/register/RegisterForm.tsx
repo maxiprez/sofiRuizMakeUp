@@ -16,7 +16,7 @@ export default function Register() {
         <h1 className="text-2xl font-bold mb-6 text-gray-700 text-center">Registrarme</h1>
         <form onSubmit={handleSubmit}>
           <Input labelText="Nombre y apellido" placeholder="Alicia Gómez" inputMode="text" name="name" id="name" htmlType="text" required value={name} onChange={(e) => setName(e.target.value)} button={false} />
-          <Input labelText="Correo Electrónico" placeholder="alicia.gomez@gmail.com" inputMode="email" name="email" id="email" htmlType="text" required value={email} onChange={(e) => setEmail(e.target.value)} button={false} />
+          <Input labelText="Correo Electrónico" placeholder="alicia.gomez@gmail.com" inputMode="email" name="email" id="email" htmlType="text" required value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} button={false} />
           <Input labelText="Celular" maxLength={10} onChange={(e) => setTel(formatToNumbersOnly(e.target.value))} placeholder="1129993848" inputMode="tel" name="tel" id="tel" htmlType="text" required value={tel} button={false} />
           <Input labelText="Contraseña" name="password" htmlType="password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)} button={true} />
           <Input labelText="Confirmar Contraseña" name="confirmPassword" htmlType={showPassword ? 'text' : 'password'} id="confirmPassword" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} button={true} />
