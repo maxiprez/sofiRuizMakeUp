@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
+import { format, parseISO } from "date-fns";
 import useHero from '@/app/hooks/useHero';
 import { Button } from '@/app/components/ui/button';
 import useGetServices from '@/app/hooks/useABMServices';
@@ -14,7 +15,6 @@ import {
 } from "@/app/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/app/components/ui/popover";
 import { Calendar } from "@/app/components/ui/calendar";
-import { format, parseISO, startOfToday } from "date-fns";
 import { es } from 'date-fns/locale';
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,22 +25,29 @@ interface HeroProps {
 }
 
 export default function Hero({ onSearch }: HeroProps) {
-  const { selectedServiceId, handleServiceChange, selectedDate, handleDateChange, handleSearchAndScroll } = useHero(onSearch);
+  const { selectedServiceId, handleServiceChange, selectedDate, handleDateChange, handleSearchAndScroll, dayStatuses } = useHero(onSearch);
   const { services } = useGetServices();
   const dateObj = selectedDate ? parseISO(selectedDate) : undefined;
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  
+  // Calculate date range from dayStatuses
+  const todayDate = new Date();
+  const maxDate = dayStatuses.length > 0 
+    ? new Date(Math.max(...dayStatuses.map(ds => new Date(ds.date).getTime())))
+    : new Date(todayDate.getTime() + 45 * 24 * 60 * 60 * 1000);
+  
+  // Find the first date with data and start calendar from there
+  const validDayStatuses = dayStatuses.filter(ds => ds.status !== undefined);
+  const firstDataDate = validDayStatuses.length > 0 
+    ? new Date(Math.min(...validDayStatuses.map(ds => new Date(ds.date).getTime())))
+    : todayDate;
+  const fromMonth = new Date(firstDataDate.getFullYear(), firstDataDate.getMonth(), 1);
 
   const handleDateSelect = (date: Date | undefined) => {
     const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
     handleDateChange(formattedDate);
     setIsCalendarOpen(false);
   };
-  const disabledDayStyle = {
-    textDecoration: 'line-through',
-    color: '#a0aec0',
-    opacity: 0.7 
-  };
-  const today = startOfToday()
 
   return (
     <section className="md:py-20 py-10 px-4">
@@ -84,8 +91,25 @@ export default function Hero({ onSearch }: HeroProps) {
                 selected={dateObj}
                 onSelect={handleDateSelect}
                 locale={es}
-                disabled={{ before: today }}
-                modifiersStyles={{ disabled: disabledDayStyle }}
+                defaultMonth={firstDataDate}
+                fromMonth={fromMonth}
+                toMonth={maxDate}
+                modifiers={{
+                  disabled: (date: Date) => {
+                    const dateStr = format(date, "yyyy-MM-dd");
+                    const dayStatus = dayStatuses.find(ds => ds.date === dateStr);
+                    const isDisabled = dayStatus?.status === 'disabled' || dayStatus?.status === 'busy' || dateStr === format(todayDate, "yyyy-MM-dd") || !dayStatus;
+                    return isDisabled;
+                  },
+                  available: (date: Date) => {
+                    const dateStr = format(date, "yyyy-MM-dd");
+                    const dayStatus = dayStatuses.find(ds => ds.date === dateStr);
+                    return dayStatus?.status === 'available';
+                  }
+                }}
+                classNames={{
+                  day: "relative data-[available=true]:after:content-[''] data-[available=true]:after:absolute data-[available=true]:after:bottom-1 data-[available=true]:after:left-1/2 data-[available=true]:after:-translate-x-1/2 data-[available=true]:after:w-1.5 data-[available=true]:after:h-1.5 data-[available=true]:after:bg-green-500 data-[available=true]:after:rounded-full"
+                }}
               />
             </PopoverContent>
           </Popover>
