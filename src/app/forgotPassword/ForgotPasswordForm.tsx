@@ -29,7 +29,7 @@ export default function ForgotPasswordForm() {
         )}
         {!isError && !message && (
           <form onSubmit={handleForgotPassword}>
-            <Input labelText="E-mail" inputMode="email" name="email" htmlType="email" id="email" required value={email} onChange={(e) => setEmail(e.target.value)} button={false} />
+            <Input labelText="E-mail" inputMode="email" name="email" htmlType="email" id="email" required value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} button={false} />
             <Button
               text={loading ? "Enviando..." : "Restablecer contraseña"}
               type="submit"
