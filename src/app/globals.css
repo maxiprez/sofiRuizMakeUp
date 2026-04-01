@@ -132,3 +132,19 @@ body {
   background-color: var(--background);
   color: var(--foreground);
 }
+
+.day-available {
+  position: relative;
+}
+
+.day-available::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background-color: #22c55e;
+  border-radius: 50%;
+}

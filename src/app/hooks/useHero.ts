@@ -23,16 +23,10 @@ export default function useHero(onSearchCallback: (serviceId: string, date: stri
         const today = new Date();
         const endDate = new Date();
         endDate.setMonth(today.getMonth() + 2);
-        
-        console.log('Requesting calendar status from', today.toISOString(), 'to', endDate.toISOString());
-        
         const response = await fetch(
           `/api/calendarStatus?startDate=${today.toISOString()}&endDate=${endDate.toISOString()}`
         );
         const data = await response.json();
-        console.log('Received dayStatuses count:', data.dayStatuses?.length);
-        console.log('Date range in response:', data.dayStatuses?.[0]?.date, 'to', data.dayStatuses?.[data.dayStatuses?.length - 1]?.date);
-        console.log('Sample dayStatuses:', data.dayStatuses?.slice(0, 5));
         setDayStatuses(data.dayStatuses || []);
       } catch (error) {
         console.error('Error al obtener estado del calendario:', error);
