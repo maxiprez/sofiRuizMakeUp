@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import useGetServices from '@/app/hooks/useABMServices';
 import { Service } from '@/app/_actions/abmServices.action';
+
+interface DayStatus {
+  date: string;
+  status: 'available' | 'busy' | 'disabled';
+}
 
 export default function useHero(onSearchCallback: (serviceId: string, date: string, duration: number) => void) {
   const { services } = useGetServices();
@@ -10,6 +15,26 @@ export default function useHero(onSearchCallback: (serviceId: string, date: stri
   const [selectedService, setSelectedService] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedDuration, setSelectedDuration] = useState(0);
+  const [dayStatuses, setDayStatuses] = useState<DayStatus[]>([]);
+
+  useEffect(() => {
+    const fetchCalendarStatus = async () => {
+      try {
+        const today = new Date();
+        const endDate = new Date();
+        endDate.setMonth(today.getMonth() + 2);
+        const response = await fetch(
+          `/api/calendarStatus?startDate=${today.toISOString()}&endDate=${endDate.toISOString()}`
+        );
+        const data = await response.json();
+        setDayStatuses(data.dayStatuses || []);
+      } catch (error) {
+        console.error('Error al obtener estado del calendario:', error);
+      }
+    };
+
+    fetchCalendarStatus();
+  }, []);
 
   const handleServiceChange = (id: string) => {
     const service = services.find((s: Service) => s.id === id);
@@ -42,7 +67,6 @@ export default function useHero(onSearchCallback: (serviceId: string, date: stri
     }
   };
 
-
   const handleSearch = useCallback((service: string, date: string, duration: number) => {
     setSelectedService(service);
     setSelectedDate(date);
@@ -58,5 +82,6 @@ export default function useHero(onSearchCallback: (serviceId: string, date: stri
     handleDateChange,
     handleSearchClick,
     handleSearchAndScroll,
+    dayStatuses,
   };
 }
