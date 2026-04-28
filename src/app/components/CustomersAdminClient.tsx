@@ -43,6 +43,21 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
       .map(({ id, name, duration }) => ({ id, name, duration }))
   : [];
 
+   const statusConfig = {
+        confirmed: {
+            label: "Confirmada",
+            className: "bg-green-100 text-green-800 hover:bg-green-100",
+        },
+        cancelled: {
+            label: "Cancelada",
+            className: "bg-red-100 text-red-800 hover:bg-red-100",
+        },
+        pending: {
+            label: "Pendiente",
+            className: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100",
+        },
+    } as const;
+
     return (
         <Card className="border-purple-100">
             <CardHeader>
@@ -91,93 +106,80 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                                 </Avatar>
                                 {booking.users.name}
                                 </div>
-                            </TableCell>    
+                            </TableCell>
                             <TableCell>{booking.users.tel}</TableCell>
                             <TableCell>{booking.services.name}</TableCell>
                             <TableCell>{formatDateTime(booking.date!,"10:00")}</TableCell>
                             <TableCell>{booking.time.slice(0, 5)}hs.</TableCell>
                             <TableCell>
                                 <Badge
-                                    variant={
-                                        booking.status === true
-                                        ? "default"
-                                        : booking.status === false
-                                            ? "secondary"
-                                            : "destructive"
-                                    }
                                     className={
-                                        booking.status === true
-                                        ? "bg-green-100 text-green-800 hover:bg-green-100"
-                                        : booking.status === false
-                                        ? "bg-red-100 text-red-800 hover:bg-red-100"
-                                        : "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
+                                    statusConfig[booking.status_new as keyof typeof statusConfig]?.className
                                     }
                                 >
-                                {booking.status ? "Confirmada" : "Cancelada"}
+                                    {statusConfig[booking.status_new as keyof typeof statusConfig]?.label}
                                 </Badge>
                             </TableCell>
-                        {
-                                booking.status === true && (
-                                <TableCell className="text-right">
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                        <Button
-                                            id={`booking-menu-${booking.id}`}
-                                            variant="ghost"
-                                            size="icon"
-                                            className="hover:bg-purple-50 focus-visible:ring-1 focus-visible:ring-purple-200 flex items-center justify-center" 
-                                        >
-                                            <MoreHorizontal className="h-4 w-4 text-gray-500 align-middle" />
-                                        </Button>
-                                        </DropdownMenuTrigger>
+                            {
+                                booking.status_new === 'confirmed' && (
+                                    <TableCell className="text-right">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button
+                                                    id={`booking-menu-${booking.id}`}
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="hover:bg-purple-50 focus-visible:ring-1 focus-visible:ring-purple-200 flex items-center justify-center" 
+                                                >
+                                                    <MoreHorizontal className="h-4 w-4 text-gray-500 align-middle" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent
+                                                align="start"
+                                                sideOffset={6}
+                                                className="w-44 bg-white shadow-md border border-gray-100 rounded-lg p-1 z-50"
+                                            >
+                                                <DropdownMenuItem
+                                                    className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                                                >
+                                                    <Eye className="h-4 w-4 mr-2 text-gray-500" />
+                                                    Ver detalles
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    onClick={() => {
+                                                        setSelectedClient({ id: booking.users.id, name: booking.users.name });
+                                                        setModalMode('edit');
+                                                        setOpenModal(true);
+                                                        setBookingEditing(booking.date);
+                                                        setBookingId(booking.id);
+                                                        setSelectedService({id: booking.services.id, name: booking.services.name});
+                                                    }}
+                                                    className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                                                >
+                                                    <Edit className="h-4 w-4 mr-2 text-gray-500" />
+                                                    Editar
+                                                </DropdownMenuItem>
 
-                                        <DropdownMenuContent
-                                        align="start"
-                                        sideOffset={6}
-                                        className="w-44 bg-white shadow-md border border-gray-100 rounded-lg p-1 z-50"
-                                        >
-                                        <DropdownMenuItem
-                                            className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                                        >
-                                            <Eye className="h-4 w-4 mr-2 text-gray-500" />
-                                            Ver detalles
-                                        </DropdownMenuItem>
-
-                                       <DropdownMenuItem
-                                            onClick={() => {
-                                                setSelectedClient({ id: booking.users.id, name: booking.users.name });
-                                                setModalMode('edit');
-                                                setOpenModal(true);
-                                                setBookingEditing(booking.date);
-                                                setBookingId(booking.id);
-                                                setSelectedService({id: booking.services.id, name: booking.services.name});
-                                            }}
-                                            className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700"
-                                        >
-                                            <Edit className="h-4 w-4 mr-2 text-gray-500" />
-                                            Editar
-                                        </DropdownMenuItem>
-
-                                        <DropdownMenuSeparator className="my-1 bg-gray-100 h-px" />
-
-                                        <DropdownMenuItem
-                                            onClick={() => handleCancelBooking(booking.id, {
-                                                id: booking.id,
-                                                service: booking.services.name,
-                                                date: booking.date,
-                                                time: booking.time,
-                                                services: booking.services,
-                                                users: booking.users,
-                                            })}
-                                            className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
-                                        >
-                                            <Trash2 className="h-4 w-4 mr-2 text-red-500" />
-                                            Cancelar
-                                        </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            )}
+                                                <DropdownMenuSeparator className="my-1 bg-gray-100 h-px" />
+                                                <DropdownMenuItem
+                                                    onClick={() => handleCancelBooking(booking.id, {
+                                                        id: booking.id,
+                                                        service: booking.services.name,
+                                                        date: booking.date,
+                                                        time: booking.time,
+                                                        services: booking.services,
+                                                        users: booking.users,
+                                                    })}
+                                                    className="flex items-center px-2 py-2 rounded-md cursor-pointer text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+                                                >
+                                                    <Trash2 className="h-4 w-4 mr-2 text-red-500" />
+                                                    Cancelar
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
+                                )
+                            }
                         </TableRow>
                     ))}
                     </TableBody>

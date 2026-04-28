@@ -1,3 +1,6 @@
+export type Trend = "up" | "down" | "same";
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled';
+
 export type Customer = {
   id: string;
   name: string;
@@ -6,8 +9,6 @@ export type Customer = {
   is_verified?: boolean;
   role?: string;
 };
-
-export type Trend = "up" | "down" | "same";
 
 type User = {
   id: string;
@@ -47,7 +48,7 @@ export type Booking = {
     google_event_id: string;
     id: string;
     service_id: string;
-    status: boolean;
+    status_new: BookingStatus;
     time: string;
     users: User;
     services: Services;
