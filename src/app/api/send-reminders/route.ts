@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
 import { RememberEmail } from '@/app/components/emails/RememberEmail';
+import { randomUUID } from 'crypto';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,8 +24,8 @@ export async function GET(req: Request) {
 
     const { data: bookings, error: bookingsError } = await supabase
       .from('bookings')
-      .select('id, user_id, service_id, date, time')
-      .eq('status', true)
+      .select('id, user_id, service_id, date, time, confirmation_token')
+      .eq('status_new', 'pending')
       .eq('date', tomorrowISODate)
       .order('date', { ascending: true })
       .order('time', { ascending: true });
@@ -61,14 +62,27 @@ export async function GET(req: Request) {
       const serviceName = serviceMap[booking.service_id];
       if (!user?.email) continue;
 
+      let token = booking.confirmation_token;
+
+      if (!token) {
+        token = randomUUID();
+
+        await supabase
+          .from('bookings')
+          .update({ confirmation_token: token })
+          .eq('id', booking.id);
+      }
+      const confirmUrl = `${process.env.NEXTAUTH_URL}/confirm-booking?token=${token}`;
+
       const [hour, minute] = booking.time.split(':');
+
       const formattedDate = new Date(`${booking.date}T${booking.time}`).toLocaleDateString('es-AR', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
-      }).replace(/\//g, '-');
-      const formattedTime = `${hour}:${minute}`;
+      });
 
+      const formattedTime = `${hour}:${minute}`;
 
       await resend.emails.send({
         from: 'no-reply@sofiruiz.com.ar',
@@ -80,8 +94,10 @@ export async function GET(req: Request) {
           serviceName,
           date: formattedDate,
           time: formattedTime,
+          confirmUrl,
         }),
       });
+
       sentEmails++;
       await new Promise(resolve => setTimeout(resolve, 2000));
     }

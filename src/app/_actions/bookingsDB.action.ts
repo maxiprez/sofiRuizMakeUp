@@ -47,7 +47,7 @@ export async function createBooking(bookingData: BookingData) {
   try {
     const { data: existingBooking, error: existingBookingError } = await supabase
       .from("bookings")
-      .select("id, status")
+      .select("id, status_new")
       .eq("user_id", targetUserId)
       .eq("date", date);
 
@@ -56,7 +56,7 @@ export async function createBooking(bookingData: BookingData) {
         return { error: "Error al verificar reservas existentes.", success: false };
     }
 
-    if (existingBooking && existingBooking.length > 0 && existingBooking[0].status) {
+    if (existingBooking && existingBooking.length > 0 && existingBooking[0].status_new) {
         return { error: "Ya tienes una reserva para este día.", success: false };
     }
     const { data, error } = await supabase
@@ -67,8 +67,8 @@ export async function createBooking(bookingData: BookingData) {
           date,
           time,
           service_id,
-          status: true,
-          google_event_id: ""
+          status_new: "pending",
+          google_event_id: "",
         }
       ])
       .select(`*, services(*)`)

@@ -23,7 +23,7 @@ async function getRevenueByRange(start: Date, end: Date): Promise<number> {
         price
       )
     `)
-    .eq("status", true)
+    .eq("status_new", "confirmed")
     .gte("date", start.toISOString())
     .lte("date", end.toISOString());
 
