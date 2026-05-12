@@ -31,14 +31,14 @@ export async function getDailyCancelledBookingsComparison() {
     supabase
       .from("bookings")
       .select("id", { count: "exact", head: true })
-      .eq("status", false)
+      .eq("status_new", "cancelled")
       .gte("date", todayStart.toISOString())
       .lte("date", todayEnd.toISOString()),
 
     supabase
       .from("bookings")
       .select("id", { count: "exact", head: true })
-      .eq("status", false)
+      .eq("status_new", "cancelled")
       .gte("date", yesterdayStart.toISOString())
       .lte("date", yesterdayEnd.toISOString()),
   ]);

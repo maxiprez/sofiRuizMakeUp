@@ -22,7 +22,8 @@ export async function GET() {
       .from('bookings')
       .select(`*, services(*)`)
       .eq('user_id', userId)
-      .eq('status', true)
+      .eq('status_new', 'confirmed')
+      .eq('status_new', 'pending')
       .order('date', { ascending: true })
       .order('time', { ascending: true });
 

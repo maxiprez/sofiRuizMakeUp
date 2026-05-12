@@ -25,7 +25,7 @@ export async function GET(req: Request) {
     const { data: bookings, error: bookingsError } = await supabase
       .from('bookings')
       .select('id, user_id, service_id, date, time, confirmation_token')
-      .eq('status', true)
+      .eq('status_new', 'pending')
       .eq('date', tomorrowISODate)
       .order('date', { ascending: true })
       .order('time', { ascending: true });

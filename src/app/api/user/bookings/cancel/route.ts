@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     // Marcar reserva como cancelada
     const { error: updateError } = await supabase
       .from('bookings')
-      .update({ status: false })
+      .update({ status_new: 'cancelled' })
       .eq('id', bookingId)
       .eq('user_id', userId);
 
