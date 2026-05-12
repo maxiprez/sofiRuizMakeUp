@@ -110,7 +110,6 @@ export async function createBooking(bookingData: BookingData) {
       const dateEmail = formatter.format(new Date(`${date}T${time}:00-03:00`));
 
       const htmlContent = ConfirmationEmail({
-        userFullName: targetUserName,
         serviceName: service.name,
         date: dateEmail,
         time,
