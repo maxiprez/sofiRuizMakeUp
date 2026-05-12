@@ -1,56 +1,178 @@
 export function ConfirmationEmail({
-  userFullName,
   serviceName,
   date,
   time,
 }: {
-  userFullName: string | null | undefined;
-  serviceName: string;
-  date: string;
-  time: string;
+  serviceName: string
+  date: string
+  time: string
 }) {
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
+
   return `
   <!DOCTYPE html>
-  <html lang="es">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>Confirmación de Turno</title>
-    </head>
-    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
-      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-        
-        <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="margin: 0 0 10px 0; color: #000;">Hola, ${userFullName}</h1>
-          <h2 style="margin: 0 0 15px 0; color: #e91e63;">¡Tu turno ha sido confirmado!</h2>
-          <p style="margin-bottom: 15px; color: #555;">Gracias por elegirnos. A continuación, los detalles de tu turno:</p>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turno confirmado</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f0f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 580px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.12);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+      padding: 28px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .brand {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .body {
+      padding: 28px;
+    }
+
+    .card {
+      background: #fdf2f8;
+      border: 1px solid #fbcfe8;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .card h2 {
+      font-size: 13px;
+      color: #db2777;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .icon { width: 20px; }
+
+    .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+
+    .value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .status {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 600;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 11px;
+      color: #9ca3af;
+      border-top: 1px solid #f3f4f6;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="header">
+      <div class="brand">Sofi Ruiz Makeup</div>
+      <h1>¡Turno confirmado!</h1>
+      <p>Tu reserva fue confirmada correctamente</p>
+    </div>
+
+    <div class="body">
+
+      <div class="card">
+        <h2>Detalles del turno</h2>
+
+        <div class="row">
+          <div class="icon">💄</div>
+          <div>
+            <div class="label">Servicio</div>
+            <div class="value">${serviceName}</div>
+          </div>
         </div>
-  
-        <div style="background-color: #fdf2f8; border: 1px solid #f8bbd0; padding: 15px; border-radius: 5px;">
-          <h3 style="margin: 0 0 10px 0; color: #e91e63; font-size: 16px;">Detalles del turno:</h3>
-          <p style="margin: 5px 0;"><strong style="color: #555;">Servicio:</strong> ${serviceName}</p>
-          <p style="margin: 5px 0;"><strong style="color: #555;">Día:</strong> ${date}</p>
-          <p style="margin: 5px 0;"><strong style="color: #555;">Hora:</strong> ${time} hs</p>
+
+        <div class="row">
+          <div class="icon">📅</div>
+          <div>
+            <div class="label">Fecha</div>
+            <div class="value">${date}</div>
+          </div>
         </div>
-  
-        <div style="text-align: center; margin-top: 25px;">
-          <a href="https://sofiruiz.com.ar"
-             style="display: inline-block; background-color: #e91e63; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold;">
-            Ver mis turnos / Reprogramar
-          </a>
+
+        <div class="row">
+          <div class="icon">🕐</div>
+          <div>
+            <div class="label">Hora</div>
+            <div class="value">${time} hs</div>
+          </div>
         </div>
-  
-        <div style="text-align: center; margin-top: 30px; color: #777; font-size: 13px;">
-          <p>¿Tenés dudas o necesitás ayuda?</p>
-          <p>Escribinos a <a href="mailto:info@sofiruiz.com.ar" style="color: #e91e63; text-decoration: none;">info@sofiruiz.com.ar</a></p>
-        </div>
-  
-        <div style="text-align: center; margin-top: 30px; color: #aaa; font-size: 12px;">
-          © ${currentYear} Sofi Ruiz Makeup. Todos los derechos reservados.
+
+        <div class="status">
+          ✔ Este turno está confirmado
         </div>
       </div>
-    </body>
-  </html>
-  `;
+
+    </div>
+
+    <div class="footer">
+      © ${currentYear} Sofi Ruiz Makeup · Todos los derechos reservados
+    </div>
+
+  </div>
+</body>
+</html>
+  `
 }

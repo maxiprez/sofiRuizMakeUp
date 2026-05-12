@@ -10,9 +10,7 @@ export default async function CustomersAdmin({ searchParams }: { searchParams: P
   const q = resolvedParams?.q?.toLowerCase().trim();
 
   const response = await getCustomers();
-  const customersInfo = {
-      allCustomers: response.allData
-  };
+  const customersInfo = { allCustomers: response.allData };
     const filteredBookings = q
     ? bookings?.filter((booking) =>
         booking.users.name.toLowerCase().includes(q) ||
