@@ -121,7 +121,7 @@ export function CustomersAdminClient({ customers, bookings }: { customers: Custo
                                 </Badge>
                             </TableCell>
                             {
-                                booking.status_new === 'confirmed' && (
+                                (booking.status_new === 'confirmed' || booking.status_new === 'pending') && (
                                     <TableCell className="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
