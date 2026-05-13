@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
 import { extractAvailableTimes } from 'utils/calendarUtils';
+import { getAvailability } from 'src/app/_actions/abmAvailability.action';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -24,7 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const selected = new Date(date);
+  const [year, month, day] = date.split('-').map(Number);
+  const selected = new Date(year, month - 1, day);
   selected.setHours(0, 0, 0, 0);
 
   const diffInDays = (selected.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
@@ -33,6 +35,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // Primero obtener los horarios configurados desde la base de datos
+    const availabilityResult = await getAvailability();
+    if (availabilityResult.error) {
+      return res.status(500).json({ error: availabilityResult.error });
+    }
+
     const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!);
     credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
     const auth = new google.auth.GoogleAuth({
@@ -57,8 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     const events = eventsResponse.data?.items || [];
-    const selectedDate = new Date(date);
-    const availableTimes = extractAvailableTimes(events, selectedDate, durationInMinutes);
+    const availableTimes = extractAvailableTimes(events, selected, durationInMinutes, availabilityResult.data);
 
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');

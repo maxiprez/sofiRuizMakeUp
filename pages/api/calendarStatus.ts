@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
 import { extractAvailableTimes } from '../../utils/calendarUtils';
+import { getAvailability } from 'src/app/_actions/abmAvailability.action';
 
 function getAuthClient() {
   const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!);
@@ -27,6 +28,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     if (!startDate || !endDate) {
       return res.status(400).json({ error: 'startDate and endDate are required' });
+    }
+    
+    // Primero obtener los horarios configurados desde la base de datos
+    const availabilityResult = await getAvailability();
+    if (availabilityResult.error) {
+      return res.status(500).json({ error: availabilityResult.error });
     }
     
     const auth = getAuthClient();
@@ -57,12 +64,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       
       let status: 'available' | 'busy' | 'disabled';
 
-      // Check if day is disabled (past or > 45 days)
       if (date < today || diffInDays > 45) {
         status = 'disabled';
       } else {
-        // Check if day is busy (no available times)
-        const availableTimes = extractAvailableTimes(events, new Date(date), 60);
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const localDate = new Date(year, month - 1, day);
+        const availableTimes = extractAvailableTimes(events, localDate, 60, availabilityResult.data);
         status = availableTimes.length === 0 ? 'busy' : 'available';
       }
 
