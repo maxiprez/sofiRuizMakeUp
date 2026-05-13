@@ -11,13 +11,35 @@ export type Json = JsonValue | JsonObject | JsonArray
 export interface Database {
   public: {
     Tables: {
-      // Define your database tables here
-      // Example:
-      // profiles: {
-      //   Row: { id: string; created_at: string; updated_at: string; username: string }
-      //   Insert: { id?: string; created_at?: string; updated_at?: string; username: string }
-      //   Update: { id?: string; created_at?: string; updated_at?: string; username?: string }
-      // }
+      availability: {
+        Row: {
+          id: string
+          day_of_week: number
+          enabled: boolean
+          start_time: string
+          end_time: string
+          break_start: string | null
+          break_end: string | null
+        }
+        Insert: {
+          id?: string
+          day_of_week: number
+          enabled?: boolean
+          start_time: string
+          end_time: string
+          break_start?: string | null
+          break_end?: string | null
+        }
+        Update: {
+          id?: string
+          day_of_week?: number
+          enabled?: boolean
+          start_time?: string
+          end_time?: string
+          break_start?: string | null
+          break_end?: string | null
+        }
+      }
     } & Record<string, unknown>
     Views: Record<string, unknown>
     Functions: Record<string, unknown>
