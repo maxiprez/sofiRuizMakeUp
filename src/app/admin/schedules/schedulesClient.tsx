@@ -8,6 +8,8 @@ import { Label } from "@/app/components/ui/label";
 import { Switch } from "@/app/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/app/components/ui/card";
 import { CalendarDays, Coffee, Save } from "lucide-react";
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const DAY_NAMES = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 
@@ -24,7 +26,7 @@ type FormValues = {
 };
 
 export function SchedulesClient({ initialData }: { initialData: Availability[] }) {
-  const { register, handleSubmit, watch, setValue, formState: { isSubmitting, isDirty } } = useForm<FormValues>({
+  const { register, handleSubmit, watch, setValue, formState: { isSubmitting } } = useForm<FormValues>({
     defaultValues: {
       availability: initialData.map(item => ({
         id: item.id,
@@ -34,11 +36,60 @@ export function SchedulesClient({ initialData }: { initialData: Availability[] }
         end_time: item.end_time?.slice(0, 5) ?? "18:00",
         break_start: item.break_start?.slice(0, 5) ?? "",
         break_end: item.break_end?.slice(0, 5) ?? "",
-      })),
-    },
+      }))
+    }
   });
 
   const onSubmit = async (data: FormValues) => {
+    for (const item of data.availability) {
+      if (item.enabled && item.break_start && item.break_end) {
+        const startTime = new Date(`2000-01-01T${item.start_time}`);
+        const endTime = new Date(`2000-01-01T${item.end_time}`);
+        const breakStart = new Date(`2000-01-01T${item.break_start}`);
+        const breakEnd = new Date(`2000-01-01T${item.break_end}`);
+        
+        if (breakStart <= startTime) {
+         Swal.fire({
+            icon: 'error',
+            title: '¡Error al crear horario!',
+            text: 'El inicio del descanso debe ser posterior al inicio del horario de atención.',
+            timer: 4000,
+            showConfirmButton: false,
+        });
+          return;
+        }
+        
+        if (breakEnd >= endTime) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error al crear horario!',
+            text: 'El fin del descanso debe ser anterior al fin del horario de atención.',
+            timer: 4000,
+            showConfirmButton: false,
+          });
+          return;
+        }
+        
+        if (breakStart >= breakEnd) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error al crear horario!',
+            text: 'El inicio del descanso debe ser anterior al fin del descanso.',
+            timer: 4000,
+            showConfirmButton: false,
+          });
+          return;
+        }
+        Swal.fire({
+            icon: 'success',
+            title: '¡Horario creado exitosamente!',
+            text: 'El horario se ha guardado correctamente.',
+            timer: 3000,
+            showConfirmButton: true,
+        });
+      }
+    }
+    
     const payload = data.availability.map(item => ({
       ...item,
       break_start: item.break_start || null,
@@ -49,18 +100,14 @@ export function SchedulesClient({ initialData }: { initialData: Availability[] }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-
-      {/* Botón en el header */}
       <Button
         type="submit"
-        disabled={isSubmitting || !isDirty}
+        disabled={isSubmitting}
         className="bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-md cursor-pointer"
       >
         <Save className="mr-2 h-4 w-4" />
         {isSubmitting ? "Guardando..." : "Guardar cambios"}
       </Button>
-
-      {/* WEEKLY SCHEDULE — esto reemplaza al map del Server Component */}
       <Card className="border-purple-100 shadow-sm mt-6">
         <CardHeader>
           <div className="flex items-center gap-3">
@@ -78,13 +125,9 @@ export function SchedulesClient({ initialData }: { initialData: Availability[] }
           {initialData.map((_, index) => (
             <div key={index} className="rounded-2xl border border-pink-100 bg-white p-5 transition hover:border-pink-200 hover:shadow-sm">
 
-              {/* Campos ocultos */}
               <input type="hidden" {...register(`availability.${index}.id`)} />
               <input type="hidden" {...register(`availability.${index}.day_of_week`, { valueAsNumber: true })} />
-
               <div className="grid gap-4 xl:grid-cols-[220px_repeat(3,1fr)] xl:items-center">
-
-                {/* DAY + SWITCH */}
                 <div className="flex items-center justify-between xl:justify-start xl:gap-4">
                   <div>
                     <h3 className="font-semibold text-gray-900">{DAY_NAMES[index]}</h3>
@@ -97,20 +140,14 @@ export function SchedulesClient({ initialData }: { initialData: Availability[] }
                     }
                   />
                 </div>
-
-                {/* START */}
                 <div className="space-y-2">
                   <Label>Desde</Label>
                   <Input type="time" {...register(`availability.${index}.start_time`)} className="border-pink-100 focus-visible:ring-pink-300" />
                 </div>
-
-                {/* END */}
                 <div className="space-y-2">
                   <Label>Hasta</Label>
                   <Input type="time" {...register(`availability.${index}.end_time`)} className="border-pink-100 focus-visible:ring-pink-300" />
                 </div>
-
-                {/* BREAK */}
                 <div className="space-y-2">
                   <Label>Descanso</Label>
                   <div className="flex items-center gap-2">
